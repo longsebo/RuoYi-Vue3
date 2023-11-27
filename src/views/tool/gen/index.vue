@@ -222,7 +222,7 @@ function handleGenTable(row) {
       proxy.$modal.msgSuccess("成功生成到自定义路径：" + row.genPath);
     });
   } else {
-    proxy.$download.zip("/tool/gen/batchGenCode?tables=" + tbNames, "ruoyi.zip");
+    proxy.$download.zip("/code/gen/batchGenCode?tables=" + tbNames, "ruoyi.zip");
   }
 }
 /** 同步数据库操作 */
@@ -266,7 +266,7 @@ function handleSelectionChange(selection) {
 /** 修改按钮操作 */
 function handleEditTable(row) {
   const tableId = row.tableId || ids.value[0];
-  router.push({ path: "/tool/gen-edit/index/" + tableId, query: { pageNum: queryParams.value.pageNum } });
+  router.push({ path: "/code/gen-edit/index/" + tableId, query: { pageNum: queryParams.value.pageNum } });
 }
 /** 删除按钮操作 */
 function handleDelete(row) {
