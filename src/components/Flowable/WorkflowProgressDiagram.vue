@@ -109,6 +109,7 @@ async function initViewer() {
 
 
 async function initViewerDiagram(xml: string) {
+  debugger;
   // find str
   const result = await viewer.value.importXML(xml)
   console.log(result)

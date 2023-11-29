@@ -140,9 +140,9 @@
       @pagination="getList"
     />
     <!-- 流程图 -->
-    <!-- <el-dialog :title="processView.title" :visible.sync="processView.open" width="70%" append-to-body>
+     <el-dialog :title="processView.title" :visible.sync="processView.open" width="70%" append-to-body>
         <WorkflowProgressDiagram :key="diagramKey" ref="diagramRef" :activity-list="detailInfo?.activity_list || []" :xml="detailInfo?.xml || ''" />
-    </el-dialog> -->
+    </el-dialog>
     <!-- 添加或修改流程模型对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
       <el-form ref="modelRef" :model="form" :rules="rules" label-width="80px">
@@ -178,11 +178,12 @@
   </div>
 </template>
 
-<script setup name="Model">
+<script setup name="Model" lang="ts">
 import { listModel, getModel, delModel, addModel, updateModel,getModelXml,depolyModel } from "@/api/flowable/model";
 import {listCategory} from "@/api/flowable/category";
-//import WorkflowProgressDiagram from '@/components/Flowable/WorkflowProgressDiagram'
+import WorkflowProgressDiagram from '@/components/Flowable/WorkflowProgressDiagram'
 import {ElMessage} from "element-plus";
+import {ref} from "vue";
 
 const { proxy } = getCurrentInstance();
 const modelList = ref([]);
@@ -197,8 +198,8 @@ const title = ref("");
 const flowCategory = ref([]);
 const insertFlag=ref(true);
 const diagramKey = ref(1)
-//const detailInfo = ref<any>();
-//const diagramRef = ref<InstanceType<typeof WorkflowProgressDiagram>>();
+const detailInfo = ref<WorkflowInstanceDetailsResult>();
+const diagramRef = ref<InstanceType<typeof WorkflowProgressDiagram>>();
 //const diagramRef = ref<any>();
 const data = reactive({
   form: {},
