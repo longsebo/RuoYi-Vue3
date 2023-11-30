@@ -57,3 +57,11 @@ export function getModelXml(modelId) {
     method: 'get'
   })
 }
+// 保存(更新或插入新版本)流程模型
+export function saveModel(data) {
+  return request({
+    url: '/flowable/model/save',
+    method: 'post',
+    data: data
+  })
+}

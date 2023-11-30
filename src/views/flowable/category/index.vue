@@ -78,7 +78,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -242,7 +242,7 @@ function handleDelete(row) {
 
 /** 导出按钮操作 */
 function handleExport() {
-  proxy.download('system/category/export', {
+  proxy.download('flowable/category/export', {
     ...queryParams.value
   }, `category_${new Date().getTime()}.xlsx`)
 }

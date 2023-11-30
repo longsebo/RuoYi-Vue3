@@ -143,6 +143,10 @@
      <el-dialog :title="processView.title" :visible.sync="processView.open" width="70%" append-to-body>
         <WorkflowProgressDiagram :key="diagramKey" ref="diagramRef" :activity-list="detailInfo?.activity_list || []" :xml="detailInfo?.xml || ''" />
     </el-dialog>
+    <!-- 流程设计界面-->
+    <el-dialog :title="designView.title" :visible.sync="designView.open" width="70%" append-to-body>
+      <WorkflowVerDesigner :id="designView!.modelId" :bpmnXml="designView!.bpmnXml"  />
+    </el-dialog>
     <!-- 添加或修改流程模型对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
       <el-form ref="modelRef" :model="form" :rules="rules" label-width="80px">
@@ -181,9 +185,10 @@
 <script setup name="Model" lang="ts">
 import { listModel, getModel, delModel, addModel, updateModel,getModelXml,depolyModel } from "@/api/flowable/model";
 import {listCategory} from "@/api/flowable/category";
-import WorkflowProgressDiagram from '@/components/Flowable/WorkflowProgressDiagram'
+import WorkflowProgressDiagram from '@/components/Flowable/instance/WorkflowProgressDiagram'
+import WorkflowVerDesigner from "@/components/Flowable/bpmn/designer.vue";
 import {ElMessage} from "element-plus";
-import {ref} from "vue";
+import {getCurrentInstance, ref, toRefs} from "vue";
 
 const { proxy } = getCurrentInstance();
 const modelList = ref([]);
@@ -200,7 +205,7 @@ const insertFlag=ref(true);
 const diagramKey = ref(1)
 const detailInfo = ref<WorkflowInstanceDetailsResult>();
 const diagramRef = ref<InstanceType<typeof WorkflowProgressDiagram>>();
-//const diagramRef = ref<any>();
+
 const data = reactive({
   form: {},
   queryParams: {
@@ -226,9 +231,20 @@ const data = reactive({
     index: undefined,
     xmlData:"",
   },
+  queryHistoryParams: {
+    pageNum: 1,
+    pageSize: 10,
+    modelKey: null
+  },
+  designView:{
+    title: '',
+    open:false,
+    modelId:undefined,
+    bpmnXml:''
+  }
 });
 
-const { queryParams, form, rules,processView } = toRefs(data);
+const { queryParams, form, rules,processView,queryHistoryParams,designView } = toRefs(data);
 
 /** 查询流程模型列表 */
 function getList() {
@@ -350,7 +366,7 @@ function handleDelete(row) {
 
 /** 导出按钮操作 */
 function handleExport() {
-  proxy.download('system/model/export', {
+  proxy.download('flowable/model/export', {
     ...queryParams.value
   }, `model_${new Date().getTime()}.xlsx`)
 }
@@ -358,11 +374,13 @@ function handleExport() {
 /** 设计按钮操作 */
 function handleDesign(row) {
   const _modelId = row.modelId
-  getModel(_modelId).then(response => {
-    insertFlag.value = false;
-    form.value = response.data;
-    open.value = true;
-    title.value = "修改流程模型";
+  getModelXml(_modelId).then(response => {
+    designView.value={
+      modelId:_modelId,
+      open:true,
+      title:'流程图设计',
+      bpmnXml:response.data
+    }
   });
 }
 /** 部署按钮操作 */
@@ -380,6 +398,7 @@ function handleDeploy(row) {
 /** 流程图查看按钮操作 */
 function handleProcessView(row) {
   const _modelId = row.modelId
+  diagramRef.value.init();
   getModelXml(_modelId).then(response => {
     processView.value={
       title:"流程图",
@@ -402,5 +421,4 @@ function handleHistory(row) {
 }
 getList();
 getFlowCategory();
-//diagramRef.value.init();
 </script>
