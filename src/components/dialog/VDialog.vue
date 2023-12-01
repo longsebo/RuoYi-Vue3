@@ -107,7 +107,10 @@ const props = defineProps({
   showFullScreen:{
     type:Boolean
   },
-  fullScreen: undefined,
+  fullScreen: {
+    type:Boolean,
+    default:false
+  },
   confirmText: {
     type:String,
     default:'确定',

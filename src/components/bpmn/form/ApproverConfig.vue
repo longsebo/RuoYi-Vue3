@@ -38,7 +38,7 @@ import { BpmnUtil } from "@/components/bpmn/form/util";
 import emitter, { BpmnElementChanged } from "@/event/mitt";
 import { useBpmnModeler, useBpmnSelectedElem } from "@/config/app.hooks";
 import BpmnFactory from "bpmn-js/lib/features/modeling/BpmnFactory";
-
+debugger;
 const modelingFields = inject(modelingFieldKey)!
 const bpmnSelectedElem = useBpmnSelectedElem()
 const bpmnModeler = useBpmnModeler()

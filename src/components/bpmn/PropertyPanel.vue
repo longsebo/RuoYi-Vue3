@@ -154,7 +154,7 @@ import SeqFlowConfig from "@/components/bpmn/form/SeqFlowConfig.vue";
 import PageConfig from "@/components/bpmn/form/PageConfig.vue";
 import BasicSetting from "@/components/bpmn/form/BasicSetting.vue";
 import ApproverConfig from "@/components/bpmn/form/ApproverConfig.vue";
-
+import VDialog from "@/components/dialog/VDialog.vue";
 import { useIcon } from "@/components/common/util";
 import emitter, { BpmnElementChanged } from '@/event/mitt'
 import { useBpmnModeler, useBpmnSelectedElem } from "@/config/app.hooks";

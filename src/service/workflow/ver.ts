@@ -1,4 +1,4 @@
-import * as VerApi from "@/api/workflow";
+// import * as VerApi from "@/api/workflow";
 import { ElMessage } from "element-plus";
 import { ref, Ref } from "vue";
 
@@ -9,7 +9,7 @@ export function useVerApi(loading: Ref<boolean>) {
   async function findVer(id: string) {
     try {
       loading && (loading.value = true)
-      workflowVer.value = await VerApi.findVerById(id)
+      // workflowVer.value = await VerApi.findVerById(id)
     } catch (e) {
       console.error(e);
       ElMessage.error((e as Error)?.message || '查询失败')
@@ -21,7 +21,7 @@ export function useVerApi(loading: Ref<boolean>) {
   async function updateXml(data: WorkflowTypeVerUpdateXmlParam) {
     try {
       loading && (loading.value = true)
-      await VerApi.updateXml(data)
+      // await VerApi.updateXml(data)
       ElMessage.success('更新成功')
       return true
     } catch (e) {
@@ -36,7 +36,7 @@ export function useVerApi(loading: Ref<boolean>) {
   async function activeVer(data: WorkflowTypeVerActiveParam) {
     try {
       loading && (loading.value = true)
-      await VerApi.activeVer(data)
+      // await VerApi.activeVer(data)
       return true
     } catch (e) {
       console.error(e);
@@ -50,7 +50,7 @@ export function useVerApi(loading: Ref<boolean>) {
   async function pendingVer(data: WorkflowTypeVerPendingParam) {
     try {
       loading && (loading.value = true)
-      await VerApi.pendingVer(data)
+      // await VerApi.pendingVer(data)
       return true
     } catch (e) {
       console.error(e);

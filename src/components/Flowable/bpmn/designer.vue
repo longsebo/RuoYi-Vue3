@@ -57,7 +57,10 @@ import Collapsed from "@/components/common/Collapsed.vue";
 import PropertyPanel from '@/components/bpmn/PropertyPanel.vue'
 import {
   bpmnModelerKey,
-  bpmnSelectedElemKey
+  bpmnSelectedElemKey,
+  modelingFieldKey,
+  modelingPageKey,
+  workflowVerKey
 } from "@/config/app.keys";
 import { ElMessageBox } from 'element-plus';
 import emitter from "@/event/mitt";
@@ -69,6 +72,9 @@ import { Shape } from 'bpmn-js/lib/model/Types'
 import InitBPMNXml from '@/assets/bpmn/init.bpmn20.xml?raw'
 import { useRoute, useRouter } from "vue-router";
 import GridLineModule from 'diagram-js-grid-bg'
+import {useModelingPageApi} from "../../../service/modeling/page";
+import {useModelingFieldApi} from "../../../service/modeling/field";
+import {useVerApi} from "../../../service/workflow/ver";
 
 const route = useRoute()
 console.log('route', route, route.name)
@@ -90,12 +96,13 @@ const props = defineProps({
 
 const propertiesPanelVisible = ref(false)
 const loading = ref(false)
-// const { modelingFields, findModelingFields } = useModelingFieldApi(loading)
-// const { pageList, findModulePages } = useModelingPageApi(loading)
+const { workflowVer, findVer, updateXml } = useVerApi(loading)
+const { modelingFields, findModelingFields } = useModelingFieldApi(loading)
+const { pageList, findModulePages } = useModelingPageApi(loading)
 
-
-// provide(modelingFieldKey, modelingFields)
-// provide(modelingPageKey, pageList)
+provide(workflowVerKey, workflowVer)
+provide(modelingFieldKey, modelingFields)
+provide(modelingPageKey, pageList)
 
 const diagramRef = ref<HTMLDivElement>()
 
@@ -130,11 +137,11 @@ function initDiagram() {
       open: true
     }
   })
+  if(props.bpmnXml!='' && typeof(props.bpmnXml)!="undefined") {
+    loading.value = true
 
-  loading.value = true
-
-  importXML(props.bpmnXml)
-
+   importXML(props.bpmnXml)
+  }
 
 }
 
