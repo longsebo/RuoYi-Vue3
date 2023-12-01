@@ -126,8 +126,6 @@
               </el-dropdown-menu>
             </template>
           </el-dropdown>
-
-
         </template>
       </el-table-column>
     </el-table>

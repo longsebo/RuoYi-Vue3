@@ -42,7 +42,7 @@
 <script lang="ts" setup>
 import { computed, ref } from "vue";
 //import { ElDialog, ElButton, ElScrollbar } from "element-plus"
-import { DialogEmits } from './dialog'
+// import { DialogEmits } from './dialog'
 import { Close } from '@element-plus/icons-vue'
 import { useIcon } from "@/components/common/util";
 const FullScreenMaximize = useIcon('FullScreenMaximize')
@@ -88,6 +88,12 @@ const FullScreenMinimize = useIcon('FullScreenMinimize')
 //   hiddenFooter?: boolean
 //
 // }
+type DialogEmits = {
+  'update:modelValue': [val: boolean],
+  'update:fullScreen': [val: boolean],
+  'confirm': [],
+  'cancel': [],
+}
 const props = defineProps({
   title: {
     type:String,
@@ -136,7 +142,6 @@ const props = defineProps({
   },
 })
 const emits = defineEmits<DialogEmits>()
-
 const visible = computed<boolean>({
   get: () => { return props.modelValue },
   set: v => emits('update:modelValue', v)
@@ -163,12 +168,12 @@ const fullScreen = computed<boolean>({
   }
 })
 
-// const fullScreen = ref<boolean>(false)
+
 function requestFullScreen() {
   fullScreen.value = !fullScreen.value
 }
-
-
+//
+//
 const bodyHeight = computed(() => {
   const footerHeight = props.hiddenFooter ? '0' : '52px';
   if (props.fullScreen) {
@@ -178,6 +183,7 @@ const bodyHeight = computed(() => {
     return `calc(70dvh - ${footerHeight} - 44px)`
   }
 })
+//
 
 const dialogClazz = computed(() => {
   const classList: string[] = ['v-dialog']
@@ -197,8 +203,8 @@ function handleConfirm() {
 function handleCancel() {
   emits("cancel")
 }
-
-
+//
+//
 function handleCloseClick() {
   visible.value = false
 }
