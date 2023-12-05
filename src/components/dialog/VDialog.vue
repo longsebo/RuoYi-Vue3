@@ -41,110 +41,26 @@
 
 <script lang="ts" setup>
 import { computed, ref } from "vue";
-//import { ElDialog, ElButton, ElScrollbar } from "element-plus"
-// import { DialogEmits } from './dialog'
+import { ElDialog, ElButton, ElScrollbar } from "element-plus"
+import { DialogEmits, DialogProps } from './dialog'
 import { Close } from '@element-plus/icons-vue'
 import { useIcon } from "@/components/common/util";
+
 const FullScreenMaximize = useIcon('FullScreenMaximize')
 const FullScreenMinimize = useIcon('FullScreenMinimize')
-// export interface DialogProps {
-//   /**
-//    * 标题
-//    */
-//   title: string
-//   /**
-//    * 显隐
-//    */
-//   modelValue: boolean
-//
-//   /**
-//    * 初始化全屏状态
-//    */
-//   initFullScreen?: boolean | undefined
-//
-//   /**
-//    * 展示全屏按钮
-//    */
-//   showFullScreen?: boolean
-//
-//   /**
-//    * 全屏
-//    */
-//   fullScreen?: boolean | undefined
-//   confirmText?: string
-//   cancelText?: string
-//   loading?: boolean
-//   /**
-//    * 使用el-scrollbar包裹对话框body
-//    */
-//   useBodyScrolling?: boolean
-//   /**
-//    * 固定对话框body高度
-//    */
-//   fixedBodyHeight?: boolean
-//
-//   draggable?: boolean
-//
-//   hiddenFooter?: boolean
-//
-// }
-type DialogEmits = {
-  'update:modelValue': [val: boolean],
-  'update:fullScreen': [val: boolean],
-  'confirm': [],
-  'cancel': [],
-}
-const props = defineProps({
-  title: {
-    type:String,
-  },
-  modelValue:{
-    type:Boolean
-  } ,
-  initFullScreen:{
-    type:Boolean
-  },
-  showFullScreen:{
-    type:Boolean
-  },
-  fullScreen: {
-    type:Boolean,
-    default:false
-  },
-  confirmText: {
-    type:String,
-    default:'确定',
-  },
-  cancelText: {
-    type:String,
-    default:'取消',
-  },
-  disableFooter: {
-    type:Boolean,
-    default:false,
-  },
-  useBodyScrolling: {
-    type:Boolean,
-    default:false,
-  },
-  fixedBodyHeight: {
-    type:Boolean,
-    default:true,
-  },
-  draggable: {
-    type:Boolean,
-    default:true,
-  },
-  loading: {
-    type:Boolean,
-    default:false,
-  },
-  hiddenFooter: {
-    type:Boolean,
-    default:false,
-  },
+
+const props = withDefaults(defineProps<DialogProps>(), {
+  fullScreen: undefined,
+  confirmText: '确定',
+  cancelText: '取消',
+  disableFooter: false,
+  useBodyScrolling: false,
+  fixedBodyHeight: true,
+  draggable: true,
+  loading: false,
 })
 const emits = defineEmits<DialogEmits>()
+
 const visible = computed<boolean>({
   get: () => { return props.modelValue },
   set: v => emits('update:modelValue', v)
@@ -171,12 +87,12 @@ const fullScreen = computed<boolean>({
   }
 })
 
-
+// const fullScreen = ref<boolean>(false)
 function requestFullScreen() {
   fullScreen.value = !fullScreen.value
 }
-//
-//
+
+
 const bodyHeight = computed(() => {
   const footerHeight = props.hiddenFooter ? '0' : '52px';
   if (props.fullScreen) {
@@ -186,7 +102,6 @@ const bodyHeight = computed(() => {
     return `calc(70dvh - ${footerHeight} - 44px)`
   }
 })
-//
 
 const dialogClazz = computed(() => {
   const classList: string[] = ['v-dialog']
@@ -206,8 +121,8 @@ function handleConfirm() {
 function handleCancel() {
   emits("cancel")
 }
-//
-//
+
+
 function handleCloseClick() {
   visible.value = false
 }
