@@ -187,7 +187,7 @@ import WorkflowProgressDiagram from '@/components/Flowable/instance/WorkflowProg
 import WorkflowVerDesigner from "@/components/Flowable/bpmn/designer.vue";
 import {ElMessage} from "element-plus";
 import {getCurrentInstance, ref, toRefs} from "vue";
-
+import InitBPMNXml from '@/assets/bpmn/holiday-request.bpmn20.xml?raw'
 const { proxy } = getCurrentInstance();
 const modelList = ref([]);
 const open = ref(false);
@@ -376,7 +376,12 @@ function handleDesign(row) {
   getModelXml(_modelId).then(response => {
     let xml ='' ;
     if(response.data!=''||typeof(response.data)!="undefined") {
-        xml = response.data;
+        //xml = response.data;
+      // xml = InitBPMNXml
+      //     .replaceAll('{{PROCESS_ID}}', process.id)
+      //     .replaceAll('{{PROCESS_NAME}}', process.businessObject.name)
+      //     .replaceAll('{{START_EVENT_ID}}', 'StartEvent_' + Math.random().toString(36).replaceAll('0.', ''))
+      xml = InitBPMNXml;
     }
     designView.value={
       modelId:_modelId,

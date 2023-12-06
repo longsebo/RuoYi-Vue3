@@ -135,12 +135,14 @@ function initDiagram() {
     },
     minimap: {
       open: true
-    }
+    },
+    readOnly:false
   })
   if(props.bpmnXml!='' && typeof(props.bpmnXml)!="undefined") {
     loading.value = true
 
    importXML(props.bpmnXml)
+    loading.value = false
   }
 
 }
