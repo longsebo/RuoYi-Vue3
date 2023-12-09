@@ -208,29 +208,35 @@ async function handleSaveXml() {
   if (!bpmnModeler.value) {
     return
   }
-  const result = validateBpmn()
-  if (!result) {
-    ElMessage.error('流程图信息未填写完毕, 无法保存')
-    return
-  }
+  // const result = validateBpmn()
+  // if (!result) {
+  //   ElMessage.error('流程图信息未填写完毕, 无法保存')
+  //   return
+  // }
   const { xml } = await bpmnModeler.value.saveXML({ format: false })
   let bNewVersion = false;
   ElMessageBox.confirm('是否将此模型保存为新版本?', '提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'info'
-  }).then(() => {
+  }).then(async () => {
     bNewVersion = true;
-  }).catch(() => {
+    await saveModel({
+      modelId: props.id,
+      bpmnXml: xml!,
+      newVersion: bNewVersion
+    })
+  }).catch(async () => {
     bNewVersion = false;
+    await saveModel({
+      modelId: props.id,
+      bpmnXml: xml!,
+      newVersion: bNewVersion
+    })
   });
 
 
-  await saveModel({
-    modelId: props.id,
-    bpmnXml: xml!,
-    newVersion: bNewVersion
-  })
+
 }
 
 const errTooltipVisible = ref(false)
