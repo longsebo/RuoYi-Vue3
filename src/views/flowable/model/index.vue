@@ -373,14 +373,13 @@ function handleExport() {
 /** 设计按钮操作 */
 function handleDesign(row) {
   const _modelId = row.modelId
+  // debugger;
   getModelXml(_modelId).then(response => {
     let xml ='' ;
-    if(response.data!=''||typeof(response.data)!="undefined") {
-        //xml = response.data;
-      // xml = InitBPMNXml
-      //     .replaceAll('{{PROCESS_ID}}', process.id)
-      //     .replaceAll('{{PROCESS_NAME}}', process.businessObject.name)
-      //     .replaceAll('{{START_EVENT_ID}}', 'StartEvent_' + Math.random().toString(36).replaceAll('0.', ''))
+    if(response.data!='' && typeof(response.data)!="undefined") {
+       xml = response.data.replaceAll('\\"','"')
+             .replaceAll('\\n','')
+    }else{
       xml = InitBPMNXml;
     }
     designView.value={

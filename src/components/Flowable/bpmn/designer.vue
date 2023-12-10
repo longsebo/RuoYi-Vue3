@@ -5,6 +5,7 @@
         <el-button :icon="View" title="预览JSON" @click="handlePreviewXml" />
         <el-button :icon="FolderOpened" title="导入BPMN文件" />
         <el-button :icon="SaveIcon" title="保存" @click="handleSaveXml" />
+        <el-button :icon="SaveAsIcon" title="另存为新版本" @click="handleSaveAsXml" />
         <el-button :icon="Check" title="校验" @click="handleValidBpmn" />
         <el-button :icon="RefreshLeft" title="重置" @click="handleReset" />
         <el-button :icon="TopRight" title="新窗口打开" :disabled="route.name === 'workflow-ver-design'" @click="handleOpenNew" />
@@ -39,7 +40,7 @@
 <script lang="ts" setup>
 import { ElButtonGroup, ElButton, ElMessage, ElTooltip } from "element-plus";
 import { View, FolderOpened, Check, RefreshLeft, TopRight } from "@element-plus/icons-vue";
-import { onMounted, provide, ref, shallowRef } from "vue";
+import {onMounted, provide, ref, shallowRef, watch} from "vue";
 import { saveModel} from "@/api/flowable/model";
 import BpmnModeler from "bpmn-js/lib/Modeler"
 import 'bpmn-js/dist/assets/bpmn-js.css';
@@ -81,7 +82,7 @@ console.log('route', route, route.name)
 const router = useRouter()
 
 const SaveIcon = useIcon('Save')
-
+const SaveAsIcon = useIcon('SaveAs')
 const props = defineProps({
   bpmnXml: {
     type: String,
@@ -105,13 +106,13 @@ provide(modelingFieldKey, modelingFields)
 provide(modelingPageKey, pageList)
 
 const diagramRef = ref<HTMLDivElement>()
-
 onMounted(initDiagram)
 
 const scale = ref<number>(1)
 const bpmnModeler = shallowRef<BpmnModeler>()
 provide(bpmnModelerKey, bpmnModeler)
 const bpmnSelectedElem = shallowRef()
+
 provide(bpmnSelectedElemKey, bpmnSelectedElem)
 
 function initDiagram() {
@@ -138,14 +139,31 @@ function initDiagram() {
     },
     readOnly:false
   })
+  //console.log('after  new BpmnModeler')
   if(props.bpmnXml!='' && typeof(props.bpmnXml)!="undefined") {
-    loading.value = true
-
-   importXML(props.bpmnXml)
-    loading.value = false
+     loading.value = true
+    importXML(props.bpmnXml)
+     loading.value = false
   }
 
 }
+watch(
+    () => props.bpmnXml,
+    (newVal) => {
+      //console.log('enter watch');
+      loading.value = true
+      // debugger;
+      if(newVal!='' && typeof(newVal)!="undefined") {
+        importXML(newVal)
+      }
+      loading.value = false
+    },
+    {
+      immediate: true,
+    }
+)
+
+
 
 async function importXML(xml: string) {
   try {
@@ -204,6 +222,9 @@ function handleUpdateXml(xml: string) {
   previewVisible.value = false
 }
 
+/**
+ * 当前版本更新
+ */
 async function handleSaveXml() {
   if (!bpmnModeler.value) {
     return
@@ -214,31 +235,33 @@ async function handleSaveXml() {
   //   return
   // }
   const { xml } = await bpmnModeler.value.saveXML({ format: false })
-  let bNewVersion = false;
-  ElMessageBox.confirm('是否将此模型保存为新版本?', '提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'info'
-  }).then(async () => {
-    bNewVersion = true;
+  await saveModel({
+      modelId: props.id,
+      bpmnXml: xml!,
+      newVersion: false
+    })
+  }
+
+/**
+ * 另存为新版本
+ */
+async function handleSaveAsXml() {
+  if (!bpmnModeler.value) {
+    return
+  }
+  // const result = validateBpmn()
+  // if (!result) {
+  //   ElMessage.error('流程图信息未填写完毕, 无法保存')
+  //   return
+  // }
+  const { xml } = await bpmnModeler.value.saveXML({ format: false })
+
     await saveModel({
       modelId: props.id,
       bpmnXml: xml!,
-      newVersion: bNewVersion
+      newVersion: true
     })
-  }).catch(async () => {
-    bNewVersion = false;
-    await saveModel({
-      modelId: props.id,
-      bpmnXml: xml!,
-      newVersion: bNewVersion
-    })
-  });
-
-
-
 }
-
 const errTooltipVisible = ref(false)
 const errEl = shallowRef<HTMLElement>()
 const errText = ref('')
