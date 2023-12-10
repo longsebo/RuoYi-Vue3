@@ -97,11 +97,11 @@
         <template #default="scope">
           <el-button link type="primary" icon="Edit"  @click="handleUpdate(scope.row)" v-hasPermi="['flow:flow_model:update']">修改</el-button>
           <el-button link type="primary" icon="Brush" @click="handleDesign(scope.row)" v-hasPermi="['flow:flow_model:design']">设计</el-button>
-          <el-dropdown>
-          <span class="el-dropdown-link">
+          <el-dropdown >
+          <span class="el-dropdown-link" >
             更多...
           </span>
-            <template #dropdown>
+            <template #dropdown  >
               <el-dropdown-menu>
                 <el-dropdown-item
                     icon="videoPlay"
@@ -138,8 +138,8 @@
       @pagination="getList"
     />
     <!-- 流程图 -->
-     <el-dialog :title="processView.title" v-model="processView.open" width="70%" append-to-body>
-        <WorkflowProgressDiagram :key="diagramKey" ref="diagramRef" :activity-list="detailInfo?.activity_list || []" :xml="detailInfo?.xml || ''" />
+     <el-dialog :title="processView.title" v-model="processView.open" fullscreen=true append-to-body="false">
+        <WorkflowProgressDiagram :key="diagramKey" ref="diagramRef" :activity-list="detailInfo?.activity_list || []" :xml="detailInfo?.xml || ''" style="height: 90vh" />
     </el-dialog>
     <!-- 流程设计界面-->
     <el-dialog :title="designView.title"  v-model="designView.open" fullscreen=true append-to-body="false">
@@ -373,7 +373,6 @@ function handleExport() {
 /** 设计按钮操作 */
 function handleDesign(row) {
   const _modelId = row.modelId
-  // debugger;
   getModelXml(_modelId).then(response => {
     let xml ='' ;
     if(response.data!='' && typeof(response.data)!="undefined") {
@@ -396,8 +395,8 @@ function handleDeploy(row) {
   depolyModel({
     modelId: row.modelId
   }).then(response => {
-    if(response.data.code==200){
-      ElMessage.message("部署成功!");
+    if(response.code==200){
+      ElMessage.success("部署成功!");
     }else{
       ElMessage.error('部署失败!');
     }
@@ -406,7 +405,7 @@ function handleDeploy(row) {
 /** 流程图查看按钮操作 */
 function handleProcessView(row) {
   const _modelId = row.modelId
-  diagramRef.value.init();
+
   getModelXml(_modelId).then(response => {
     processView.value={
       title:"流程图",
@@ -414,6 +413,7 @@ function handleProcessView(row) {
       xmlData: response.data,
       open : true
     }
+    //diagramRef.value.init();
   });
 }
 /** 查看历史按钮操作 */
