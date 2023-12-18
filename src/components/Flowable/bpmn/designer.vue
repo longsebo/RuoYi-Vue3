@@ -81,8 +81,8 @@ const route = useRoute()
 console.log('route', route, route.name)
 const router = useRouter()
 
-const SaveIcon = useIcon('Save')
-const SaveAsIcon = useIcon('SaveAs')
+const SaveIcon = useIcon('ali_save')
+const SaveAsIcon = useIcon('ali_saveas')
 const props = defineProps({
   bpmnXml: {
     type: String,

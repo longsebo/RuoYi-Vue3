@@ -109,11 +109,6 @@
                     v-hasPermi="['flow:flow_model:deploy']"
                 >部署</el-dropdown-item>
                 <el-dropdown-item
-                    icon="View"
-                    @click.native="handleProcessView(scope.row)"
-                    v-hasPermi="['flow:flow_model:query']"
-                >流程图</el-dropdown-item>
-                <el-dropdown-item
                     icon="PriceTag"
                     @click.native="handleHistory(scope.row)"
                     v-hasPermi="['flow:flow_model:list']"
@@ -312,7 +307,8 @@ function handleAdd() {
   let timestamp = (new Date()).valueOf();
   form.value = {
     modelId: 'flowable_'+timestamp,
-    modelName: 'business_' + timestamp
+    modelName: 'business_' + timestamp,
+    modelKey:'process_'+timestamp
   }
   insertFlag.value = true;
   open.value = true;
