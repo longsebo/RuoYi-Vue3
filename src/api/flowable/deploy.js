@@ -42,3 +42,10 @@ export function delDeploy(definitionId) {
     method: 'delete'
   })
 }
+// 获取流程模型流程图
+export function getBpmnXml(definitionId) {
+  return request({
+    url: '/flowable/deploy/bpmnXml/' + definitionId,
+    method: 'get'
+  })
+}
