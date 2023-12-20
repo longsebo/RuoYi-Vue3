@@ -66,6 +66,10 @@ import {useModelingPageApi} from "../../../service/modeling/page";
 import {useModelingFieldApi} from "../../../service/modeling/field";
 import {useVerApi} from "../../../service/workflow/ver";
 
+import BpmnViewer from 'bpmn-js/lib/NavigatedViewer'
+import ImportModule from 'bpmn-js/lib/import/index'
+import DrawModule from 'bpmn-js/lib/draw/index'
+import MiniMapModule from 'diagram-js-minimap/dist/index'
 const route = useRoute()
 console.log('route', route, route.name)
 const router = useRouter()
@@ -73,10 +77,6 @@ const router = useRouter()
 
 const props = defineProps({
   bpmnXml: {
-    type: String,
-    required: true
-  },
-  id: {
     type: String,
     required: true
   }
@@ -97,35 +97,28 @@ const diagramRef = ref<HTMLDivElement>()
 onMounted(initDiagram)
 
 const scale = ref<number>(1)
-const bpmnModeler = shallowRef<BpmnModeler>()
+const bpmnModeler = shallowRef()
 provide(bpmnModelerKey, bpmnModeler)
 const bpmnSelectedElem = shallowRef()
 
-provide(bpmnSelectedElemKey, bpmnSelectedElem)
+
 
 function initDiagram() {
-  bpmnModeler.value = new BpmnModeler({
+  bpmnModeler.value = new BpmnViewer({
     container: diagramRef.value,
-    keyboard: {
-      bindTo: window
-    },
     additionalModules: [
-      {
-        // 禁用滚轮滚动
-        zoomScroll: ["value", ""],
-
-      },
-      miniMapModule,
-      GridLineModule,
+      ImportModule, MiniMapModule, DrawModule, GridLineModule,
     ],
-    moddleExtensions: {
-      flowable: flowableDescriptor
-    },
     minimap: {
-      open: true
+      open: false
     },
-    readOnly:true
+    textRender: {
+      defaultStyle: {
+        color: 'red'
+      }
+    },
   })
+
   //console.log('after  new BpmnModeler')
   if(props.bpmnXml!='' && typeof(props.bpmnXml)!="undefined") {
      loading.value = true
@@ -209,46 +202,8 @@ function handleUpdateXml(xml: string) {
   previewVisible.value = false
 }
 
-/**
- * 当前版本更新
- */
-async function handleSaveXml() {
-  if (!bpmnModeler.value) {
-    return
-  }
-  // const result = validateBpmn()
-  // if (!result) {
-  //   ElMessage.error('流程图信息未填写完毕, 无法保存')
-  //   return
-  // }
-  const { xml } = await bpmnModeler.value.saveXML({ format: false })
-  await saveModel({
-      modelId: props.id,
-      bpmnXml: xml!,
-      newVersion: false
-    })
-  }
 
-/**
- * 另存为新版本
- */
-async function handleSaveAsXml() {
-  if (!bpmnModeler.value) {
-    return
-  }
-  // const result = validateBpmn()
-  // if (!result) {
-  //   ElMessage.error('流程图信息未填写完毕, 无法保存')
-  //   return
-  // }
-  const { xml } = await bpmnModeler.value.saveXML({ format: false })
 
-    await saveModel({
-      modelId: props.id,
-      bpmnXml: xml!,
-      newVersion: true
-    })
-}
 const errTooltipVisible = ref(false)
 const errEl = shallowRef<HTMLElement>()
 const errText = ref('')
@@ -285,12 +240,6 @@ function validateBpmn(): boolean {
 
 
 
-function handleValidBpmn() {
-  const result = validateBpmn()
-  if (result) {
-    ElMessage.success('校验成功 bpmn文件正常')
-  }
-}
 
 function handleReset() {
   if (!bpmnModeler.value || !workflowVer.value) {
@@ -308,13 +257,6 @@ function handleReset() {
   importXML(xml)
 }
 
-function handleOpenNew() {
-
-  router.push({
-    name: 'workflow-ver-design',
-    params: props
-  })
-}
 
 </script>
 

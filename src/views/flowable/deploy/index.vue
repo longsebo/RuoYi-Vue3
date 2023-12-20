@@ -17,6 +17,7 @@
           @keyup.enter="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="流程分类" prop="category">
       <el-select
           v-model="queryParams.category"
           placeholder="流程分类"
@@ -30,6 +31,7 @@
             :value="item.code"
         />
       </el-select>
+      </el-form-item>
       <el-form-item label="状态" prop="state">
         <el-select v-model="queryParams.suspended" size="small" clearable placeholder="请选择状态">
           <el-option :key="1" label="激活" value="active" />
@@ -60,14 +62,18 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="流程名称" align="center" :show-overflow-tooltip="true">
         <template #default="scope">
-          <el-button type="text" @click="handleProcessView(scope.row)">
+          <el-button link @click="handleProcessView(scope.row)" type="primary" key="primary" >
             <span>{{ scope.row.processName }}</span>
           </el-button>
         </template>
       </el-table-column>
       <el-table-column label="流程标识" align="center" prop="processKey" />
       <el-table-column label="流程分类" align="center" prop="category" :formatter="categoryFormat" />
-      <el-table-column label="流程版本" align="center" prop="version" />
+      <el-table-column label="流程版本" align="center" prop="version" >
+        <template #default="scope">
+          <el-tag size="small" >version{{ scope.row.version }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="流程状态" align="center" prop="suspended" >
         <template #default="scope">
           <el-tag type="success" v-if="!scope.row.suspended">激活</el-tag>
@@ -82,15 +88,31 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button
-              type="text"
-              size="mini"
-              icon="versionIcon"
+              link
+              size="small"
+              :icon="suspendIcon"
+              v-if="!scope.row.suspended"
+              @click.native="handleChangeState(scope.row, 'suspended')"
+              v-hasPermi="['flowable:deploy:status']"
+          >挂起</el-button>
+          <el-button
+              link
+              size="small"
+              :icon="activeIcon"
+              v-if="scope.row.suspended"
+              @click.native="handleChangeState(scope.row, 'active')"
+              v-hasPermi="['flowable:deploy:status']"
+          >激活</el-button>
+          <el-button
+              link
+              size="small"
+              :icon="versionIcon"
               @click="handlePublish(scope.row)"
               v-hasPermi="['flowable:deploy:publishList']"
           >版本管理</el-button>
           <el-button
-              type="text"
-              size="mini"
+              link
+              size="small"
               icon="Delete"
               @click="handleDelete(scope.row)"
               v-hasPermi="['flowable:deploy:remove']"
@@ -107,18 +129,77 @@
       @pagination="getList"
     />
     <!-- 流程查看界面-->
-    <el-dialog :title="processView.title"  v-model="processView.open" width="80%" height="80%" append-to-body="false">
-      <WorkflowView :id="processView!.modelId" :bpmnXml="processView!.bpmnXml" style="height: 90vh" />
+    <el-dialog :title="processView.title"  v-model="processView.open" width="80%" height="80%" :append-to-body="false">
+      <WorkflowView  :bpmnXml="processView.bpmnXml" style="height: 90vh" />
+    </el-dialog>
+    <!-- 版本管理 -->
+    <el-dialog title="版本管理" v-model="publish.open" width="80%" height="80%" :append-to-body="false" >
+      <el-table  :data="publish.dataList" height="100%" style="width: 100%">
+        <el-table-column label="流程名称" align="center" :show-overflow-tooltip="true">
+          <template #default="scope">
+            <el-button link="true" @click="handleProcessView(scope.row)" type="primary" key="primary" >
+              {{ scope.row.processName }}
+            </el-button>
+          </template>
+        </el-table-column>
+        <el-table-column label="流程标识" align="center" prop="processKey" :show-overflow-tooltip="true" />
+        <el-table-column label="流程版本" align="center">
+          <template #default="scope">
+            <el-tag size="small" >version{{ scope.row.version }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="状态" align="center">
+          <template #default="scope">
+            <el-tag type="success" v-if="!scope.row.suspended">激活</el-tag>
+            <el-tag type="warning" v-if="scope.row.suspended">挂起</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+          <template #default="scope">
+            <el-button
+                link
+                size="small"
+                :icon="suspendIcon"
+                v-if="!scope.row.suspended"
+                @click.native="handleChangeState(scope.row, 'suspended')"
+                v-hasPermi="['workflow:deploy:status']"
+            >挂起</el-button>
+            <el-button
+                link
+                size="small"
+                :icon="activeIcon"
+                v-if="scope.row.suspended"
+                @click.native="handleChangeState(scope.row, 'active')"
+                v-hasPermi="['workflow:deploy:status']"
+            >激活</el-button>
+            <el-button
+                link
+                size="small"
+                icon="Delete"
+                @click="handleDelete(scope.row)"
+                v-hasPermi="['workflow:deploy:remove']"
+            >删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <pagination
+          v-show="publishTotal > 0"
+          :total="publishTotal"
+          :page.sync="publishQueryParams.pageNum"
+          :limit.sync="publishQueryParams.pageSize"
+          @pagination="getPublishList"
+      />
     </el-dialog>
   </div>
 </template>
 
-<script setup name="Deploy">
-import { listDeploy, getDeploy, delDeploy, handlePublish } from "@/api/flowable/deploy";
+<script setup name="Deploy" lang="ts">
+import { listDeploy,  delDeploy, publishList,changeState,getBpmnXml } from "@/api/flowable/deploy";
 import { useIcon } from "@/components/common/util";
 import WorkflowView from "@/components/Flowable/bpmn/view.vue";
 import InitBPMNXml from '@/assets/bpmn/empty.bpmn20.xml?raw'
-import {publishList} from "../../../api/flowable/deploy";
+import {listCategory} from "@/api/flowable/category";
+import {ref} from "vue";
 const { proxy } = getCurrentInstance();
 
 const deployList = ref([]);
@@ -131,6 +212,9 @@ const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
 const versionIcon = useIcon('ali_version')
+const activeIcon = useIcon('ali_active')
+const suspendIcon = useIcon('ali_suspend')
+const flowCategory = ref([]);
 
 const data = reactive({
   form: {},
@@ -214,7 +298,7 @@ function resetQuery() {
 
 // 多选框选中数据
 function handleSelectionChange(selection) {
-  ids.value = selection.map(item => item.definitionId);
+  ids.value = selection.map(item => item.deploymentId);
   single.value = selection.length != 1;
   multiple.value = !selection.length;
 }
@@ -223,8 +307,6 @@ function handleSelectionChange(selection) {
 /** 查看流程图 */
 function handleProcessView(row) {
   let definitionId = row.definitionId;
-
-
   // 发送请求，获取xml
   getBpmnXml(definitionId).then(response => {
     let xml ='' ;
@@ -235,36 +317,43 @@ function handleProcessView(row) {
       xml = InitBPMNXml;
     }
     processView.value={
-      modelId:_modelId,
+      modelId:definitionId,
       open:true,
       title:'流程图',
       bpmnXml:xml
     }
   })
-  this.processView.open = true;
+  //this.processView.open = true;
 }
 function getPublishList() {
-  publish.loading = true;
-  publishList(this.publishQueryParams).then(response => {
-    publish.dataList = response.rows;
+  //publish.loading = true;
+  publishList(publishQueryParams).then(response => {
+    publish.value={
+      dataList: response.rows,
+      open:true,
+      loading:false
+    }
     publishTotal.value = response.total;
-    publish.loading = false;
+
   })
 }
 function handlePublish(row) {
-  publishQueryParams.processKey = row.processKey;
-  publish.open = true;
-  getPublishList();
+   publishQueryParams.processKey = row.processKey;
+
+   getPublishList();
+
 }
 /** 挂起/激活流程 */
-handleChangeState(row, state) {
+function handleChangeState(row, state) {
   const params = {
     definitionId: row.definitionId,
+    processKey:row.processKey,
     state: state
   }
   changeState(params).then(res => {
-    this.$modal.msgSuccess(res.msg)
-    this.getPublishList();
+    proxy.$modal.msgSuccess(res.msg)
+    publishQueryParams.processKey = row.processKey;
+    getList();
   });
 }
 
@@ -272,8 +361,8 @@ handleChangeState(row, state) {
 
 /** 删除按钮操作 */
 function handleDelete(row) {
-  const _definitionIds = row.definitionId || ids.value;
-  proxy.$modal.confirm('是否确认删除流程部署编号为"' + _definitionIds + '"的数据项？').then(function() {
+  const _definitionIds = row.deploymentId || ids.value;
+  proxy.$modal.confirm('是否确认删除流程部署编号为"' + row.processName + '"的部署？').then(function() {
     return delDeploy(_definitionIds);
   }).then(() => {
     getList();
@@ -288,7 +377,18 @@ function handleDelete(row) {
  * @returns {*|string}
  */
 function  categoryFormat(row, column){
-  return flowCategory.find(k => k.code === row.code)?.name ?? '';
+  return flowCategory.value.find(k => k.code === row.category)?.name ?? '';
+}
+
+/**
+ * 获取流程分类
+ */
+function getFlowCategory(){
+  listCategory().then(res=>{
+    console.log(res)
+    flowCategory.value = res.rows;
+  });
 }
 getList();
+getFlowCategory();
 </script>
