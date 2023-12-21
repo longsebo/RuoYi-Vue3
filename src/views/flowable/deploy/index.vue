@@ -33,7 +33,7 @@
       </el-select>
       </el-form-item>
       <el-form-item label="状态" prop="state">
-        <el-select v-model="queryParams.suspended" size="small" clearable placeholder="请选择状态">
+        <el-select v-model="state" size="small" clearable placeholder="请选择状态">
           <el-option :key="1" label="激活" value="active" />
           <el-option :key="2" label="挂起" value="suspended" />
         </el-select>
@@ -215,7 +215,7 @@ const versionIcon = useIcon('ali_version')
 const activeIcon = useIcon('ali_active')
 const suspendIcon = useIcon('ali_suspend')
 const flowCategory = ref([]);
-
+const state = ref('');
 const data = reactive({
   form: {},
   queryParams: {
@@ -260,6 +260,14 @@ function getList() {
     deployList.value = response.rows;
     total.value = response.total;
     loading.value = false;
+    //恢复状态
+    // if(typeof(queryParams.value.suspended)!="undefined") {
+    //   if (!queryParams.value.suspended) {
+    //     queryParams.value.suspended = 'active';
+    //   } else {
+    //     queryParams.value.suspended = 'suspended';
+    //   }
+    // }
   });
 }
 
@@ -287,6 +295,18 @@ function reset() {
 /** 搜索按钮操作 */
 function handleQuery() {
   queryParams.value.pageNum = 1;
+  //转换一下状态
+  if(state.value) {
+    if (state.value == 'active') {
+      queryParams.value.suspended = false;
+    } else if(state.value=='suspended'){
+      queryParams.value.suspended = true;
+    }else{
+      queryParams.value.suspended = null;
+    }
+  }else {
+    queryParams.value.suspended = null;
+  }
   getList();
 }
 
@@ -354,6 +374,18 @@ function handleChangeState(row, state) {
     proxy.$modal.msgSuccess(res.msg)
     publishQueryParams.processKey = row.processKey;
     getList();
+    //刷新对话框
+    publishQueryParams.processKey = row.processKey;
+    if(data.publish.open) {
+      publishList(publishQueryParams).then(response => {
+        publish.value = {
+          dataList: response.rows,
+          open:data.publish.open,
+          loading: false
+        }
+        publishTotal.value = response.total;
+      })
+    }
   });
 }
 
@@ -366,6 +398,16 @@ function handleDelete(row) {
     return delDeploy(_definitionIds);
   }).then(() => {
     getList();
+    if(data.publish.open) {
+      publishList(publishQueryParams).then(response => {
+        publish.value = {
+          dataList: response.rows,
+          open:data.publish.open,
+          loading: false
+        }
+        publishTotal.value = response.total;
+      })
+    }
     proxy.$modal.msgSuccess("删除成功");
   }).catch(() => {});
 }

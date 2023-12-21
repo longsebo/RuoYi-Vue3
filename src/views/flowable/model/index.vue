@@ -369,13 +369,15 @@ function handleExport() {
 /** 设计按钮操作 */
 function handleDesign(row) {
   const _modelId = row.modelId
-  getModelXml(_modelId).then(response => {
+  getModel(_modelId).then(response => {
     let xml ='' ;
-    if(response.data!='' && typeof(response.data)!="undefined") {
-       xml = response.data.replaceAll('\\"','"')
+    if(response.data.bpmnXml!='' && typeof(response.data.bpmnXml)!="undefined") {
+       xml = response.data.bpmnXml.replaceAll('\\"','"')
              .replaceAll('\\n','')
     }else{
-      xml = InitBPMNXml;
+      xml = InitBPMNXml.replaceAll('{{PROCESS_ID}}', response.data.modelKey)
+          .replaceAll('{{PROCESS_NAME}}', response.data.modelName)
+          .replaceAll('{{START_EVENT_ID}}', 'StartEvent_' + Math.random().toString(36).replaceAll('0.', ''))
     }
     designView.value={
       modelId:_modelId,
