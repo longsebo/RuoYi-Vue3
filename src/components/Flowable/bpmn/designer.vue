@@ -61,7 +61,8 @@ import {
   bpmnSelectedElemKey,
   modelingFieldKey,
   modelingPageKey,
-  workflowVerKey
+  workflowVerKey,
+  actReModelKey
 } from "@/config/app.keys";
 import { ElMessageBox } from 'element-plus';
 import emitter from "@/event/mitt";
@@ -76,6 +77,7 @@ import GridLineModule from 'diagram-js-grid-bg'
 import {useModelingPageApi} from "../../../service/modeling/page";
 import {useModelingFieldApi} from "../../../service/modeling/field";
 import {useVerApi} from "../../../service/workflow/ver";
+import {useActReModelApi} from "../../../service/workflow/actremodel";
 
 const route = useRoute()
 console.log('route', route, route.name)
@@ -97,6 +99,7 @@ const props = defineProps({
 
 const propertiesPanelVisible = ref(false)
 const loading = ref(false)
+const {actReModel,findModel} = useActReModelApi(loading)
 const { workflowVer, findVer, updateXml } = useVerApi(loading)
 const { modelingFields, findModelingFields } = useModelingFieldApi(loading)
 const { pageList, findModulePages } = useModelingPageApi(loading)
@@ -104,7 +107,7 @@ const { pageList, findModulePages } = useModelingPageApi(loading)
 provide(workflowVerKey, workflowVer)
 provide(modelingFieldKey, modelingFields)
 provide(modelingPageKey, pageList)
-
+provide(actReModelKey,actReModel)
 const diagramRef = ref<HTMLDivElement>()
 onMounted(initDiagram)
 
@@ -140,29 +143,54 @@ function initDiagram() {
     readOnly:false
   })
   //console.log('after  new BpmnModeler')
-  if(props.bpmnXml!='' && typeof(props.bpmnXml)!="undefined") {
-     loading.value = true
-    importXML(props.bpmnXml)
-     loading.value = false
-  }
+
+  loading.value = true
+  console.log('props.id:'+props.id);
+  findModel(props.id)
+      .then(() => findModulePages({ module: 'WORKFLOW', mkey: actReModel.value!.modelKey }))
+      .then(() => importXML(actReModel.value!.bpmnXml))
+      .finally(() => loading.value = false)
+
+  // if(props.bpmnXml!='' && typeof(props.bpmnXml)!="undefined") {
+  //    loading.value = true
+  //   importXML(props.bpmnXml)
+  //    loading.value = false
+  // }
 
 }
+// watch(
+//     () => props.bpmnXml,
+//     (newVal) => {
+//       console.log('enter watch');
+//       loading.value = true
+//       // debugger;
+//       if(newVal!='' && typeof(newVal)!="undefined") {
+//         importXML(newVal)
+//       }
+//       loading.value = false
+//     },
+//     {
+//       immediate: true,
+//     }
+// )
 watch(
-    () => props.bpmnXml,
+    () => props.id,
     (newVal) => {
-      //console.log('enter watch');
-      loading.value = true
-      // debugger;
+      // loading.value = true
       if(newVal!='' && typeof(newVal)!="undefined") {
-        importXML(newVal)
+        console.log('props.id1:'+props.id);
+        findModel(props.id)
+            .then(() => console.log('actReModel:'+JSON.stringify(actReModel)))
+        // findModel(props.id)
+        //     .then(() => findModulePages({ module: 'WORKFLOW', mkey: actReModel.value!.modelKey}))
+        //     .then(()=> importXML(actReModel.value.data!.bpmnXml))
+        //     .finally(() => loading.value = false)
       }
-      loading.value = false
     },
     {
       immediate: true,
     }
 )
-
 
 
 async function importXML(xml: string) {

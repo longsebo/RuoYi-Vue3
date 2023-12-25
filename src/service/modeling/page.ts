@@ -1,4 +1,4 @@
-// import * as PageApi from '@/api/modeling/page'
+import * as PageApi from '@/api/flowable/page'
 import {ref, Ref} from "vue";
 import {ElMessage} from "element-plus";
 
@@ -12,7 +12,7 @@ export function useModelingPageApi(loading?: Ref<boolean>) {
   async function getPage(pageId: string) {
     try {
       loading && (loading.value = true)
-      //pageInfo.value = await PageApi.getPage(pageId)
+      pageInfo.value = await PageApi.getPage(pageId)
     } catch (e) {
       console.error(e)
       ElMessage.error((e as Error)?.message || '查询失败')
@@ -24,7 +24,7 @@ export function useModelingPageApi(loading?: Ref<boolean>) {
   async function findPage(param: ModelingPageFindParam) {
     try {
       loading && (loading.value = true)
-      // pageInfo.value = await PageApi.findPage(param)
+      pageInfo.value = await PageApi.findPage(param)
     } catch (e) {
       console.error(e)
       ElMessage.error((e as Error)?.message || '查询失败')
@@ -37,7 +37,7 @@ export function useModelingPageApi(loading?: Ref<boolean>) {
   async function findModulePages(param: ModelingPageModuleFindParam) {
     try {
       loading && (loading.value = true)
-      // pageList.value = await PageApi.findModulePages(param)
+      pageList.value = await PageApi.findModulePages(param)
     } catch (e) {
       console.error(e)
       ElMessage.error((e as Error)?.message || '查询失败')
@@ -50,7 +50,7 @@ export function useModelingPageApi(loading?: Ref<boolean>) {
   async function bindPage(param: ModelingPageBindParam) {
     try {
       loading && (loading.value = true)
-      //await PageApi.bindPage(param)
+      await PageApi.bindPage(param)
       ElMessage.success('绑定成功')
     } catch (e) {
       console.error(e)
@@ -63,7 +63,7 @@ export function useModelingPageApi(loading?: Ref<boolean>) {
   async function unbindPage(param: ModelingPageUnbindParam) {
     try {
       loading && (loading.value = true)
-      //await PageApi.unbindPage(param)
+      await PageApi.unbindPage(param)
       ElMessage.success('解绑成功')
     } catch (e) {
       console.error(e)
@@ -72,9 +72,6 @@ export function useModelingPageApi(loading?: Ref<boolean>) {
       loading && (loading.value = false)
     }
   }
-
-
-
 
 
 

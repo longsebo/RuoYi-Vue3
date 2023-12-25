@@ -12,7 +12,7 @@
     <el-button text circle v-else :icon="Plus" @click="handleAddPage" />
     <el-button text circle :icon="Refresh" @click="handleRefreshPageList" />
     <mask-window v-model="visible" teleport-to="#workflow-mask-panel">
-      <FormDesigner module="WORKFLOW" :mkey="workflowTypeVer!.key" :name="pageName" />
+      <FormDesigner module="WORKFLOW" :mkey="actReModel!.modelKey" :name="pageName" />
     </mask-window>
   </div>
 </template>
@@ -20,7 +20,7 @@
 <script lang="ts" setup>
 import { ref, inject, computed, toRaw, onUnmounted } from "vue"
 import { ElMessage, ElButton, ElSelect, ElOption } from "element-plus"
-import { modelingPageKey, workflowVerKey } from "@/config/app.keys";
+import { modelingPageKey, workflowVerKe,actReModelKey } from "@/config/app.keys";
 import { Plus, Setting, Refresh } from '@element-plus/icons-vue'
 import { BpmnUtil } from "@/components/bpmn/form/util";
 import emitter, { BpmnElementChanged } from '@/event/mitt'
@@ -28,15 +28,16 @@ import emitter, { BpmnElementChanged } from '@/event/mitt'
 import MaskWindow from "@/components/dialog/MaskWindow.vue";
 import FormDesigner from '@/views/modeling/form/designer.vue'
 import { useBpmnModeler, useBpmnSelectedElem } from "@/config/app.hooks";
+import {useModelingPageApi} from "../../../service/modeling/page";
 
 
 const bpmnSelectedElem = useBpmnSelectedElem()
 const bpmnModeler = useBpmnModeler()
 const modulePageList = inject(modelingPageKey)!
-const workflowTypeVer = inject(workflowVerKey)!
-
+//const workflowTypeVer = inject(workflowVerKey)!
+const actReModel = inject(actReModelKey)!
 const bpmnUtil = new BpmnUtil(bpmnModeler)
-
+console.log('actReModel:'+JSON.stringify(actReModel))
 const boundPageId = computed({
   get() {
     const elem = toRaw(bpmnSelectedElem.value)
@@ -52,15 +53,15 @@ const boundPageId = computed({
 })
 
 const loading = ref(false)
-// const { pageList, findModulePages } = useModelingPageApi(loading)
+const { pageList, findModulePages } = useModelingPageApi(loading)
 function handleRefreshPageList() {
-  // if (!workflowTypeVer.value) {
-  //   return
-  // }
-  // findModulePages({ module: 'WORKFLOW', mkey: workflowTypeVer.value.key })
-  //   .then(() => {
-  //     modulePageList.value = pageList.value
-  //   })
+  if (!actReModel.value) {
+    return
+  }
+  findModulePages({ module: 'WORKFLOW', mkey: actReModel.value.modelKey })
+    .then(() => {
+      modulePageList.value = pageList.value
+    })
 }
 
 const pageName = ref('')

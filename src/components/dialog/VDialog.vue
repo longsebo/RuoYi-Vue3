@@ -50,7 +50,7 @@ const FullScreenMaximize = useIcon('FullScreenMaximize')
 const FullScreenMinimize = useIcon('FullScreenMinimize')
 
 const props = withDefaults(defineProps<DialogProps>(), {
-  fullScreen: undefined,
+  fullScreen: false,
   confirmText: '确定',
   cancelText: '取消',
   disableFooter: false,

@@ -33,7 +33,28 @@ declare interface WorkflowTypeVerView {
   create_by: string
   create_time: string
 }
-
+declare interface ActReModel {
+  modelId:string
+  rev:string
+  modelName:string
+  modelKey:string
+  category:string
+  createTime:string
+  updateTime:string
+  version:string
+  metaInfo:string
+  deploymentId:string
+  editorSourceValueId:string
+  editorSourceExtraValueId:string
+  tenantId:string
+  formType:string
+  formId:string
+  description:string
+  bpmnXml:string
+  content:string
+  createBy:string
+  updateBy:string
+}
 declare type CodeGenType = 'fixed' | 'class'
 
 declare interface CodeGenRule {

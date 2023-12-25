@@ -133,11 +133,11 @@
       @pagination="getList"
     />
     <!-- 流程图 -->
-     <el-dialog :title="processView.title" v-model="processView.open" fullscreen=true :append-to-body="false">
+     <el-dialog :title="processView.title" v-model="processView.open" :fullscreen="true" :append-to-body="false">
         <WorkflowProgressDiagram :key="diagramKey" ref="diagramRef" :activity-list="detailInfo?.activity_list || []" :xml="detailInfo?.xml || ''" style="height: 90vh" />
     </el-dialog>
     <!-- 流程设计界面-->
-    <el-dialog :title="designView.title"  v-model="designView.open" fullscreen=true :append-to-body="false">
+    <el-dialog :title="designView.title"  v-model="designView.open" :fullscreen="true" :append-to-body="false">
       <WorkflowVerDesigner :id="designView!.modelId" :bpmnXml="designView!.bpmnXml" style="height: 90vh" />
     </el-dialog>
     <!-- 添加或修改流程模型对话框 -->

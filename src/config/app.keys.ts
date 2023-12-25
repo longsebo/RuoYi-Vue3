@@ -18,6 +18,6 @@ export const modelingPageKey = Symbol("modelingPageKey") as InjectionKey<Shallow
 export const processInstanceDetailInfoKey = Symbol("processInstanceDetailInfoKey") as InjectionKey<Ref<ProcessInstanceInfoView>>
 export const processNodePageListKey = Symbol("processNodePageListKey") as InjectionKey<ShallowRef<ProcessModelNodePageView[]>>
 
-
+export const actReModelKey = Symbol("actReModel") as InjectionKey<Ref<ActReModel | undefined>>
 
 
