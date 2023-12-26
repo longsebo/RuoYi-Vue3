@@ -77,6 +77,7 @@ function handleUpdatePage() {
     ElMessage.error('无效的表单选项，请刷新页面重新选择')
     return
   }
+  console.log('handleUpdatePage actReModel!.modelKey:'+actReModel.value!.modelKey)
   pageName.value = page.name
   visible.value = true
 

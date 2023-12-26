@@ -110,7 +110,7 @@ import { Delete, View } from "@element-plus/icons-vue";
 import { getDeviceType } from "@/utils/common";
 import { useLayoutStore } from "@/store/layout";
 import { useThemeStore } from "@/store/theme";
-
+import VDialog from "@/components/dialog/VDialog.vue";
 const saveIcon = useIcon('Save')
 
 interface Props {
@@ -168,7 +168,7 @@ onBeforeMount(async () => {
     pageName.value = pageInfo.value.name
   }
   if (pageInfo.value?.pageScheme) {
-    formScheme.value = pageInfo.value.pageScheme
+    formScheme.value = JSON.parse(pageInfo.value.pageScheme)
   }
 })
 

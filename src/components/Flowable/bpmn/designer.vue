@@ -263,11 +263,16 @@ async function handleSaveXml() {
   //   return
   // }
   const { xml } = await bpmnModeler.value.saveXML({ format: false })
-  await saveModel({
+  let res = await saveModel({
       modelId: props.id,
       bpmnXml: xml!,
       newVersion: false
     })
+  if(res.code==200){
+    ElMessage.success('保存成功!')
+  }else{
+    ElMessage.error(res.msg || '保存失败！')
+  }
   }
 
 /**

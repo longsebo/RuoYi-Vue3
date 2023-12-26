@@ -12,7 +12,8 @@ export function useModelingPageApi(loading?: Ref<boolean>) {
   async function getPage(pageId: string) {
     try {
       loading && (loading.value = true)
-      pageInfo.value = await PageApi.getPage(pageId)
+      let temp = await PageApi.getPage(pageId)
+      pageInfo.value = temp.data
     } catch (e) {
       console.error(e)
       ElMessage.error((e as Error)?.message || '查询失败')
@@ -24,7 +25,8 @@ export function useModelingPageApi(loading?: Ref<boolean>) {
   async function findPage(param: ModelingPageFindParam) {
     try {
       loading && (loading.value = true)
-      pageInfo.value = await PageApi.findPage(param)
+      let temp = await PageApi.findPage(param)
+      pageInfo.value = temp.data
     } catch (e) {
       console.error(e)
       ElMessage.error((e as Error)?.message || '查询失败')
@@ -37,7 +39,8 @@ export function useModelingPageApi(loading?: Ref<boolean>) {
   async function findModulePages(param: ModelingPageModuleFindParam) {
     try {
       loading && (loading.value = true)
-      pageList.value = await PageApi.findModulePages(param)
+      let temp = await PageApi.findModulePages(param)
+      pageList.value = temp.data
     } catch (e) {
       console.error(e)
       ElMessage.error((e as Error)?.message || '查询失败')
