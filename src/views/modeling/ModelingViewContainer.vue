@@ -55,18 +55,18 @@
     <MaskWindow v-model="viewPanelVisible" :teleport-to="teleportTo">
       <div style="width: 100%; height: 100%; background-color: var(--el-bg-color);">
         <div style="width: 100%; padding: 6px;  background-color: var(--toolbar-bg-color); ">
-          <el-button v-if="viewerMode" @click="viewerMode = false" :disabled="!updatePageInfo?.page_scheme">编辑</el-button>
+          <el-button v-if="viewerMode" @click="viewerMode = false" :disabled="!updatePageInfo?.pageScheme">编辑</el-button>
           <el-button v-if="!viewerMode" @click="handleCancelUpdate">取消</el-button>
           <el-button v-if="!viewerMode" @click="handleConfirmUpdate">确定</el-button>
         </div>
         <div style="width: 100%; height: calc(100% - 32px - 1px - 12px - 10px); margin-top: 10px">
           <el-scrollbar always>
             <template v-if="props.module === 'ENTITY'">
-              <v-form-render v-if="viewerMode" :scheme="viewPageInfo!.page_scheme" :form-data="instanceInfo || {}" />
-              <v-form-render  ref="updateFormRenderRef" :scheme="updatePageInfo!.page_scheme" :form-data="instanceInfo || {}" />
+              <v-form-render v-if="viewerMode" :scheme="viewPageInfo!.pageScheme" :form-data="instanceInfo || {}" />
+              <v-form-render  ref="updateFormRenderRef" :scheme="updatePageInfo!.pageScheme" :form-data="instanceInfo || {}" />
             </template>
             <template v-else>
-              <v-form-render v-if="viewerMode" :scheme="viewPageInfo!.page_scheme" :form-data="instanceInfo || {}" />
+              <v-form-render v-if="viewerMode" :scheme="viewPageInfo!.pageScheme" :form-data="instanceInfo || {}" />
             </template>
           </el-scrollbar>
         </div>
@@ -172,7 +172,7 @@ const workflowUpdatePanelVisible = ref(false)
 
 const viewSimpleInfoList = ref<ModelingViewSimpleInfo[]>([])
 
-const startForm = computed(() => props.module === 'ENTITY' ? pageInfo.value?.page_scheme : startFormScheme.value?.page_scheme)
+const startForm = computed(() => props.module === 'ENTITY' ? pageInfo.value?.pageScheme : startFormScheme.value?.pageScheme)
 
 const autoSizeColumnKeys = ref<string[]>([])
 
@@ -437,7 +437,7 @@ const gridOptions: GridOptions = {
 
 function gotoSummaryPage(row: any) {
   if (props.module === 'ENTITY') {
-    if (!viewPageInfo.value?.page_scheme) {
+    if (!viewPageInfo.value?.pageScheme) {
       ElMessage.error(`请先配置一个查询页面`)
       return
     }

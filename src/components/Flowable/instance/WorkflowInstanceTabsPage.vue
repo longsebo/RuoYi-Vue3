@@ -8,7 +8,7 @@
           <el-button v-for="outcome in (detailInfo?.outcomes || [])" :key="outcome.name" @click="handleClickOutcome(outcome)" >{{ outcome.name }}</el-button>
         </div>
         <div style="box-sizing: border-box; width: 100%; height: calc(100% - 32px);">
-          <WorkflowInstanceTaskForm v-loading="loading" :form-data="detailInfo?.instance_info || null" :scheme="detailInfo?.page_info?.page_scheme || null" />
+          <WorkflowInstanceTaskForm v-loading="loading" :form-data="detailInfo?.instance_info || null" :scheme="detailInfo?.page_info?.pageScheme || null" />
         </div>
         <div id="basic-form-panel"></div>
         <MaskWindow v-model="postPanelVisible" teleport-to="#basic-form-panel" show-toolbar @confirm="handleConfirmPost" @cancel="handleCancelPost">
@@ -116,7 +116,7 @@ function handleClickOutcome(outcome: WorkflowOutcomeInfo) {
   } else {
     postOutcome.value = outcome.name
     postFormData.value = detailInfo.value.instance_info
-    postPageScheme.value = outcome.page_info.page_scheme
+    postPageScheme.value = outcome.page_info.pageScheme
     postPanelVisible.value = true
   }
 }

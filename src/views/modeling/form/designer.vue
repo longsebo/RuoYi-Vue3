@@ -167,8 +167,8 @@ onBeforeMount(async () => {
   if (pageInfo.value?.name) {
     pageName.value = pageInfo.value.name
   }
-  if (pageInfo.value?.page_scheme) {
-    formScheme.value = pageInfo.value.page_scheme
+  if (pageInfo.value?.pageScheme) {
+    formScheme.value = pageInfo.value.pageScheme
   }
 })
 
@@ -210,7 +210,7 @@ async function handleClickSave() {
     name: pageName.value,
     module: props.module,
     mkey: props.mkey,
-    page_scheme: formScheme.value,
+    pageScheme: JSON.stringify(formScheme.value),
   }
   bindPage(param)
 }

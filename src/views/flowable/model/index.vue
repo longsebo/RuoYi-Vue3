@@ -106,17 +106,14 @@
                 <el-dropdown-item
                     icon="videoPlay"
                     @click.native="handleDeploy(scope.row)"
-                    v-hasPermi="['flow:flow_model:deploy']"
                 >部署</el-dropdown-item>
                 <el-dropdown-item
                     icon="PriceTag"
                     @click.native="handleHistory(scope.row)"
-                    v-hasPermi="['flow:flow_model:list']"
                 >历史</el-dropdown-item>
                 <el-dropdown-item
                     icon="Delete"
                     @click.native="handleDelete(scope.row)"
-                    v-hasPermi="['flow:flow_model:delete']"
                 >删除</el-dropdown-item>
               </el-dropdown-menu>
             </template>
