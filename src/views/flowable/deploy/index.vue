@@ -145,7 +145,7 @@
         <el-table-column label="流程标识" align="center" prop="processKey" :show-overflow-tooltip="true" />
         <el-table-column label="流程版本" align="center">
           <template #default="scope">
-            <el-tag size="small" >version{{ scope.row.version }}</el-tag>
+            <el-tag size="small" >v{{ scope.row.version }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column label="状态" align="center">

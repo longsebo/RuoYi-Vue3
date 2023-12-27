@@ -65,3 +65,19 @@ export function saveModel(data) {
     data: data
   })
 }
+// 查询流程模型历史列表
+export function historyList(query) {
+  return request({
+    url: '/flowable/model/historyList',
+    method: 'get',
+    params: query
+  })
+}
+// 设置最新版
+export function latestModel(params) {
+  return request({
+    url: '/flowable/model/latest',
+    method: 'post',
+    params: params
+  })
+}

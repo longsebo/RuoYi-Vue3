@@ -86,7 +86,11 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="模型名称" align="center" prop="modelName" />
       <el-table-column label="流程分类" align="center" prop="category" />
-      <el-table-column label="版本" align="center" prop="version" />
+      <el-table-column label="版本" align="center" prop="version" >
+        <template #default="scope">
+          <el-tag size="medium" >v{{ scope.row.version }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="模型描述" align="center" prop="description" />
       <el-table-column label="创建时间" align="center" prop="createTime" width="180">
         <template #default="scope">
@@ -130,8 +134,8 @@
       @pagination="getList"
     />
     <!-- 流程图 -->
-     <el-dialog :title="processView.title" v-model="processView.open" :fullscreen="true" :append-to-body="false">
-        <WorkflowProgressDiagram :key="diagramKey" ref="diagramRef" :activity-list="detailInfo?.activity_list || []" :xml="detailInfo?.xml || ''" style="height: 90vh" />
+    <el-dialog :title="processView.title"  v-model="processView.open" width="80%" height="80%" :append-to-body="false">
+      <WorkflowView  :bpmnXml="processView.bpmnXml" style="height: 90vh" />
     </el-dialog>
     <!-- 流程设计界面-->
     <el-dialog :title="designView.title"  v-model="designView.open" :fullscreen="true" :append-to-body="false">
@@ -169,17 +173,66 @@
         </div>
       </template>
     </el-dialog>
+    <el-dialog title="模型历史" v-model="history.open" width="70%" >
+      <el-table v-loading="history.loading" fit :data="historyListData" @selection-change="handleSelectionChange">
+        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column label="模型标识" align="center" prop="modelKey" :show-overflow-tooltip="true" />
+        <el-table-column label="模型名称" align="center" :show-overflow-tooltip="true">
+          <template #default="scope">
+            <el-button link="true" @click="handleProcessView(scope.row)" type="primary" key="primary" >
+              {{ scope.row.modelName }}
+            </el-button>
+          </template>
+        </el-table-column>
+        <el-table-column label="流程分类" align="center" prop="category" :formatter="categoryFormat" />
+        <el-table-column label="模型版本" align="center">
+          <template #default="scope">
+            <el-tag size="medium" >v{{ scope.row.version }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="描述" align="center" prop="description" :show-overflow-tooltip="true" />
+        <el-table-column label="创建时间" align="center" prop="createTime" width="180"/>
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+          <template #default="scope">
+            <el-button
+                type="primary"
+                text="primary"
+                size="small"
+                icon="videoPlay"
+                v-hasPermi="['flow:flow_model:deploy']"
+                @click.native="handleDeploy(scope.row)"
+            >部署</el-button>
+            <el-button
+                type="primary"
+                text="primary"
+                size="small"
+                v-hasPermi="['workflow:model:save']"
+                @click.native="handleLatest(scope.row)"
+            >设为最新</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <pagination
+          v-show="historyTotal > 0"
+          :total="historyTotal"
+          :page.sync="queryHistoryParams.pageNum"
+          :limit.sync="queryHistoryParams.pageSize"
+          @pagination="getHistoryList"
+      />
+    </el-dialog>
   </div>
 </template>
 
 <script setup name="Model" lang="ts">
-import { listModel, getModel, delModel, addModel, updateModel,getModelXml,depolyModel } from "@/api/flowable/model";
+import { listModel, getModel, delModel, addModel, updateModel,getModelXml,depolyModel,historyList,latestModel } from "@/api/flowable/model";
 import {listCategory} from "@/api/flowable/category";
-import WorkflowProgressDiagram from '@/components/Flowable/instance/WorkflowProgressDiagram'
+import WorkflowView from "@/components/Flowable/bpmn/view.vue";
 import WorkflowVerDesigner from "@/components/Flowable/bpmn/designer.vue";
 import {ElMessage} from "element-plus";
 import {getCurrentInstance, ref, toRefs} from "vue";
 import InitBPMNXml from '@/assets/bpmn/holiday-request.bpmn20.xml?raw'
+import EmptyBPMNXml from '@/assets/bpmn/empty.bpmn20.xml?raw'
 const { proxy } = getCurrentInstance();
 const modelList = ref([]);
 const open = ref(false);
@@ -231,10 +284,16 @@ const data = reactive({
     open:false,
     modelId:undefined,
     bpmnXml:''
-  }
+  },
+  history: {
+    open: false,
+    loading: false
+  },
+  historyListData: [],
+  historyTotal: 0
 });
 
-const { queryParams, form, rules,processView,queryHistoryParams,designView} = toRefs(data);
+const { queryParams, form, rules,processView,queryHistoryParams,designView,history,historyListData,historyTotal} = toRefs(data);
 
 
 /** 查询流程模型列表 */
@@ -400,27 +459,69 @@ function handleDeploy(row) {
 /** 流程图查看按钮操作 */
 function handleProcessView(row) {
   const _modelId = row.modelId
-
+  // 发送请求，获取xml
   getModelXml(_modelId).then(response => {
-    processView.value={
-      title:"流程图",
-      index: _modelId,
-      xmlData: response.data,
-      open : true
+    let xml ='' ;
+    if(response.data!='' && typeof(response.data)!="undefined") {
+      xml = response.data.replaceAll('\\"','"')
+          .replaceAll('\\n','')
+    }else{
+      xml = EmptyBPMNXml;
     }
-    //diagramRef.value.init();
-  });
+    processView.value={
+      modelId:_modelId,
+      open:true,
+      title:'流程图',
+      bpmnXml:xml
+    }
+  })
+
+
 }
 /** 查看历史按钮操作 */
 function handleHistory(row) {
   reset();
   const _modelId = row.modelId
-  getModel(_modelId).then(response => {
-    insertFlag.value = false;
-    form.value = response.data;
-    open.value = true;
-    title.value = "修改流程模型";
-  });
+  data.history.open = true;
+  data.queryHistoryParams.modelKey = row.modelKey;
+  getHistoryList();
+}
+function getHistoryList() {
+  data.history.loading = true;
+  historyList(data.queryHistoryParams).then(response => {
+    data.historyTotal = response.total;
+    data.historyListData = response.rows;
+    data.history.loading = false;
+  })
+}
+/** 设为最新版 */
+function handleLatest(row) {
+  proxy.$modal.confirm('是否确认将此版本设为最新？').then(function() {
+    data.history.loading = true;
+    latestModel({
+      modelId: row.modelId
+    }).then(response => {
+      if(response.code==200){
+        ElMessage.success("设置成功!");
+      }else{
+        ElMessage.error("设置失败!");
+      }
+      data.history.open = false;
+      getList();
+      proxy.$modal.msgSuccess(response.msg);
+    }).finally(() => {
+      data.history.loading = false;
+    })
+  })
+}
+/**
+ * 翻译分类编码
+ * @param row
+ * @param column
+ * @returns {*|string}
+ */
+function  categoryFormat(row, column){
+  return flowCategory.value.find(k => k.code === row.category)?.name ?? '';
 }
 getList();
 getFlowCategory();
