@@ -42,3 +42,11 @@ export function delDef(id) {
     method: 'delete'
   })
 }
+// 查询流程字段定义列表(不翻页)
+export function listAll(query) {
+  return request({
+    url: '/flowable/def/listAll',
+    method: 'get',
+    params: query
+  })
+}

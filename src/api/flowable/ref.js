@@ -42,3 +42,11 @@ export function delRef(id) {
     method: 'delete'
   })
 }
+//组合查询流程字段引用关系列表
+export function listCombination(query) {
+  return request({
+    url: '/flowable/ref/listCombination',
+    method: 'get',
+    params: query
+  })
+}

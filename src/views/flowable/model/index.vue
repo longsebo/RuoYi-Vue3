@@ -101,16 +101,20 @@
         <template #default="scope">
           <el-button link type="primary" icon="Edit"  @click="handleUpdate(scope.row)" v-hasPermi="['flow:flow_model:update']">修改</el-button>
           <el-button link type="primary" icon="Brush" @click="handleDesign(scope.row)" v-hasPermi="['flow:flow_model:design']">设计</el-button>
-          <el-dropdown >
-          <span class="el-dropdown-link" >
-            更多...
-          </span>
-            <template #dropdown  >
+          <el-dropdown class="mt-[1px]">
+            <el-button link type="primary" icon="DArrowRight">
+              更多
+              <el-icon class="DArrowRight"></el-icon></el-button>
+            <template #dropdown>
               <el-dropdown-menu>
                 <el-dropdown-item
                     icon="videoPlay"
                     @click.native="handleDeploy(scope.row)"
                 >部署</el-dropdown-item>
+                <el-dropdown-item
+                    icon="fieldIcon"
+                    @click.native="handleFieldMaintenance(scope.row)"
+                >设置字段</el-dropdown-item>
                 <el-dropdown-item
                     icon="PriceTag"
                     @click.native="handleHistory(scope.row)"
@@ -233,6 +237,7 @@ import {ElMessage} from "element-plus";
 import {getCurrentInstance, ref, toRefs} from "vue";
 import InitBPMNXml from '@/assets/bpmn/holiday-request.bpmn20.xml?raw'
 import EmptyBPMNXml from '@/assets/bpmn/empty.bpmn20.xml?raw'
+import {useIcon} from "../../../components/common/util";
 const { proxy } = getCurrentInstance();
 const modelList = ref([]);
 const open = ref(false);
@@ -247,6 +252,7 @@ const flowCategory = ref([]);
 const insertFlag=ref(true);
 const diagramKey = ref(1)
 const detailInfo = ref<WorkflowInstanceDetailsResult>();
+const fieldIcon = useIcon('ali_field')
 //const diagramRef = ref<InstanceType<typeof WorkflowProgressDiagram>>();
 //const showDialog = ref(Boolean);
 const data = reactive({
@@ -293,7 +299,7 @@ const data = reactive({
   historyTotal: 0
 });
 
-const { queryParams, form, rules,processView,queryHistoryParams,designView,history,historyListData,historyTotal} = toRefs(data);
+const { queryParams, form, rules,processView,queryHistoryParams,designView,history,historyListData,historyTotal,fields} = toRefs(data);
 
 
 /** 查询流程模型列表 */
@@ -513,6 +519,10 @@ function handleLatest(row) {
       data.history.loading = false;
     })
   })
+}
+/**字段设置*/
+function handleFieldMaintenance(row){
+
 }
 /**
  * 翻译分类编码
