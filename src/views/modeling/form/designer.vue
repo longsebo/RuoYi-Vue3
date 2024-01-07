@@ -32,13 +32,13 @@
       </div>
       <div style="height: calc(100% - 40px);">
         <el-scrollbar always>
-          <el-form
+          <el-form v-for="formScheme in formSchemes"
             :size="formScheme.size"
             :label-width="formScheme.labelWidth"
-            :label-position="labelPosition"
+            :label-position="labelPosition(formScheme)"
             :style="formScheme.style"
             style="padding: 10px; box-sizing: border-box; height: 100%;"
-            @click.stop="vFormActiveElement = null"
+            @click="setActiveForm(formScheme)"
           >
             <!-- 若(nested-drag-item).height + padding*2 > designerContainerHeight 则会出现滚动条  -->
             <nested-drag-item
@@ -143,23 +143,33 @@ provide(vFormActiveElementKey, vFormActiveElement)
 const mode = computed<FormFieldMode>(() => 'design')
 provide(formModeKey, mode)
 
-const formScheme = ref<VFormScheme>({
+const formSchemes = ref<VFormScheme>([{
   labelPosition: 'auto',
   labelWidth: '120px',
   size: 'default',
   mode: 'design',
   style: '',
   children: []
-})
-provide(vFormSchemeKey, formScheme)
+},{
+  labelPosition: 'auto',
+  labelWidth: '120px',
+  size: 'default',
+  mode: 'design',
+  style: '',
+  children: []
+}])
+const activeFormScheme = ref({})
+provide(vFormSchemeKey, activeFormScheme)
 
 const deviceType = getDeviceType()
 const labelPosition = computed(() => {
-  if (formScheme.value.labelPosition === 'auto') {
+  return function(formScheme){
+  if (formScheme.labelPosition === 'auto') {
     return deviceType.value === 'h5' ? 'top' : 'right'
   }
-  return formScheme.value.labelPosition
-})
+  return formScheme.labelPosition
+}}
+)
 
 
 onBeforeMount(async () => {
@@ -222,6 +232,9 @@ async function handleClickValidateForm() {
   } catch(e) {
     console.error(e);
   }
+}
+function setActiveForm(formSchema){
+  activeFormScheme.value = formSchema
 }
 </script>
 

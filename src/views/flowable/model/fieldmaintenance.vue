@@ -92,13 +92,52 @@
       </el-table>
     </el-tab-pane>
   </el-tabs>
+  <el-dialog :title="field.title" v-model="field.open" width="70%" >
+    <el-scrollbar always>
+      <el-form ref="formRef" :model="formData" label-width="100px" label-position="right" status-icon style="width: 100%">
+        <el-divider content-position="left">基本信息</el-divider>
+        <el-form-item prop="field" label="字段" required :rules="{ pattern: /^[a-zA-Z_][a-zA-Z0-9_]*$/, message: '必须以字母或下划线开头' }">
+          <el-input v-model="formData.field" />
+        </el-form-item>
+        <el-form-item prop="label" label="标签" required>
+          <el-input v-model="formData.label" />
+        </el-form-item>
+        <el-form-item prop="remark" label="说明">
+          <el-input v-model="formData.remark" />
+        </el-form-item>
+        <el-form-item prop="width" label="宽度" required>
+          <el-input-number v-model="formData.width" :min="1" :controls="false" style="width: 100%" />
+        </el-form-item>
+        <el-form-item prop="type" label="类型" required>
+          <el-select v-model="formData.type" @change="v => formData.scheme.type = v" style="width: 100%">
+            <el-option label="数字" value="number" />
+            <el-option label="文本" value="text" />
+            <el-option label="选项" value="option" />
+            <el-option label="用户" value="user" />
+            <el-option label="部门" value="dept" />
+            <el-option label="时间" value="date" />
+            <el-option label="时间范围" value="daterange" />
+          </el-select>
+        </el-form-item>
+        <el-divider content-position="left">组件配置</el-divider>
+        <component :form-data="formData" :is="schemeConfigComponentMap[formData.type]"/>
 
+      </el-form>
+    </el-scrollbar>
+  </el-dialog>
 </template>
 
 <script lang="ts" setup>
-import {ref, watch} from "vue";
+import {markRaw, ref, watch} from "vue";
 import * as refApi from "@/api/flowable/ref"
 import {listAll} from "@/api/flowable/def"
+import NumberSchemeConfig from "@/views/modeling/field/form/NumberSchemeConfig.vue";
+import TextSchemeConfig from "@/views/modeling/field/form/TextSchemeConfig.vue";
+import OptionSchemeConfig from "@/views/modeling/field/form/OptionSchemeConfig.vue";
+import UserSchemeConfig from "@/views/modeling/field/form/UserSchemeConfig.vue";
+import DeptSchemeConfig from "@/views/modeling/field/form/DeptSchemeConfig.vue";
+import DateSchemeConfig from "@/views/modeling/field/form/DateSchemeConfig.vue";
+import DateRangeSchemeConfig from "@/views/modeling/field/form/DateRangeSchemeConfig.vue";
 interface Props {
   mkey: string,
   version: string
@@ -115,6 +154,28 @@ const privateMultiple = ref(true);
 const publicIds = ref([]);
 const publicSingle = ref(true);
 const publicMultiple = ref(true);
+const schemeConfigComponentMap = ref({
+  number: markRaw(NumberSchemeConfig),
+  text: markRaw(TextSchemeConfig),
+  option: markRaw(OptionSchemeConfig),
+  user: markRaw(UserSchemeConfig),
+  dept: markRaw(DeptSchemeConfig),
+  date: markRaw(DateSchemeConfig),
+  daterange: markRaw(DateRangeSchemeConfig),
+})
+const formData = ref({
+  mkey: '',
+  field: '',
+  label: '',
+  remark: '',
+  width: 16,
+  type: 'number',
+  scope: '',
+  scheme: {
+    type: 'number'
+  }
+})
+const field
 watch(
     () => [props.mkey, props.version],
     (newVal) => {
