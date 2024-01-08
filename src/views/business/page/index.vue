@@ -1,9 +1,9 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="模块" prop="MODULE">
+      <el-form-item label="模块" prop="module">
         <el-input
-          v-model="queryParams.MODULE"
+          v-model="queryParams.module"
           placeholder="请输入模块"
           clearable
           @keyup.enter="handleQuery"
@@ -83,8 +83,8 @@
 
     <el-table v-loading="loading" :data="pageList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="ID" />
-      <el-table-column label="模块" align="center" prop="MODULE" />
+      <el-table-column label="ID" align="center" prop="id" />
+      <el-table-column label="模块" align="center" prop="module" />
       <el-table-column label="页面编码" align="center" prop="pageCode" />
       <el-table-column label="页面名称" align="center" prop="pageName" />
       <el-table-column label="页面内容" align="center" prop="pageScheme" />
@@ -109,8 +109,8 @@
     <!-- 添加或修改页面定义对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
       <el-form ref="pageRef" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="模块" prop="MODULE">
-          <el-input v-model="form.MODULE" placeholder="请输入模块" />
+        <el-form-item label="模块" prop="module">
+          <el-input v-model="form.module" placeholder="请输入模块" />
         </el-form-item>
         <el-form-item label="页面编码" prop="pageCode">
           <el-input v-model="form.pageCode" placeholder="请输入页面编码" />
@@ -152,12 +152,12 @@ const data = reactive({
   queryParams: {
     pageNum: 1,
     pageSize: 10,
-    MODULE: null,
+    module: null,
     pageCode: null,
     pageName: null,
     pageScheme: null,
     pageTypeCode: null,
-    pageParameter: null
+    pageParameter: null,
   },
   rules: {
     pageCode: [
@@ -187,13 +187,17 @@ function cancel() {
 // 表单重置
 function reset() {
   form.value = {
-    ID: null,
-    MODULE: null,
+    id: null,
+    module: null,
     pageCode: null,
     pageName: null,
     pageScheme: null,
     pageTypeCode: null,
-    pageParameter: null
+    pageParameter: null,
+    createBy: null,
+    createTime: null,
+    updateBy: null,
+    updateTime: null
   };
   proxy.resetForm("pageRef");
 }
@@ -212,7 +216,7 @@ function resetQuery() {
 
 // 多选框选中数据
 function handleSelectionChange(selection) {
-  ids.value = selection.map(item => item.ID);
+  ids.value = selection.map(item => item.id);
   single.value = selection.length != 1;
   multiple.value = !selection.length;
 }
@@ -227,8 +231,8 @@ function handleAdd() {
 /** 修改按钮操作 */
 function handleUpdate(row) {
   reset();
-  const _ID = row.ID || ids.value
-  getPage(_ID).then(response => {
+  const _id = row.id || ids.value
+  getPage(_id).then(response => {
     form.value = response.data;
     open.value = true;
     title.value = "修改页面定义";
@@ -239,7 +243,7 @@ function handleUpdate(row) {
 function submitForm() {
   proxy.$refs["pageRef"].validate(valid => {
     if (valid) {
-      if (form.value.ID != null) {
+      if (form.value.id != null) {
         updatePage(form.value).then(response => {
           proxy.$modal.msgSuccess("修改成功");
           open.value = false;
@@ -258,9 +262,9 @@ function submitForm() {
 
 /** 删除按钮操作 */
 function handleDelete(row) {
-  const _IDs = row.ID || ids.value;
-  proxy.$modal.confirm('是否确认删除页面定义编号为"' + _IDs + '"的数据项？').then(function() {
-    return delPage(_IDs);
+  const _ids = row.id || ids.value;
+  proxy.$modal.confirm('是否确认删除页面定义编号为"' + _ids + '"的数据项？').then(function() {
+    return delPage(_ids);
   }).then(() => {
     getList();
     proxy.$modal.msgSuccess("删除成功");

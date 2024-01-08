@@ -25,14 +25,6 @@
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="备注" prop="REMARK">
-        <el-input
-          v-model="queryParams.REMARK"
-          placeholder="请输入备注"
-          clearable
-          @keyup.enter="handleQuery"
-        />
-      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
         <el-button icon="Refresh" @click="resetQuery">重置</el-button>
@@ -83,12 +75,12 @@
 
     <el-table v-loading="loading" :data="defList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="ID" />
+      <el-table-column label="ID" align="center" prop="id" />
       <el-table-column label="中文名" align="center" prop="cnName" />
       <el-table-column label="英文名" align="center" prop="enName" />
       <el-table-column label="数据源名称" align="center" prop="datasourceName" />
-      <el-table-column label="状态" align="center" prop="STATUS" />
-      <el-table-column label="备注" align="center" prop="REMARK" />
+      <el-table-column label="状态" align="center" prop="status" />
+      <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['business:def:edit']">修改</el-button>
@@ -117,8 +109,8 @@
         <el-form-item label="数据源名称" prop="datasourceName">
           <el-input v-model="form.datasourceName" placeholder="请输入数据源名称" />
         </el-form-item>
-        <el-form-item label="备注" prop="REMARK">
-          <el-input v-model="form.REMARK" placeholder="请输入备注" />
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -154,8 +146,7 @@ const data = reactive({
     cnName: null,
     enName: null,
     datasourceName: null,
-    STATUS: null,
-    REMARK: null
+    status: null,
   },
   rules: {
     cnName: [
@@ -191,12 +182,16 @@ function cancel() {
 // 表单重置
 function reset() {
   form.value = {
-    ID: null,
+    id: null,
     cnName: null,
     enName: null,
     datasourceName: null,
-    STATUS: null,
-    REMARK: null
+    status: null,
+    remark: null,
+    createBy: null,
+    createTime: null,
+    updateBy: null,
+    updateTime: null
   };
   proxy.resetForm("defRef");
 }
@@ -215,7 +210,7 @@ function resetQuery() {
 
 // 多选框选中数据
 function handleSelectionChange(selection) {
-  ids.value = selection.map(item => item.ID);
+  ids.value = selection.map(item => item.id);
   single.value = selection.length != 1;
   multiple.value = !selection.length;
 }
@@ -230,8 +225,8 @@ function handleAdd() {
 /** 修改按钮操作 */
 function handleUpdate(row) {
   reset();
-  const _ID = row.ID || ids.value
-  getDef(_ID).then(response => {
+  const _id = row.id || ids.value
+  getDef(_id).then(response => {
     form.value = response.data;
     open.value = true;
     title.value = "修改模型定义";
@@ -242,7 +237,7 @@ function handleUpdate(row) {
 function submitForm() {
   proxy.$refs["defRef"].validate(valid => {
     if (valid) {
-      if (form.value.ID != null) {
+      if (form.value.id != null) {
         updateDef(form.value).then(response => {
           proxy.$modal.msgSuccess("修改成功");
           open.value = false;
@@ -261,9 +256,9 @@ function submitForm() {
 
 /** 删除按钮操作 */
 function handleDelete(row) {
-  const _IDs = row.ID || ids.value;
-  proxy.$modal.confirm('是否确认删除模型定义编号为"' + _IDs + '"的数据项？').then(function() {
-    return delDef(_IDs);
+  const _ids = row.id || ids.value;
+  proxy.$modal.confirm('是否确认删除模型定义编号为"' + _ids + '"的数据项？').then(function() {
+    return delDef(_ids);
   }).then(() => {
     getList();
     proxy.$modal.msgSuccess("删除成功");

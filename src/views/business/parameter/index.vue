@@ -75,7 +75,7 @@
 
     <el-table v-loading="loading" :data="parameterList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="ID" />
+      <el-table-column label="ID" align="center" prop="id" />
       <el-table-column label="参数名称" align="center" prop="parameterName" />
       <el-table-column label="参数描述" align="center" prop="parameterDesc" />
       <el-table-column label="前端是否可见" align="center" prop="isFrontpageVisible" />
@@ -142,7 +142,7 @@ const data = reactive({
     parameterName: null,
     parameterDesc: null,
     isFrontpageVisible: null,
-    parameterType: null
+    parameterType: null,
   },
   rules: {
   }
@@ -169,11 +169,15 @@ function cancel() {
 // 表单重置
 function reset() {
   form.value = {
-    ID: null,
+    id: null,
     parameterName: null,
     parameterDesc: null,
     isFrontpageVisible: null,
-    parameterType: null
+    parameterType: null,
+    createBy: null,
+    createTime: null,
+    updateBy: null,
+    updateTime: null
   };
   proxy.resetForm("parameterRef");
 }
@@ -192,7 +196,7 @@ function resetQuery() {
 
 // 多选框选中数据
 function handleSelectionChange(selection) {
-  ids.value = selection.map(item => item.ID);
+  ids.value = selection.map(item => item.id);
   single.value = selection.length != 1;
   multiple.value = !selection.length;
 }
@@ -207,8 +211,8 @@ function handleAdd() {
 /** 修改按钮操作 */
 function handleUpdate(row) {
   reset();
-  const _ID = row.ID || ids.value
-  getParameter(_ID).then(response => {
+  const _id = row.id || ids.value
+  getParameter(_id).then(response => {
     form.value = response.data;
     open.value = true;
     title.value = "修改接口参数";
@@ -219,7 +223,7 @@ function handleUpdate(row) {
 function submitForm() {
   proxy.$refs["parameterRef"].validate(valid => {
     if (valid) {
-      if (form.value.ID != null) {
+      if (form.value.id != null) {
         updateParameter(form.value).then(response => {
           proxy.$modal.msgSuccess("修改成功");
           open.value = false;
@@ -238,9 +242,9 @@ function submitForm() {
 
 /** 删除按钮操作 */
 function handleDelete(row) {
-  const _IDs = row.ID || ids.value;
-  proxy.$modal.confirm('是否确认删除接口参数编号为"' + _IDs + '"的数据项？').then(function() {
-    return delParameter(_IDs);
+  const _ids = row.id || ids.value;
+  proxy.$modal.confirm('是否确认删除接口参数编号为"' + _ids + '"的数据项？').then(function() {
+    return delParameter(_ids);
   }).then(() => {
     getList();
     proxy.$modal.msgSuccess("删除成功");

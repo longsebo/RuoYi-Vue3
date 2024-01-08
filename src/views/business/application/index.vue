@@ -17,14 +17,6 @@
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="备注" prop="REMARK">
-        <el-input
-          v-model="queryParams.REMARK"
-          placeholder="请输入备注"
-          clearable
-          @keyup.enter="handleQuery"
-        />
-      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
         <el-button icon="Refresh" @click="resetQuery">重置</el-button>
@@ -75,10 +67,9 @@
 
     <el-table v-loading="loading" :data="applicationList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="ID" />
       <el-table-column label="应用编码" align="center" prop="applicationCode" />
       <el-table-column label="应用名称" align="center" prop="applicationName" />
-      <el-table-column label="备注" align="center" prop="REMARK" />
+      <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['business:application:edit']">修改</el-button>
@@ -86,7 +77,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -104,8 +95,8 @@
         <el-form-item label="应用名称" prop="applicationName">
           <el-input v-model="form.applicationName" placeholder="请输入应用名称" />
         </el-form-item>
-        <el-form-item label="备注" prop="REMARK">
-          <el-input v-model="form.REMARK" placeholder="请输入备注" />
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -140,7 +131,6 @@ const data = reactive({
     pageSize: 10,
     applicationCode: null,
     applicationName: null,
-    REMARK: null
   },
   rules: {
   }
@@ -167,10 +157,14 @@ function cancel() {
 // 表单重置
 function reset() {
   form.value = {
-    ID: null,
+    id: null,
     applicationCode: null,
     applicationName: null,
-    REMARK: null
+    remark: null,
+    createBy: null,
+    createTime: null,
+    updateBy: null,
+    updateTime: null
   };
   proxy.resetForm("applicationRef");
 }
@@ -189,7 +183,7 @@ function resetQuery() {
 
 // 多选框选中数据
 function handleSelectionChange(selection) {
-  ids.value = selection.map(item => item.ID);
+  ids.value = selection.map(item => item.id);
   single.value = selection.length != 1;
   multiple.value = !selection.length;
 }
@@ -204,8 +198,8 @@ function handleAdd() {
 /** 修改按钮操作 */
 function handleUpdate(row) {
   reset();
-  const _ID = row.ID || ids.value
-  getApplication(_ID).then(response => {
+  const _id = row.id || ids.value
+  getApplication(_id).then(response => {
     form.value = response.data;
     open.value = true;
     title.value = "修改应用定义";
@@ -216,7 +210,7 @@ function handleUpdate(row) {
 function submitForm() {
   proxy.$refs["applicationRef"].validate(valid => {
     if (valid) {
-      if (form.value.ID != null) {
+      if (form.value.id != null) {
         updateApplication(form.value).then(response => {
           proxy.$modal.msgSuccess("修改成功");
           open.value = false;
@@ -235,9 +229,9 @@ function submitForm() {
 
 /** 删除按钮操作 */
 function handleDelete(row) {
-  const _IDs = row.ID || ids.value;
-  proxy.$modal.confirm('是否确认删除应用定义编号为"' + _IDs + '"的数据项？').then(function() {
-    return delApplication(_IDs);
+  const _ids = row.id || ids.value;
+  proxy.$modal.confirm('是否确认删除应用定义编号为"' + _ids + '"的数据项？').then(function() {
+    return delApplication(_ids);
   }).then(() => {
     getList();
     proxy.$modal.msgSuccess("删除成功");

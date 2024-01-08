@@ -10,9 +10,9 @@ export function listFunction(query) {
 }
 
 // 查询业务功能详细
-export function getFunction(ID) {
+export function getFunction(id) {
   return request({
-    url: '/business/function/' + ID,
+    url: '/business/function/' + id,
     method: 'get'
   })
 }
@@ -36,9 +36,9 @@ export function updateFunction(data) {
 }
 
 // 删除业务功能
-export function delFunction(ID) {
+export function delFunction(id) {
   return request({
-    url: '/business/function/' + ID,
+    url: '/business/function/' + id,
     method: 'delete'
   })
 }

@@ -10,9 +10,9 @@ export function listRef(query) {
 }
 
 // 查询模型字段引用详细
-export function getRef(ID) {
+export function getRef(id) {
   return request({
-    url: '/business/ref/' + ID,
+    url: '/business/ref/' + id,
     method: 'get'
   })
 }
@@ -36,9 +36,9 @@ export function updateRef(data) {
 }
 
 // 删除模型字段引用
-export function delRef(ID) {
+export function delRef(id) {
   return request({
-    url: '/business/ref/' + ID,
+    url: '/business/ref/' + id,
     method: 'delete'
   })
 }

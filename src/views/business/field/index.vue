@@ -33,9 +33,9 @@
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="信息范围" prop="SCOPE">
+      <el-form-item label="信息范围" prop="scope">
         <el-input
-          v-model="queryParams.SCOPE"
+          v-model="queryParams.scope"
           placeholder="请输入信息范围"
           clearable
           @keyup.enter="handleQuery"
@@ -91,14 +91,14 @@
 
     <el-table v-loading="loading" :data="fieldList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="ID" />
+      <el-table-column label="ID" align="center" prop="id" />
       <el-table-column label="字段名" align="center" prop="fieldEnName" />
       <el-table-column label="字段中文名" align="center" prop="fieldCnName" />
       <el-table-column label="字段说明" align="center" prop="ffieldRemark" />
       <el-table-column label="字段宽度" align="center" prop="fieldWidth" />
       <el-table-column label="字段类型" align="center" prop="fieldType" />
-      <el-table-column label="字段控件定义" align="center" prop="SCHEME" />
-      <el-table-column label="信息范围" align="center" prop="SCOPE" />
+      <el-table-column label="字段控件定义" align="center" prop="scheme" />
+      <el-table-column label="信息范围" align="center" prop="scope" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['business:field:edit']">修改</el-button>
@@ -130,8 +130,8 @@
         <el-form-item label="字段宽度" prop="fieldWidth">
           <el-input v-model="form.fieldWidth" placeholder="请输入字段宽度" />
         </el-form-item>
-        <el-form-item label="信息范围" prop="SCOPE">
-          <el-input v-model="form.SCOPE" placeholder="请输入信息范围" />
+        <el-form-item label="信息范围" prop="scope">
+          <el-input v-model="form.scope" placeholder="请输入信息范围" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -169,8 +169,8 @@ const data = reactive({
     ffieldRemark: null,
     fieldWidth: null,
     fieldType: null,
-    SCHEME: null,
-    SCOPE: null
+    scheme: null,
+    scope: null,
   },
   rules: {
     fieldEnName: [
@@ -200,14 +200,18 @@ function cancel() {
 // 表单重置
 function reset() {
   form.value = {
-    ID: null,
+    id: null,
     fieldEnName: null,
     fieldCnName: null,
     ffieldRemark: null,
     fieldWidth: null,
     fieldType: null,
-    SCHEME: null,
-    SCOPE: null
+    scheme: null,
+    scope: null,
+    createBy: null,
+    createTime: null,
+    updateBy: null,
+    updateTime: null
   };
   proxy.resetForm("fieldRef");
 }
@@ -226,7 +230,7 @@ function resetQuery() {
 
 // 多选框选中数据
 function handleSelectionChange(selection) {
-  ids.value = selection.map(item => item.ID);
+  ids.value = selection.map(item => item.id);
   single.value = selection.length != 1;
   multiple.value = !selection.length;
 }
@@ -241,8 +245,8 @@ function handleAdd() {
 /** 修改按钮操作 */
 function handleUpdate(row) {
   reset();
-  const _ID = row.ID || ids.value
-  getField(_ID).then(response => {
+  const _id = row.id || ids.value
+  getField(_id).then(response => {
     form.value = response.data;
     open.value = true;
     title.value = "修改模型字段";
@@ -253,7 +257,7 @@ function handleUpdate(row) {
 function submitForm() {
   proxy.$refs["fieldRef"].validate(valid => {
     if (valid) {
-      if (form.value.ID != null) {
+      if (form.value.id != null) {
         updateField(form.value).then(response => {
           proxy.$modal.msgSuccess("修改成功");
           open.value = false;
@@ -272,9 +276,9 @@ function submitForm() {
 
 /** 删除按钮操作 */
 function handleDelete(row) {
-  const _IDs = row.ID || ids.value;
-  proxy.$modal.confirm('是否确认删除模型字段编号为"' + _IDs + '"的数据项？').then(function() {
-    return delField(_IDs);
+  const _ids = row.id || ids.value;
+  proxy.$modal.confirm('是否确认删除模型字段编号为"' + _ids + '"的数据项？').then(function() {
+    return delField(_ids);
   }).then(() => {
     getList();
     proxy.$modal.msgSuccess("删除成功");

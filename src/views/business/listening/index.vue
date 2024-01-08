@@ -9,17 +9,25 @@
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="主题" prop="TOPIC">
+      <el-form-item label="MQ名称" prop="mqName">
         <el-input
-          v-model="queryParams.TOPIC"
+          v-model="queryParams.mqName"
+          placeholder="请输入MQ名称"
+          clearable
+          @keyup.enter="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="主题" prop="topic">
+        <el-input
+          v-model="queryParams.topic"
           placeholder="请输入主题"
           clearable
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="标签" prop="TAG">
+      <el-form-item label="标签" prop="tag">
         <el-input
-          v-model="queryParams.TAG"
+          v-model="queryParams.tag"
           placeholder="请输入标签"
           clearable
           @keyup.enter="handleQuery"
@@ -45,14 +53,6 @@
         <el-input
           v-model="queryParams.forwardTag"
           placeholder="请输入转发标签"
-          clearable
-          @keyup.enter="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="备注" prop="REMARK">
-        <el-input
-          v-model="queryParams.REMARK"
-          placeholder="请输入备注"
           clearable
           @keyup.enter="handleQuery"
         />
@@ -107,15 +107,15 @@
 
     <el-table v-loading="loading" :data="listeningList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="ID" />
+      <el-table-column label="ID" align="center" prop="id" />
       <el-table-column label="应用编码" align="center" prop="applicationCode" />
-      <el-table-column label="MQ类型" align="center" prop="mqType" />
-      <el-table-column label="主题" align="center" prop="TOPIC" />
-      <el-table-column label="标签" align="center" prop="TAG" />
+      <el-table-column label="MQ名称" align="center" prop="mqName" />
+      <el-table-column label="主题" align="center" prop="topic" />
+      <el-table-column label="标签" align="center" prop="tag" />
       <el-table-column label="监听服务名称" align="center" prop="listenServiceName" />
       <el-table-column label="转发主题" align="center" prop="forwardTopic" />
       <el-table-column label="转发标签" align="center" prop="forwardTag" />
-      <el-table-column label="备注" align="center" prop="REMARK" />
+      <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['business:listening:edit']">修改</el-button>
@@ -138,11 +138,14 @@
         <el-form-item label="应用编码" prop="applicationCode">
           <el-input v-model="form.applicationCode" placeholder="请输入应用编码" />
         </el-form-item>
-        <el-form-item label="主题" prop="TOPIC">
-          <el-input v-model="form.TOPIC" placeholder="请输入主题" />
+        <el-form-item label="MQ名称" prop="mqName">
+          <el-input v-model="form.mqName" placeholder="请输入MQ名称" />
         </el-form-item>
-        <el-form-item label="标签" prop="TAG">
-          <el-input v-model="form.TAG" placeholder="请输入标签" />
+        <el-form-item label="主题" prop="topic">
+          <el-input v-model="form.topic" placeholder="请输入主题" />
+        </el-form-item>
+        <el-form-item label="标签" prop="tag">
+          <el-input v-model="form.tag" placeholder="请输入标签" />
         </el-form-item>
         <el-form-item label="监听服务名称" prop="listenServiceName">
           <el-input v-model="form.listenServiceName" placeholder="请输入监听服务名称" />
@@ -153,8 +156,8 @@
         <el-form-item label="转发标签" prop="forwardTag">
           <el-input v-model="form.forwardTag" placeholder="请输入转发标签" />
         </el-form-item>
-        <el-form-item label="备注" prop="REMARK">
-          <el-input v-model="form.REMARK" placeholder="请输入备注" />
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -188,13 +191,12 @@ const data = reactive({
     pageNum: 1,
     pageSize: 10,
     applicationCode: null,
-    mqType: null,
-    TOPIC: null,
-    TAG: null,
+    mqName: null,
+    topic: null,
+    tag: null,
     listenServiceName: null,
     forwardTopic: null,
     forwardTag: null,
-    REMARK: null
   },
   rules: {
     applicationCode: [
@@ -224,15 +226,19 @@ function cancel() {
 // 表单重置
 function reset() {
   form.value = {
-    ID: null,
+    id: null,
     applicationCode: null,
-    mqType: null,
-    TOPIC: null,
-    TAG: null,
+    mqName: null,
+    topic: null,
+    tag: null,
     listenServiceName: null,
     forwardTopic: null,
     forwardTag: null,
-    REMARK: null
+    remark: null,
+    createBy: null,
+    createTime: null,
+    updateBy: null,
+    updateTime: null
   };
   proxy.resetForm("listeningRef");
 }
@@ -251,7 +257,7 @@ function resetQuery() {
 
 // 多选框选中数据
 function handleSelectionChange(selection) {
-  ids.value = selection.map(item => item.ID);
+  ids.value = selection.map(item => item.id);
   single.value = selection.length != 1;
   multiple.value = !selection.length;
 }
@@ -266,8 +272,8 @@ function handleAdd() {
 /** 修改按钮操作 */
 function handleUpdate(row) {
   reset();
-  const _ID = row.ID || ids.value
-  getListening(_ID).then(response => {
+  const _id = row.id || ids.value
+  getListening(_id).then(response => {
     form.value = response.data;
     open.value = true;
     title.value = "修改功能侦听";
@@ -278,7 +284,7 @@ function handleUpdate(row) {
 function submitForm() {
   proxy.$refs["listeningRef"].validate(valid => {
     if (valid) {
-      if (form.value.ID != null) {
+      if (form.value.id != null) {
         updateListening(form.value).then(response => {
           proxy.$modal.msgSuccess("修改成功");
           open.value = false;
@@ -297,9 +303,9 @@ function submitForm() {
 
 /** 删除按钮操作 */
 function handleDelete(row) {
-  const _IDs = row.ID || ids.value;
-  proxy.$modal.confirm('是否确认删除功能侦听编号为"' + _IDs + '"的数据项？').then(function() {
-    return delListening(_IDs);
+  const _ids = row.id || ids.value;
+  proxy.$modal.confirm('是否确认删除功能侦听编号为"' + _ids + '"的数据项？').then(function() {
+    return delListening(_ids);
   }).then(() => {
     getList();
     proxy.$modal.msgSuccess("删除成功");

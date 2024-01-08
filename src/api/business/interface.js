@@ -10,9 +10,9 @@ export function listInterface(query) {
 }
 
 // 查询接口详细
-export function getInterface(ID) {
+export function getInterface(id) {
   return request({
-    url: '/business/interface/' + ID,
+    url: '/business/interface/' + id,
     method: 'get'
   })
 }
@@ -36,9 +36,9 @@ export function updateInterface(data) {
 }
 
 // 删除接口
-export function delInterface(ID) {
+export function delInterface(id) {
   return request({
-    url: '/business/interface/' + ID,
+    url: '/business/interface/' + id,
     method: 'delete'
   })
 }

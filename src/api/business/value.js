@@ -10,9 +10,9 @@ export function listValue(query) {
 }
 
 // 查询接口返回值详细
-export function getValue(ID) {
+export function getValue(id) {
   return request({
-    url: '/business/value/' + ID,
+    url: '/business/value/' + id,
     method: 'get'
   })
 }
@@ -36,9 +36,9 @@ export function updateValue(data) {
 }
 
 // 删除接口返回值
-export function delValue(ID) {
+export function delValue(id) {
   return request({
-    url: '/business/value/' + ID,
+    url: '/business/value/' + id,
     method: 'delete'
   })
 }

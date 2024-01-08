@@ -9,9 +9,9 @@
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="信息范围" prop="SCOPE">
+      <el-form-item label="信息范围" prop="scope">
         <el-input
-          v-model="queryParams.SCOPE"
+          v-model="queryParams.scope"
           placeholder="请输入信息范围"
           clearable
           @keyup.enter="handleQuery"
@@ -75,9 +75,9 @@
 
     <el-table v-loading="loading" :data="typeList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="ID" />
+      <el-table-column label="ID" align="center" prop="id" />
       <el-table-column label="信息名称" align="center" prop="infoName" />
-      <el-table-column label="信息范围" align="center" prop="SCOPE" />
+      <el-table-column label="信息范围" align="center" prop="scope" />
       <el-table-column label="模型表英文名" align="center" prop="enName" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
@@ -101,8 +101,8 @@
         <el-form-item label="信息名称" prop="infoName">
           <el-input v-model="form.infoName" placeholder="请输入信息名称" />
         </el-form-item>
-        <el-form-item label="信息范围" prop="SCOPE">
-          <el-input v-model="form.SCOPE" placeholder="请输入信息范围" />
+        <el-form-item label="信息范围" prop="scope">
+          <el-input v-model="form.scope" placeholder="请输入信息范围" />
         </el-form-item>
         <el-form-item label="模型表英文名" prop="enName">
           <el-input v-model="form.enName" placeholder="请输入模型表英文名" />
@@ -139,19 +139,19 @@ const data = reactive({
     pageNum: 1,
     pageSize: 10,
     infoName: null,
-    SCOPE: null,
-    enName: null
+    scope: null,
+    enName: null,
   },
   rules: {
     infoName: [
       { required: true, message: "信息名称不能为空", trigger: "blur" }
     ],
-    SCOPE: [
+    scope: [
       { required: true, message: "信息范围不能为空", trigger: "blur" }
     ],
     enName: [
       { required: true, message: "模型表英文名不能为空", trigger: "blur" }
-    ]
+    ],
   }
 });
 
@@ -176,10 +176,14 @@ function cancel() {
 // 表单重置
 function reset() {
   form.value = {
-    ID: null,
+    id: null,
     infoName: null,
-    SCOPE: null,
-    enName: null
+    scope: null,
+    enName: null,
+    createBy: null,
+    createTime: null,
+    updateBy: null,
+    updateTime: null
   };
   proxy.resetForm("typeRef");
 }
@@ -198,7 +202,7 @@ function resetQuery() {
 
 // 多选框选中数据
 function handleSelectionChange(selection) {
-  ids.value = selection.map(item => item.ID);
+  ids.value = selection.map(item => item.id);
   single.value = selection.length != 1;
   multiple.value = !selection.length;
 }
@@ -213,8 +217,8 @@ function handleAdd() {
 /** 修改按钮操作 */
 function handleUpdate(row) {
   reset();
-  const _ID = row.ID || ids.value
-  getType(_ID).then(response => {
+  const _id = row.id || ids.value
+  getType(_id).then(response => {
     form.value = response.data;
     open.value = true;
     title.value = "修改选项类型";
@@ -225,7 +229,7 @@ function handleUpdate(row) {
 function submitForm() {
   proxy.$refs["typeRef"].validate(valid => {
     if (valid) {
-      if (form.value.ID != null) {
+      if (form.value.id != null) {
         updateType(form.value).then(response => {
           proxy.$modal.msgSuccess("修改成功");
           open.value = false;
@@ -244,9 +248,9 @@ function submitForm() {
 
 /** 删除按钮操作 */
 function handleDelete(row) {
-  const _IDs = row.ID || ids.value;
-  proxy.$modal.confirm('是否确认删除选项类型编号为"' + _IDs + '"的数据项？').then(function() {
-    return delType(_IDs);
+  const _ids = row.id || ids.value;
+  proxy.$modal.confirm('是否确认删除选项类型编号为"' + _ids + '"的数据项？').then(function() {
+    return delType(_ids);
   }).then(() => {
     getList();
     proxy.$modal.msgSuccess("删除成功");

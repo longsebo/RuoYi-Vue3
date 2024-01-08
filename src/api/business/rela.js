@@ -10,9 +10,9 @@ export function listRela(query) {
 }
 
 // 查询业务功能接口关系详细
-export function getRela(ID) {
+export function getRela(id) {
   return request({
-    url: '/business/rela/' + ID,
+    url: '/business/rela/' + id,
     method: 'get'
   })
 }
@@ -36,9 +36,9 @@ export function updateRela(data) {
 }
 
 // 删除业务功能接口关系
-export function delRela(ID) {
+export function delRela(id) {
   return request({
-    url: '/business/rela/' + ID,
+    url: '/business/rela/' + id,
     method: 'delete'
   })
 }

@@ -25,14 +25,6 @@
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="备注" prop="REMARK">
-        <el-input
-          v-model="queryParams.REMARK"
-          placeholder="请输入备注"
-          clearable
-          @keyup.enter="handleQuery"
-        />
-      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
         <el-button icon="Refresh" @click="resetQuery">重置</el-button>
@@ -83,11 +75,11 @@
 
     <el-table v-loading="loading" :data="functionList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="ID" />
+      <el-table-column label="ID" align="center" prop="id" />
       <el-table-column label="业务编码" align="center" prop="businessCode" />
       <el-table-column label="业务名称" align="center" prop="businessName" />
       <el-table-column label="父级编码" align="center" prop="parentCode" />
-      <el-table-column label="备注" align="center" prop="REMARK" />
+      <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['business:function:edit']">修改</el-button>
@@ -116,8 +108,8 @@
         <el-form-item label="父级编码" prop="parentCode">
           <el-input v-model="form.parentCode" placeholder="请输入父级编码" />
         </el-form-item>
-        <el-form-item label="备注" prop="REMARK">
-          <el-input v-model="form.REMARK" placeholder="请输入备注" />
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -153,7 +145,6 @@ const data = reactive({
     businessCode: null,
     businessName: null,
     parentCode: null,
-    REMARK: null
   },
   rules: {
     businessCode: [
@@ -186,11 +177,15 @@ function cancel() {
 // 表单重置
 function reset() {
   form.value = {
-    ID: null,
+    id: null,
     businessCode: null,
     businessName: null,
     parentCode: null,
-    REMARK: null
+    remark: null,
+    createBy: null,
+    createTime: null,
+    updateBy: null,
+    updateTime: null
   };
   proxy.resetForm("functionRef");
 }
@@ -209,7 +204,7 @@ function resetQuery() {
 
 // 多选框选中数据
 function handleSelectionChange(selection) {
-  ids.value = selection.map(item => item.ID);
+  ids.value = selection.map(item => item.id);
   single.value = selection.length != 1;
   multiple.value = !selection.length;
 }
@@ -224,8 +219,8 @@ function handleAdd() {
 /** 修改按钮操作 */
 function handleUpdate(row) {
   reset();
-  const _ID = row.ID || ids.value
-  getFunction(_ID).then(response => {
+  const _id = row.id || ids.value
+  getFunction(_id).then(response => {
     form.value = response.data;
     open.value = true;
     title.value = "修改业务功能";
@@ -236,7 +231,7 @@ function handleUpdate(row) {
 function submitForm() {
   proxy.$refs["functionRef"].validate(valid => {
     if (valid) {
-      if (form.value.ID != null) {
+      if (form.value.id != null) {
         updateFunction(form.value).then(response => {
           proxy.$modal.msgSuccess("修改成功");
           open.value = false;
@@ -255,9 +250,9 @@ function submitForm() {
 
 /** 删除按钮操作 */
 function handleDelete(row) {
-  const _IDs = row.ID || ids.value;
-  proxy.$modal.confirm('是否确认删除业务功能编号为"' + _IDs + '"的数据项？').then(function() {
-    return delFunction(_IDs);
+  const _ids = row.id || ids.value;
+  proxy.$modal.confirm('是否确认删除业务功能编号为"' + _ids + '"的数据项？').then(function() {
+    return delFunction(_ids);
   }).then(() => {
     getList();
     proxy.$modal.msgSuccess("删除成功");

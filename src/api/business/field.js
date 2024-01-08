@@ -10,9 +10,9 @@ export function listField(query) {
 }
 
 // 查询模型字段详细
-export function getField(ID) {
+export function getField(id) {
   return request({
-    url: '/business/field/' + ID,
+    url: '/business/field/' + id,
     method: 'get'
   })
 }
@@ -36,9 +36,9 @@ export function updateField(data) {
 }
 
 // 删除模型字段
-export function delField(ID) {
+export function delField(id) {
   return request({
-    url: '/business/field/' + ID,
+    url: '/business/field/' + id,
     method: 'delete'
   })
 }

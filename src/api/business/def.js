@@ -10,9 +10,9 @@ export function listDef(query) {
 }
 
 // 查询模型定义详细
-export function getDef(ID) {
+export function getDef(id) {
   return request({
-    url: '/business/def/' + ID,
+    url: '/business/def/' + id,
     method: 'get'
   })
 }
@@ -36,9 +36,9 @@ export function updateDef(data) {
 }
 
 // 删除模型定义
-export function delDef(ID) {
+export function delDef(id) {
   return request({
-    url: '/business/def/' + ID,
+    url: '/business/def/' + id,
     method: 'delete'
   })
 }

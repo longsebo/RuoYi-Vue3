@@ -10,9 +10,9 @@ export function listPage(query) {
 }
 
 // 查询页面定义详细
-export function getPage(ID) {
+export function getPage(id) {
   return request({
-    url: '/business/page/' + ID,
+    url: '/business/page/' + id,
     method: 'get'
   })
 }
@@ -36,9 +36,9 @@ export function updatePage(data) {
 }
 
 // 删除页面定义
-export function delPage(ID) {
+export function delPage(id) {
   return request({
-    url: '/business/page/' + ID,
+    url: '/business/page/' + id,
     method: 'delete'
   })
 }

@@ -10,9 +10,9 @@ export function listApplication(query) {
 }
 
 // 查询应用定义详细
-export function getApplication(ID) {
+export function getApplication(id) {
   return request({
-    url: '/business/application/' + ID,
+    url: '/business/application/' + id,
     method: 'get'
   })
 }
@@ -36,9 +36,9 @@ export function updateApplication(data) {
 }
 
 // 删除应用定义
-export function delApplication(ID) {
+export function delApplication(id) {
   return request({
-    url: '/business/application/' + ID,
+    url: '/business/application/' + id,
     method: 'delete'
   })
 }

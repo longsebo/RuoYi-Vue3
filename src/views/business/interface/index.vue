@@ -107,7 +107,7 @@
 
     <el-table v-loading="loading" :data="interfaceList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="ID" />
+      <el-table-column label="ID" align="center" prop="id" />
       <el-table-column label="接口名称" align="center" prop="interfaceName" />
       <el-table-column label="接口编码" align="center" prop="interfaceCode" />
       <el-table-column label="接口URL" align="center" prop="interfaceUrl" />
@@ -194,7 +194,7 @@ const data = reactive({
     interfaceType: null,
     interfaceDatasourceName: null,
     isSelectDatasource: null,
-    isCommonUrl: null
+    isCommonUrl: null,
   },
   rules: {
   }
@@ -221,7 +221,7 @@ function cancel() {
 // 表单重置
 function reset() {
   form.value = {
-    ID: null,
+    id: null,
     interfaceName: null,
     interfaceCode: null,
     interfaceUrl: null,
@@ -229,7 +229,11 @@ function reset() {
     interfaceType: null,
     interfaceDatasourceName: null,
     isSelectDatasource: null,
-    isCommonUrl: null
+    isCommonUrl: null,
+    createBy: null,
+    createTime: null,
+    updateBy: null,
+    updateTime: null
   };
   proxy.resetForm("interfaceRef");
 }
@@ -248,7 +252,7 @@ function resetQuery() {
 
 // 多选框选中数据
 function handleSelectionChange(selection) {
-  ids.value = selection.map(item => item.ID);
+  ids.value = selection.map(item => item.id);
   single.value = selection.length != 1;
   multiple.value = !selection.length;
 }
@@ -263,8 +267,8 @@ function handleAdd() {
 /** 修改按钮操作 */
 function handleUpdate(row) {
   reset();
-  const _ID = row.ID || ids.value
-  getInterface(_ID).then(response => {
+  const _id = row.id || ids.value
+  getInterface(_id).then(response => {
     form.value = response.data;
     open.value = true;
     title.value = "修改接口";
@@ -275,7 +279,7 @@ function handleUpdate(row) {
 function submitForm() {
   proxy.$refs["interfaceRef"].validate(valid => {
     if (valid) {
-      if (form.value.ID != null) {
+      if (form.value.id != null) {
         updateInterface(form.value).then(response => {
           proxy.$modal.msgSuccess("修改成功");
           open.value = false;
@@ -294,9 +298,9 @@ function submitForm() {
 
 /** 删除按钮操作 */
 function handleDelete(row) {
-  const _IDs = row.ID || ids.value;
-  proxy.$modal.confirm('是否确认删除接口编号为"' + _IDs + '"的数据项？').then(function() {
-    return delInterface(_IDs);
+  const _ids = row.id || ids.value;
+  proxy.$modal.confirm('是否确认删除接口编号为"' + _ids + '"的数据项？').then(function() {
+    return delInterface(_ids);
   }).then(() => {
     getList();
     proxy.$modal.msgSuccess("删除成功");

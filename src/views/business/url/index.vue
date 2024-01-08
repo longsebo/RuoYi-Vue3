@@ -1,26 +1,18 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="名称" prop="NAME">
+      <el-form-item label="名称" prop="name">
         <el-input
-          v-model="queryParams.NAME"
+          v-model="queryParams.name"
           placeholder="请输入名称"
           clearable
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="URL" prop="URL">
+      <el-form-item label="URL" prop="url">
         <el-input
-          v-model="queryParams.URL"
+          v-model="queryParams.url"
           placeholder="请输入URL"
-          clearable
-          @keyup.enter="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="备注" prop="REMARK">
-        <el-input
-          v-model="queryParams.REMARK"
-          placeholder="请输入备注"
           clearable
           @keyup.enter="handleQuery"
         />
@@ -75,10 +67,10 @@
 
     <el-table v-loading="loading" :data="urlList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="ID" />
-      <el-table-column label="名称" align="center" prop="NAME" />
-      <el-table-column label="URL" align="center" prop="URL" />
-      <el-table-column label="备注" align="center" prop="REMARK" />
+      <el-table-column label="ID" align="center" prop="id" />
+      <el-table-column label="名称" align="center" prop="name" />
+      <el-table-column label="URL" align="center" prop="url" />
+      <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['business:url:edit']">修改</el-button>
@@ -98,14 +90,14 @@
     <!-- 添加或修改通用URL对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
       <el-form ref="urlRef" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="名称" prop="NAME">
-          <el-input v-model="form.NAME" placeholder="请输入名称" />
+        <el-form-item label="名称" prop="name">
+          <el-input v-model="form.name" placeholder="请输入名称" />
         </el-form-item>
-        <el-form-item label="URL" prop="URL">
-          <el-input v-model="form.URL" placeholder="请输入URL" />
+        <el-form-item label="URL" prop="url">
+          <el-input v-model="form.url" placeholder="请输入URL" />
         </el-form-item>
-        <el-form-item label="备注" prop="REMARK">
-          <el-input v-model="form.REMARK" placeholder="请输入备注" />
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -138,15 +130,14 @@ const data = reactive({
   queryParams: {
     pageNum: 1,
     pageSize: 10,
-    NAME: null,
-    URL: null,
-    REMARK: null
+    name: null,
+    url: null,
   },
   rules: {
-    NAME: [
+    name: [
       { required: true, message: "名称不能为空", trigger: "blur" }
     ],
-    URL: [
+    url: [
       { required: true, message: "URL不能为空", trigger: "blur" }
     ],
   }
@@ -173,10 +164,14 @@ function cancel() {
 // 表单重置
 function reset() {
   form.value = {
-    ID: null,
-    NAME: null,
-    URL: null,
-    REMARK: null
+    id: null,
+    name: null,
+    url: null,
+    remark: null,
+    createBy: null,
+    createTime: null,
+    updateBy: null,
+    updateTime: null
   };
   proxy.resetForm("urlRef");
 }
@@ -195,7 +190,7 @@ function resetQuery() {
 
 // 多选框选中数据
 function handleSelectionChange(selection) {
-  ids.value = selection.map(item => item.ID);
+  ids.value = selection.map(item => item.id);
   single.value = selection.length != 1;
   multiple.value = !selection.length;
 }
@@ -210,8 +205,8 @@ function handleAdd() {
 /** 修改按钮操作 */
 function handleUpdate(row) {
   reset();
-  const _ID = row.ID || ids.value
-  getUrl(_ID).then(response => {
+  const _id = row.id || ids.value
+  getUrl(_id).then(response => {
     form.value = response.data;
     open.value = true;
     title.value = "修改通用URL";
@@ -222,7 +217,7 @@ function handleUpdate(row) {
 function submitForm() {
   proxy.$refs["urlRef"].validate(valid => {
     if (valid) {
-      if (form.value.ID != null) {
+      if (form.value.id != null) {
         updateUrl(form.value).then(response => {
           proxy.$modal.msgSuccess("修改成功");
           open.value = false;
@@ -241,9 +236,9 @@ function submitForm() {
 
 /** 删除按钮操作 */
 function handleDelete(row) {
-  const _IDs = row.ID || ids.value;
-  proxy.$modal.confirm('是否确认删除通用URL编号为"' + _IDs + '"的数据项？').then(function() {
-    return delUrl(_IDs);
+  const _ids = row.id || ids.value;
+  proxy.$modal.confirm('是否确认删除通用URL编号为"' + _ids + '"的数据项？').then(function() {
+    return delUrl(_ids);
   }).then(() => {
     getList();
     proxy.$modal.msgSuccess("删除成功");

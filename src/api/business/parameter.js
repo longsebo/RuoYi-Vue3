@@ -10,9 +10,9 @@ export function listParameter(query) {
 }
 
 // 查询接口参数详细
-export function getParameter(ID) {
+export function getParameter(id) {
   return request({
-    url: '/business/parameter/' + ID,
+    url: '/business/parameter/' + id,
     method: 'get'
   })
 }
@@ -36,9 +36,9 @@ export function updateParameter(data) {
 }
 
 // 删除接口参数
-export function delParameter(ID) {
+export function delParameter(id) {
   return request({
-    url: '/business/parameter/' + ID,
+    url: '/business/parameter/' + id,
     method: 'delete'
   })
 }

@@ -10,9 +10,9 @@ export function listListening(query) {
 }
 
 // 查询功能侦听详细
-export function getListening(ID) {
+export function getListening(id) {
   return request({
-    url: '/business/listening/' + ID,
+    url: '/business/listening/' + id,
     method: 'get'
   })
 }
@@ -36,9 +36,9 @@ export function updateListening(data) {
 }
 
 // 删除功能侦听
-export function delListening(ID) {
+export function delListening(id) {
   return request({
-    url: '/business/listening/' + ID,
+    url: '/business/listening/' + id,
     method: 'delete'
   })
 }

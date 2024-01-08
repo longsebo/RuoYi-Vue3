@@ -10,9 +10,9 @@ export function listUrl(query) {
 }
 
 // 查询通用URL详细
-export function getUrl(ID) {
+export function getUrl(id) {
   return request({
-    url: '/business/url/' + ID,
+    url: '/business/url/' + id,
     method: 'get'
   })
 }
@@ -36,9 +36,9 @@ export function updateUrl(data) {
 }
 
 // 删除通用URL
-export function delUrl(ID) {
+export function delUrl(id) {
   return request({
-    url: '/business/url/' + ID,
+    url: '/business/url/' + id,
     method: 'delete'
   })
 }

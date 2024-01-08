@@ -10,9 +10,9 @@ export function listDatasource(query) {
 }
 
 // 查询数据源定义详细
-export function getDatasource(ID) {
+export function getDatasource(id) {
   return request({
-    url: '/business/datasource/' + ID,
+    url: '/business/datasource/' + id,
     method: 'get'
   })
 }
@@ -36,9 +36,9 @@ export function updateDatasource(data) {
 }
 
 // 删除数据源定义
-export function delDatasource(ID) {
+export function delDatasource(id) {
   return request({
-    url: '/business/datasource/' + ID,
+    url: '/business/datasource/' + id,
     method: 'delete'
   })
 }

@@ -17,9 +17,9 @@
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="URL" prop="URL">
+      <el-form-item label="URL" prop="url">
         <el-input
-          v-model="queryParams.URL"
+          v-model="queryParams.url"
           placeholder="请输入URL"
           clearable
           @keyup.enter="handleQuery"
@@ -33,18 +33,10 @@
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="密码" prop="PASSWORD">
+      <el-form-item label="密码" prop="password">
         <el-input
-          v-model="queryParams.PASSWORD"
+          v-model="queryParams.password"
           placeholder="请输入密码"
-          clearable
-          @keyup.enter="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="备注" prop="REMARK">
-        <el-input
-          v-model="queryParams.REMARK"
-          placeholder="请输入备注"
           clearable
           @keyup.enter="handleQuery"
         />
@@ -99,13 +91,13 @@
 
     <el-table v-loading="loading" :data="datasourceList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="ID" />
+      <el-table-column label="ID" align="center" prop="id" />
       <el-table-column label="数据源名称" align="center" prop="datasourceName" />
       <el-table-column label="驱动类" align="center" prop="driverClass" />
-      <el-table-column label="URL" align="center" prop="URL" />
+      <el-table-column label="URL" align="center" prop="url" />
       <el-table-column label="用户名" align="center" prop="userName" />
-      <el-table-column label="密码" align="center" prop="PASSWORD" />
-      <el-table-column label="备注" align="center" prop="REMARK" />
+      <el-table-column label="密码" align="center" prop="password" />
+      <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['business:datasource:edit']">修改</el-button>
@@ -131,17 +123,17 @@
         <el-form-item label="驱动类" prop="driverClass">
           <el-input v-model="form.driverClass" placeholder="请输入驱动类" />
         </el-form-item>
-        <el-form-item label="URL" prop="URL">
-          <el-input v-model="form.URL" placeholder="请输入URL" />
+        <el-form-item label="URL" prop="url">
+          <el-input v-model="form.url" placeholder="请输入URL" />
         </el-form-item>
         <el-form-item label="用户名" prop="userName">
           <el-input v-model="form.userName" placeholder="请输入用户名" />
         </el-form-item>
-        <el-form-item label="密码" prop="PASSWORD">
-          <el-input v-model="form.PASSWORD" placeholder="请输入密码" />
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="form.password" placeholder="请输入密码" />
         </el-form-item>
-        <el-form-item label="备注" prop="REMARK">
-          <el-input v-model="form.REMARK" placeholder="请输入备注" />
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -176,10 +168,9 @@ const data = reactive({
     pageSize: 10,
     datasourceName: null,
     driverClass: null,
-    URL: null,
+    url: null,
     userName: null,
-    PASSWORD: null,
-    REMARK: null
+    password: null,
   },
   rules: {
     datasourceName: [
@@ -188,7 +179,7 @@ const data = reactive({
     driverClass: [
       { required: true, message: "驱动类不能为空", trigger: "blur" }
     ],
-    URL: [
+    url: [
       { required: true, message: "URL不能为空", trigger: "blur" }
     ],
   }
@@ -215,13 +206,17 @@ function cancel() {
 // 表单重置
 function reset() {
   form.value = {
-    ID: null,
+    id: null,
     datasourceName: null,
     driverClass: null,
-    URL: null,
+    url: null,
     userName: null,
-    PASSWORD: null,
-    REMARK: null
+    password: null,
+    remark: null,
+    createBy: null,
+    createTime: null,
+    updateBy: null,
+    updateTime: null
   };
   proxy.resetForm("datasourceRef");
 }
@@ -240,7 +235,7 @@ function resetQuery() {
 
 // 多选框选中数据
 function handleSelectionChange(selection) {
-  ids.value = selection.map(item => item.ID);
+  ids.value = selection.map(item => item.id);
   single.value = selection.length != 1;
   multiple.value = !selection.length;
 }
@@ -255,8 +250,8 @@ function handleAdd() {
 /** 修改按钮操作 */
 function handleUpdate(row) {
   reset();
-  const _ID = row.ID || ids.value
-  getDatasource(_ID).then(response => {
+  const _id = row.id || ids.value
+  getDatasource(_id).then(response => {
     form.value = response.data;
     open.value = true;
     title.value = "修改数据源定义";
@@ -267,7 +262,7 @@ function handleUpdate(row) {
 function submitForm() {
   proxy.$refs["datasourceRef"].validate(valid => {
     if (valid) {
-      if (form.value.ID != null) {
+      if (form.value.id != null) {
         updateDatasource(form.value).then(response => {
           proxy.$modal.msgSuccess("修改成功");
           open.value = false;
@@ -286,9 +281,9 @@ function submitForm() {
 
 /** 删除按钮操作 */
 function handleDelete(row) {
-  const _IDs = row.ID || ids.value;
-  proxy.$modal.confirm('是否确认删除数据源定义编号为"' + _IDs + '"的数据项？').then(function() {
-    return delDatasource(_IDs);
+  const _ids = row.id || ids.value;
+  proxy.$modal.confirm('是否确认删除数据源定义编号为"' + _ids + '"的数据项？').then(function() {
+    return delDatasource(_ids);
   }).then(() => {
     getList();
     proxy.$modal.msgSuccess("删除成功");

@@ -10,9 +10,9 @@ export function listType(query) {
 }
 
 // 查询选项类型详细
-export function getType(ID) {
+export function getType(id) {
   return request({
-    url: '/business/type/' + ID,
+    url: '/business/type/' + id,
     method: 'get'
   })
 }
@@ -36,9 +36,9 @@ export function updateType(data) {
 }
 
 // 删除选项类型
-export function delType(ID) {
+export function delType(id) {
   return request({
-    url: '/business/type/' + ID,
+    url: '/business/type/' + id,
     method: 'delete'
   })
 }
