@@ -42,3 +42,11 @@ export function delFunction(id) {
     method: 'delete'
   })
 }
+//查询业务树
+export function functionTreeSelect(query){
+  return request({
+    url: '/business/function/tree',
+    method: 'post',
+    data:query
+  })
+}
