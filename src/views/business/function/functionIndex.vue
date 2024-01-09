@@ -29,7 +29,6 @@
                   >新增根功能</el-button>
                </el-col>
             </el-row>
-
            <el-form ref="currentFunctionRef" :model="currentForm" :rules="rules" label-width="80px">
              <el-form-item label="业务编码" prop="businessCode">
                <el-input v-model="currentForm.businessCode" placeholder="请输入业务编码" />
@@ -43,7 +42,7 @@
              <el-form-item label="备注" prop="remark">
                <el-input v-model="currentForm.remark" placeholder="请输入备注" />
              </el-form-item>
-             <el-form-tem>
+             <el-form-item>
                <el-button
                    type="success"
                    plain
@@ -65,7 +64,7 @@
                    @click="handleDelete"
                    v-hasPermi="['business:function:remove']"
                >删除</el-button>
-             </el-form-tem>
+             </el-form-item>
            </el-form>
          </el-col>
       </el-row>
