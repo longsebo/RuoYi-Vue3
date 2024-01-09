@@ -59,7 +59,6 @@
 
     <el-table v-loading="loading" :data="confList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="id" />
       <el-table-column label="名称" align="center" prop="mqName" />
       <el-table-column label="MQ类型" align="center" prop="mqType" />
       <el-table-column label="MQ配置" align="center" prop="mqConfig" />
@@ -70,7 +69,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -85,6 +84,25 @@
         <el-form-item label="名称" prop="mqName">
           <el-input v-model="form.mqName" placeholder="请输入名称" />
         </el-form-item>
+        <el-form-item label="MQ类型" prop="mqType">
+          <el-select
+              v-model="form.mqType"
+              placeholder="请选择MQ类型"
+              clearable
+              style="width: 240px"
+              @change="mqTypeSelectChange"
+          >
+            <el-option
+                v-for="item in mqTypeList"
+                :key="item.dictLabel"
+                :label="item.dictLabel"
+                :value="item.dictLabel"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="MQ配置" prop="mqConfig">
+          <el-input v-model="form.mqConfig" type="textarea" :rows="10" placeholder="请输入配置" />
+        </el-form-item>
       </el-form>
       <template #footer>
         <div class="dialog-footer">
@@ -98,7 +116,7 @@
 
 <script setup name="Conf">
 import { listConf, getConf, delConf, addConf, updateConf } from "@/api/business/conf";
-
+import { listData } from "@/api/system/dict/data";
 const { proxy } = getCurrentInstance();
 
 const confList = ref([]);
@@ -110,6 +128,7 @@ const single = ref(true);
 const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
+const mqTypeList = ref([]);
 
 const data = reactive({
   form: {},
@@ -130,10 +149,17 @@ const data = reactive({
     mqConfig: [
       { required: true, message: "MQ配置不能为空", trigger: "blur" }
     ],
+  },
+  queryDictParams: {
+    pageNum: 1,
+    pageSize: 10,
+    dictType: 'mq_type',
+    dictLabel: undefined,
+    status: undefined
   }
 });
 
-const { queryParams, form, rules } = toRefs(data);
+const { queryParams, form, rules,queryDictParams } = toRefs(data);
 
 /** 查询MQ配置定义列表 */
 function getList() {
@@ -241,6 +267,31 @@ function handleExport() {
     ...queryParams.value
   }, `conf_${new Date().getTime()}.xlsx`)
 }
+/** 查询mqType字典数据列表 */
+function getMqTypeList() {
 
+  listData(queryDictParams.value).then(response => {
+    mqTypeList.value = response.rows;
+  });
+}
+
+/**
+ * mq类型选择变化
+ */
+function mqTypeSelectChange(mqName){
+ //回填mq配置
+ let mqConfig='';
+ debugger;
+ //循环查找字典
+  for(let i=0;i<mqTypeList.value.length;i++){
+    let item = mqTypeList.value[i];
+    if(item.dictLabel==mqName){
+      mqConfig = item.dictValue;
+      break;
+    }
+  }
+ form.value.mqConfig =mqConfig;
+}
 getList();
+getMqTypeList();
 </script>
