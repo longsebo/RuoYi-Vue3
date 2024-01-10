@@ -107,7 +107,6 @@
 
     <el-table v-loading="loading" :data="listeningList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="id" />
       <el-table-column label="应用编码" align="center" prop="applicationCode" />
       <el-table-column label="MQ名称" align="center" prop="mqName" />
       <el-table-column label="主题" align="center" prop="topic" />
@@ -123,7 +122,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -133,13 +132,37 @@
     />
 
     <!-- 添加或修改功能侦听对话框 -->
-    <el-dialog :title="title" v-model="open" width="500px" append-to-body>
+    <el-dialog :title="title" v-model="open" width="600px" append-to-body>
       <el-form ref="listeningRef" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="应用编码" prop="applicationCode">
-          <el-input v-model="form.applicationCode" placeholder="请输入应用编码" />
+          <el-select
+              v-model="form.applicationCode"
+              placeholder="应用编码"
+              clearable
+              style="width: 240px"
+          >
+            <el-option
+                v-for="item in applicationCodeList"
+                :key="item.applicationCode"
+                :label="item.applicationName"
+                :value="item.applicationCode"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="MQ名称" prop="mqName">
-          <el-input v-model="form.mqName" placeholder="请输入MQ名称" />
+          <el-select
+              v-model="form.mqName"
+              placeholder="MQ名称"
+              clearable
+              style="width: 240px"
+          >
+            <el-option
+                v-for="item in mqConfigList"
+                :key="item.mqName"
+                :label="item.mqName"
+                :value="item.mqName"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="主题" prop="topic">
           <el-input v-model="form.topic" placeholder="请输入主题" />
@@ -147,7 +170,7 @@
         <el-form-item label="标签" prop="tag">
           <el-input v-model="form.tag" placeholder="请输入标签" />
         </el-form-item>
-        <el-form-item label="监听服务名称" prop="listenServiceName">
+        <el-form-item label="监听服务名称" prop="listenServiceName" label-width="auto">
           <el-input v-model="form.listenServiceName" placeholder="请输入监听服务名称" />
         </el-form-item>
         <el-form-item label="转发主题" prop="forwardTopic">
@@ -172,6 +195,9 @@
 
 <script setup name="Listening">
 import { listListening, getListening, delListening, addListening, updateListening } from "@/api/business/listening";
+import {listApplication} from "@/api/business/application";
+import {listConf} from "@/api/business/conf";
+import {reactive, ref} from "vue";
 
 const { proxy } = getCurrentInstance();
 
@@ -184,7 +210,8 @@ const single = ref(true);
 const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
-
+const mqConfigList= ref([])
+const applicationCodeList = ref([])
 const data = reactive({
   form: {},
   queryParams: {
@@ -200,9 +227,19 @@ const data = reactive({
   },
   rules: {
     applicationCode: [
-      { required: true, message: "应用编码不能为空", trigger: "blur" }
+      { required: true, message: "应用编码不能为空", trigger: "blur" },
     ],
+    mqName:[
+      { required: true, message: "mq名称不能为空", trigger: "blur" }
+    ],
+    topic:[
+      { required: true, message: "主题不能为空", trigger: "blur" },
+    ],
+    listenServiceName:[
+      { required: true, message: "监听服务不能为空", trigger: "blur" }
+    ]
   }
+
 });
 
 const { queryParams, form, rules } = toRefs(data);
@@ -319,5 +356,26 @@ function handleExport() {
   }, `listening_${new Date().getTime()}.xlsx`)
 }
 
+/**
+ * 获取应用列表
+ */
+function getApplicaitonList(){
+  let queryParam={pageNum: 1, pageSize: 1000};
+  listApplication(queryParam).then(response => {
+    applicationCodeList.value = response.rows;
+  });
+}
+
+/**
+ * 获取MQ配置列表
+ */
+function getMqConfigList() {
+  let queryParam={pageNum: 1, pageSize: 1000};
+  listConf(queryParam).then(response => {
+    mqConfigList.value = response.rows;
+  });
+}
 getList();
+getApplicaitonList();
+getMqConfigList();
 </script>

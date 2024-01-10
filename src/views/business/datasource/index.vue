@@ -91,7 +91,6 @@
 
     <el-table v-loading="loading" :data="datasourceList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="id" />
       <el-table-column label="数据源名称" align="center" prop="datasourceName" />
       <el-table-column label="驱动类" align="center" prop="driverClass" />
       <el-table-column label="URL" align="center" prop="url" />
@@ -105,7 +104,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
