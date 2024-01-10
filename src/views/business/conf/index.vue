@@ -79,7 +79,7 @@
     />
 
     <!-- 添加或修改MQ配置定义对话框 -->
-    <el-dialog :title="title" v-model="open" width="500px" append-to-body>
+    <el-dialog :title="title" v-model="open" width="80%" height="80%" append-to-body>
       <el-form ref="confRef" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="名称" prop="mqName">
           <el-input v-model="form.mqName" placeholder="请输入名称" />
@@ -100,8 +100,14 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="MQ配置" prop="mqConfig">
-          <el-input v-model="form.mqConfig" type="textarea" :rows="10" placeholder="请输入配置" />
+        <el-form-item label="MQ配置" prop="mqConfig" >
+          <Vue3JsonEditor
+              v-model="json"
+              mode='tree'
+              :show-btns="true"
+              :on-node-name="onNodeName"
+              @json-change="onJsonChange"
+          />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -114,9 +120,11 @@
   </div>
 </template>
 
-<script setup name="Conf">
+<script setup name="Conf" lang="ts">
 import { listConf, getConf, delConf, addConf, updateConf } from "@/api/business/conf";
 import { listData } from "@/api/system/dict/data";
+import {Vue3JsonEditor} from "@/components/json-editor";
+import {getCurrentInstance, reactive, ref, toRefs} from "vue";
 const { proxy } = getCurrentInstance();
 
 const confList = ref([]);
@@ -129,7 +137,8 @@ const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
 const mqTypeList = ref([]);
-
+const json =ref({
+})
 const data = reactive({
   form: {},
   queryParams: {
@@ -161,6 +170,23 @@ const data = reactive({
 
 const { queryParams, form, rules,queryDictParams } = toRefs(data);
 
+/**
+ * json编辑发生变化
+ * @param value
+ */
+function onJsonChange(value){
+  console.log('jsonValue1:'+JSON.stringify(value))
+  form.value.mqConfig = JSON.stringify(value)
+}
+// eslint-disable-next-line consistent-return
+const onNodeName = (node: {
+  value: any; type: any
+}) => {
+  if (node.type === 'object' && node.value.identity) {
+    return node.value.identity;
+  }
+  return undefined;
+}
 /** 查询MQ配置定义列表 */
 function getList() {
   loading.value = true;
@@ -224,6 +250,7 @@ function handleUpdate(row) {
   const _id = row.id || ids.value
   getConf(_id).then(response => {
     form.value = response.data;
+    json.value = JSON.parse(form.value.mqConfig)
     open.value = true;
     title.value = "修改MQ配置定义";
   });
@@ -291,6 +318,7 @@ function mqTypeSelectChange(mqName){
     }
   }
  form.value.mqConfig =mqConfig;
+ json.value = JSON.parse(form.value.mqConfig)
 }
 getList();
 getMqTypeList();

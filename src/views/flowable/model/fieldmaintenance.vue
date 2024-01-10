@@ -175,7 +175,10 @@ const formData = ref({
     type: 'number'
   }
 })
-const field
+const field = ref({
+  title:'',
+  open:false
+})
 watch(
     () => [props.mkey, props.version],
     (newVal) => {
