@@ -42,3 +42,11 @@ export function delDef(id) {
     method: 'delete'
   })
 }
+// 查询模型实例单条数据
+export function getInstance(query) {
+  return request({
+    url: '/business/def/getInstance',
+    method: 'get',
+    params:query
+  })
+}

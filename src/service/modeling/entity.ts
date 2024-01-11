@@ -1,5 +1,5 @@
 import { ref, Ref } from "vue";
-import * as EntityApi from "@/api/modeling/entity";
+import * as EntityApi from "@/api/business/def";
 import { ElMessage } from "element-plus";
 
 export function useEntityApi(loading?: Ref<boolean>) {
@@ -14,7 +14,7 @@ export function useEntityApi(loading?: Ref<boolean>) {
   async function findEntity(id: string) {
     try {
       loading && (loading.value = true)
-      modelView.value = await EntityApi.findModelingEntity(id)
+      modelView.value = await EntityApi.getDef(id)
     } catch (e) {
       console.error(e);
       ElMessage.error((e as Error)?.message || '查询失败')
@@ -26,7 +26,7 @@ export function useEntityApi(loading?: Ref<boolean>) {
   async function searchEntity(param: Partial<ModelingEntityFindParam>) {
     try {
       loading && (loading.value = true)
-      pageData.value = await EntityApi.searchModelingEntity(param)
+      pageData.value = await EntityApi.listDef(param)
     } catch (e) {
       console.error(e);
       ElMessage.error((e as Error)?.message || '查询失败')
@@ -38,7 +38,7 @@ export function useEntityApi(loading?: Ref<boolean>) {
   async function addEntity(data: ModelingEntityAddParam) {
     try {
       loading && (loading.value = true)
-      await EntityApi.addModelingEntity(data)
+      await EntityApi.addDef(data)
       ElMessage.success('创建成功')
       return true
     } catch (e) {
@@ -53,7 +53,7 @@ export function useEntityApi(loading?: Ref<boolean>) {
   async function updateEntity(data: ModelingEntityUpdateParam) {
     try {
       loading && (loading.value = true)
-      await EntityApi.updateModelingEntity(data)
+      await EntityApi.updateDef(data)
       ElMessage.success('更新成功')
       return true
     } catch (e) {
@@ -68,7 +68,7 @@ export function useEntityApi(loading?: Ref<boolean>) {
   async function deleteEntity(id: string) {
     try {
       loading && (loading.value = true)
-      await EntityApi.deleteModelingEntity(id)
+      await EntityApi.delDef(id)
       ElMessage.success('删除成功')
       return true
     } catch (e) {
