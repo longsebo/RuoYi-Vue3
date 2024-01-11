@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="数据源名称" prop="datasourceName">
+      <el-form-item label="数据源名称" prop="datasourceName" label-width="auto">
         <el-input
           v-model="queryParams.datasourceName"
           placeholder="请输入数据源名称"
@@ -95,11 +95,11 @@
       <el-table-column label="驱动类" align="center" prop="driverClass" />
       <el-table-column label="URL" align="center" prop="url" />
       <el-table-column label="用户名" align="center" prop="userName" />
-      <el-table-column label="密码" align="center" prop="password" />
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['business:datasource:edit']">修改</el-button>
+          <el-button link type="primary" :icon="dbConectIcon" @click="handleCheckConnect(scope.row.id)" v-hasPermi="['business:datasource:checkconnect']">测试连接</el-button>
           <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['business:datasource:remove']">删除</el-button>
         </template>
       </el-table-column>
@@ -116,7 +116,7 @@
     <!-- 添加或修改数据源定义对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
       <el-form ref="datasourceRef" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="数据源名称" prop="datasourceName">
+        <el-form-item label="数据源名称" prop="datasourceName" label-width="auto">
           <el-input v-model="form.datasourceName" placeholder="请输入数据源名称" />
         </el-form-item>
         <el-form-item label="驱动类" prop="driverClass">
@@ -129,7 +129,7 @@
           <el-input v-model="form.userName" placeholder="请输入用户名" />
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input v-model="form.password" placeholder="请输入密码" />
+          <el-input v-model="form.password" placeholder="请输入密码" type="password"/>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注" />
@@ -138,6 +138,7 @@
       <template #footer>
         <div class="dialog-footer">
           <el-button type="primary" @click="submitForm">确 定</el-button>
+          <el-button type="primary"  v-show="canCheckConnect" @click="handleCheckConnectByForm(form.id)">测试连接</el-button>
           <el-button @click="cancel">取 消</el-button>
         </div>
       </template>
@@ -145,9 +146,11 @@
   </div>
 </template>
 
-<script setup name="Datasource">
+<script setup name="Datasource" lang="ts">
 import { listDatasource, getDatasource, delDatasource, addDatasource, updateDatasource } from "@/api/business/datasource";
-
+import {useIcon} from "../../../components/common/util";
+import {checkConnect} from "../../../api/business/datasource";
+import {getCurrentInstance, reactive, ref, toRefs} from "vue";
 const { proxy } = getCurrentInstance();
 
 const datasourceList = ref([]);
@@ -159,7 +162,8 @@ const single = ref(true);
 const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
-
+const dbConectIcon = useIcon('ali_connect')
+const canCheckConnect = ref(false)
 const data = reactive({
   form: {},
   queryParams: {
@@ -243,6 +247,7 @@ function handleSelectionChange(selection) {
 function handleAdd() {
   reset();
   open.value = true;
+  canCheckConnect.value = false;
   title.value = "添加数据源定义";
 }
 
@@ -250,9 +255,11 @@ function handleAdd() {
 function handleUpdate(row) {
   reset();
   const _id = row.id || ids.value
+
   getDatasource(_id).then(response => {
     form.value = response.data;
     open.value = true;
+    canCheckConnect.value = true;
     title.value = "修改数据源定义";
   });
 }
@@ -277,7 +284,22 @@ function submitForm() {
     }
   });
 }
-
+/** 测试连接 */
+function handleCheckConnectByForm(id) {
+  updateDatasource(form.value).then(response => {
+    handleCheckConnect(id)
+  })
+}
+/** 测试连接 */
+function handleCheckConnect(id){
+    checkConnect(id).then(response => {
+      if (response.code == 200) {
+        proxy.$modal.msgSuccess("连接成功");
+      } else {
+        proxy.$modal.msgError(response.msg);
+      }
+    })
+}
 /** 删除按钮操作 */
 function handleDelete(row) {
   const _ids = row.id || ids.value;

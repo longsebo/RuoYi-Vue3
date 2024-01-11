@@ -42,3 +42,10 @@ export function delDatasource(id) {
     method: 'delete'
   })
 }
+// 测试连接
+export function checkConnect(id) {
+  return request({
+    url: '/business/datasource/checkconnect/' + id,
+    method: 'get'
+  })
+}
