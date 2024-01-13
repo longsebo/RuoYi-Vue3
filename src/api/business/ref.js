@@ -42,3 +42,11 @@ export function delRef(id) {
     method: 'delete'
   })
 }
+// 查询模型引用字段列表非翻页
+export function listFieldNoPage(query) {
+  return request({
+    url: '/business/ref/listnopage',
+    method: 'get',
+    params: query
+  })
+}

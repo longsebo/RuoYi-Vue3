@@ -42,3 +42,4 @@ export function delField(id) {
     method: 'delete'
   })
 }
+

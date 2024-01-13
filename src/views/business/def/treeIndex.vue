@@ -53,6 +53,21 @@
                     @keyup.enter="handleQuery"
                 />
               </el-form-item>
+              <el-form-item label="表类型" prop="tableType">
+                <el-select
+                    v-model="form.tableType"
+                    placeholder="请选择表类型"
+                    clearable
+                    style="width: 240px"
+                >
+                  <el-option
+                      v-for="item in tableTypeList"
+                      :key="item.dictValue"
+                      :label="item.dictLabel"
+                      :value="item.dictValue"
+                  />
+                </el-select>
+              </el-form-item>
                <el-form-item>
                   <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
                   <el-button icon="Refresh" @click="resetQuery">重置</el-button>
@@ -106,6 +121,7 @@
              <el-table-column label="中文名" align="center" prop="cnName" />
              <el-table-column label="英文名" align="center" prop="enName" />
              <el-table-column label="数据源名称" align="center" prop="datasourceName" />
+             <el-table-column label="表类型" align="center" prop="tableType" :formatter="formatTableType" />
              <el-table-column label="状态" align="center" prop="status" />
              <el-table-column label="备注" align="center" prop="remark" />
              <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -137,6 +153,21 @@
           <el-form-item label="数据源名称" prop="datasourceName">
             <el-input v-model="form.datasourceName" placeholder="请输入数据源名称" />
           </el-form-item>
+          <el-form-item label="表类型" prop="tableType">
+            <el-select
+                v-model="form.tableType"
+                placeholder="请选择表类型"
+                clearable
+                style="width: 240px"
+            >
+              <el-option
+                  v-for="item in tableTypeList"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+              />
+            </el-select>
+          </el-form-item>
           <el-form-item label="备注" prop="remark">
             <el-input v-model="form.remark" placeholder="请输入备注" />
           </el-form-item>
@@ -162,9 +193,9 @@ import { listDef, getDef, delDef, addDef, updateDef } from "@/api/business/def";
 import { functionTreeSelect } from "@/api/business/function";
 import {useRouter} from "vue-router";
 import {getCurrentInstance, provide, reactive, ref, toRefs} from "vue";
-import EntityAddPanel from "./EntityAddPanel.vue";
 import ModelingConfigTabs from "./ModelingConfigTabs.vue";
 import {modelingEntityKey} from "../../modeling/keys";
+import { listData } from "@/api/system/dict/data";
 const router = useRouter();
 const { proxy } = getCurrentInstance();
 
@@ -182,7 +213,7 @@ const addPanelVisible = ref(false);
 
 const businessFunctionName = ref("");
 const businessFunctionOptions = ref(undefined);
-
+const tableTypeList = ref([])
 const srcRow = ref({})
 provide(modelingEntityKey, srcRow)
 // 列显隐信息
@@ -207,20 +238,31 @@ const data = reactive({
     status: null,
     businessCode:'',
   },
+  queryDictParams: {
+    pageNum: 1,
+    pageSize: 10,
+    dictType: 'table_type',
+    dictLabel: undefined,
+    status: undefined
+  },
   rules: {
     cnName: [
       { required: true, message: "中文名不能为空", trigger: "blur" }
     ],
     enName: [
-      { required: true, message: "英文名不能为空", trigger: "blur" }
+      { required: true, trigger: "blur",pattern: /^[a-zA-Z_]+\w?$/,
+        message: '必须以字母或下划线开头' }
     ],
     datasourceName: [
       { required: true, message: "数据源名称不能为空", trigger: "blur" }
     ],
+    tableType: [
+      { required: true, message: "表类型不能为空", trigger: "blur" }
+    ],
   }
 })
 
-const { queryParams, form, rules } = toRefs(data)
+const { queryParams, form, rules,queryDictParams } = toRefs(data)
 
 /** 通过条件过滤节点  */
 const filterNode = (value, data) => {
@@ -343,7 +385,23 @@ function submitForm() {
     }
   });
 };
+/** 查询TableType字典数据列表 */
+function getTableTypeList() {
 
+  listData(queryDictParams.value).then(response => {
+    tableTypeList.value = response.rows;
+  });
+}
+/**
+ * 翻译表类型编码
+ * @param row
+ * @param column
+ * @returns {*|string}
+ */
+function  formatTableType(row, column){
+  return tableTypeList.value.find(k => k.dictValue === row.tableType)?.dictLablel ?? '';
+}
 getFunctionTree();
 getList();
+getTableTypeList();
 </script>

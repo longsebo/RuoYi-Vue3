@@ -1,44 +1,54 @@
 <template>
 
-  <div v-loading="loading" style="background-color: var(--el-bg-color); padding: 10px; height: 100%; box-sizing: border-box;">
-    <div style="background-color: var(--toolbar-bg-color); box-sizing: border-box; padding: 6px;">
-      <el-button v-if="mode === 'view'" @click="mode = 'edit'">编辑</el-button>
-      <el-popconfirm
-        v-if="mode === 'view'"
-        confirm-button-text="确定"
-        cancel-button-text="取消"
-        icon-color="#626AEF"
-        title="你确定要删除吗?"
-        @confirm="handleDeleteEntity"
-      >
-        <template #reference>
-          <el-button type="danger" plain>删除</el-button>
-        </template>
-      </el-popconfirm>
-
-      <el-button v-if="mode === 'edit'" @click="handleCancel">取消</el-button>
-      <el-button v-if="mode === 'edit'" @click="handleConfirm" type="primary" plain>确定</el-button>
-    </div>
+  <div  style="background-color: var(--el-bg-color); padding: 10px; height: 100%; box-sizing: border-box;">
     <div style="width: 100%; max-width: 800px; height: calc(100% - 32px - 12px)">
       <el-scrollbar always>
         <el-divider content-position="left">基本信息</el-divider>
-        <el-form :model="formData" label-width="80px" :label-position="formLabelPosition" ref="formRef" :rules="rules" status-icon>
-          <el-form-item label="标识" prop="mkey">
-            <div v-text="entity.mkey"></div>
+        <el-form  :model="formData" :rules="rules" label-width="80px" :label-position="formLabelPosition" ref="formRef" :rules="rules" status-icon>
+          <el-form-item label="中文名" prop="cnName">
+            <el-input v-model="formData.cnName" placeholder="请输入中文名" />
           </el-form-item>
-          <el-form-item label="名称" prop="name">
-            <el-input v-if="mode === 'edit'" v-model="formData.name" />
-            <div v-if="mode === 'view'" v-text="formData.name"></div>
+          <el-form-item label="英文名" prop="enName">
+            <el-input v-model="formData.enName" placeholder="请输入英文名" />
           </el-form-item>
-          <el-form-item label="备注" prop="remark">
-            <el-input v-if="mode === 'edit'" type="textarea" :rows="2" v-model="formData.remark" />
-            <div v-if="mode === 'view'" v-text="formData.remark"></div>
+          <el-form-item label="数据源名称" prop="datasourceName">
+            <el-input v-model="formData.datasourceName" placeholder="请输入数据源名称" />
+          </el-form-item>
+          <el-form-item label="表类型" prop="tableType">
+            <el-select
+                v-model="formData.tableType"
+                placeholder="请选择表类型"
+                clearable
+                style="width: 240px"
+            >
+              <el-option
+                  v-for="item in tableTypeList"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+              />
+            </el-select>
           </el-form-item>
           <el-form-item label="状态" prop="status">
-            <el-radio-group v-model="formData.status" :disabled="mode === 'view'">
-              <el-radio-button :label="0">正常</el-radio-button>
-              <el-radio-button :label="1">禁用</el-radio-button>
-            </el-radio-group>
+            <el-select
+                v-model="formData.status"
+                placeholder="请选择状态"
+                clearable
+                style="width: 240px"
+            >
+              <el-option
+                  v-for="item in activeStateList"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="备注" prop="remark">
+            <el-input v-model="formData.remark" placeholder="请输入备注" />
+          </el-form-item>
+          <el-form-item>
+            <el-button  @click="handleUpdate" type="primary" plain>保存</el-button>
           </el-form-item>
         </el-form>
       </el-scrollbar>
@@ -50,88 +60,82 @@
 </template>
 <script lang="ts" setup>
 import {
-  ElForm, ElFormItem, ElInput, ElRadioGroup, ElRadioButton, ElButton, ElDivider, FormRules, ElScrollbar,
+  ElForm,  FormRules, ElScrollbar,
   ElPopconfirm,
 } from "element-plus";
-import { inject, ref } from "vue";
-import { useEntityApi } from "@/service/modeling/entity";
-
+import {getCurrentInstance, inject, ref} from "vue";
+import {  updateDef } from "@/api/business/def";
 import { formLabelPosition } from "@/store/layout";
 import {modelingEntityKey} from "../../modeling/keys";
+import { listData } from "@/api/system/dict/data";
 
-interface Emits {
-  (e: 'close'): void
-}
-
-const emits = defineEmits<Emits>()
 
 const entity = inject(modelingEntityKey)!
 
-const loading = ref<boolean>(false)
 
-const { findEntity, modelView, updateEntity, deleteEntity } = useEntityApi(loading)
+const activeStateList=ref([])
+const tableTypeList = ref([])
 
+const { proxy } = getCurrentInstance();
 const formData = ref<ModelingEntityUpdateParam>({
   id: entity.value.id,
-  name: entity.value.name,
+  cnName: entity.value.cnName,
+  enName: entity.value.enName,
+  businessCode:entity.value.businessCode,
+  tableType:entity.value.tableType,
   remark: entity.value.remark,
   status: entity.value.status,
 })
 
-const mode = ref<'edit' | 'view'>('view')
-
-function initFormData() {
-  formData.value = {
-    id: entity.value.id,
-    name: entity.value.name,
-    remark: entity.value.remark,
-    status: entity.value.status,
-  }
+const queryTableTypeDictParams: {
+  pageNum: 1,
+      pageSize: 10,
+      dictType: 'table_type',
+      dictLabel: undefined,
+      status: undefined
+}
+const queryActiveStateDictParams: {
+  pageNum: 1,
+  pageSize: 10,
+  dictType: 'active_state',
+  dictLabel: undefined,
+  status: undefined
 }
 
-function handleCancel() {
-  mode.value = 'view'
-  initFormData()
-}
 
-async function handleConfirm() {
-  try {
-    await formRef.value.validate()
-  } catch (e) {
-    console.error(e);
-    return
-  }
-  await updateEntity(formData.value)
-  await findEntity(entity.value.id)
-  formData.value = modelView.value
-  mode.value = 'view'
+function handleUpdate() {
+  updateDef(formData.value).then(response => {
+    proxy.$modal.msgSuccess("修改成功");
+  });
 }
+/** 查询字典数据列表 */
+function getDictList() {
 
-function handleDeleteEntity() {
-  deleteEntity(entity.value.id)
-    .then(result => {
-      if (result) {
-        emits('close')
-      }
-    })
+  listData(queryTableTypeDictParams.value).then(response => {
+    tableTypeList.value = response.rows;
+  });
+  listData(queryActiveStateDictParams.value).then(response => {
+    activeStateList.value = response.rows;
+  });
 }
 
 const rules: FormRules = {
-  key: {
-    trigger: 'blur',
-    required: true,
-    pattern: /^[a-zA-Z_]+\w?$/,
-    message: '必须以字母或下划线开头'
-  },
-  name: {
-    trigger: 'blur',
-    required: true,
-    message: '名称长度有误',
-  },
-
+  cnName: [
+    { required: true, message: "中文名不能为空", trigger: "blur" }
+  ],
+  enName: [
+    { required: true, trigger: "blur",pattern: /^[a-zA-Z_]+\w?$/,
+      message: '必须以字母或下划线开头' }
+  ],
+  datasourceName: [
+    { required: true, message: "数据源名称不能为空", trigger: "blur" }
+  ],
+  tableType: [
+    { required: true, message: "表类型不能为空", trigger: "blur" }
+  ],
 }
 
 
 const formRef = ref<InstanceType<typeof ElForm>>()
-
+getDictList()
 </script>
