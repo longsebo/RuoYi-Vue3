@@ -4,7 +4,7 @@
     <div style="width: 100%; max-width: 800px; height: calc(100% - 32px - 12px)">
       <el-scrollbar always>
         <el-divider content-position="left">基本信息</el-divider>
-        <el-form  :model="formData" :rules="rules" label-width="80px" :label-position="formLabelPosition" ref="formRef" :rules="rules" status-icon>
+        <el-form  :model="formData" :rules="rules" label-width="80px" :label-position="formLabelPosition" ref="formRef"  status-icon>
           <el-form-item label="中文名" prop="cnName">
             <el-input v-model="formData.cnName" placeholder="请输入中文名" />
           </el-form-item>
@@ -87,20 +87,20 @@ const formData = ref<ModelingEntityUpdateParam>({
   status: entity.value.status,
 })
 
-const queryTableTypeDictParams: {
-  pageNum: 1,
+const queryTableTypeDictParams=ref({
+      pageNum: 1,
       pageSize: 10,
       dictType: 'table_type',
       dictLabel: undefined,
       status: undefined
-}
-const queryActiveStateDictParams: {
+})
+const queryActiveStateDictParams= ref({
   pageNum: 1,
   pageSize: 10,
   dictType: 'active_state',
   dictLabel: undefined,
   status: undefined
-}
+})
 
 
 function handleUpdate() {

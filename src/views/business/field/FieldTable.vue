@@ -52,10 +52,10 @@ const gridOptions: GridOptions<ModelingFieldDefView> = {
   preventDefaultOnContextMenu: true,
   columnDefs: [
     { headerName: '#', width: 50, valueGetter: params => String((params.node?.rowIndex || 0) + 1) },
-    { field: 'field', headerName: '字段', width: 150, resizable: true },
-    { field: 'label', headerName: '名称', width: 150, resizable: true },
-    { field: 'type', headerName: '类型', width: 150, resizable: true },
-    { field: 'remark', headerName: '说明',  },
+    { field: 'fieldEnName', headerName: '字段', width: 150, resizable: true },
+    { field: 'fieldCnName', headerName: '名称', width: 150, resizable: true },
+    { field: 'fieldType', headerName: '类型', width: 150, resizable: true },
+    { field: 'ffieldRemark', headerName: '说明',  },
   ],
   onGridReady(event: GridReadyEvent<ModelingFieldDefView>) {
     gridApi.value = event.api

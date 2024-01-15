@@ -86,8 +86,8 @@ DateRangeFieldScheme
 
 declare interface ModelingFieldDefView {
   id: string
-  field: string
-  label: string
+  fieldEnName: string
+  fieldCnName: string
   remark: string
   width: number
   /**

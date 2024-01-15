@@ -4,7 +4,7 @@ import Cookies from 'js-cookie'
 
 import ElementPlus from 'element-plus'
 import locale from 'element-plus/lib/locale/lang/zh-cn' // 中文语言
-
+import { ElLoading, ClickOutside } from 'element-plus';
 import '@/assets/styles/index.scss' // global css
 
 import App from './App'
@@ -43,8 +43,27 @@ import TreeSelect from '@/components/TreeSelect'
 // 字典标签组件
 import DictTag from '@/components/DictTag'
 import "@/config/ployfill"
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-balham.css';
+import TextFilter from '@/components/ag-grid/filter/components/TextFilter.vue'
+import OptionFilter from '@/components/ag-grid/filter/components/OptionFilter.vue'
+import UserFilter from '@/components/ag-grid/filter/components/UserFilter.vue'
+import DeptFilter from '@/components/ag-grid/filter/components/DeptFilter.vue'
+import DateFilter from '@/components/ag-grid/filter/components/DateFilter.vue'
+import FieldConditionInput from "@/components/ag-grid/cell/components/FieldConditionInput.vue";
+import FieldCheckboxInput from "@/components/ag-grid/cell/components/FieldCheckboxInput.vue";
+import FieldNumberInput from "@/components/ag-grid/cell/components/FieldNumberInput.vue";
+
 const app = createApp(App)
 
+app.component('TextFilter', TextFilter)
+app.component('OptionFilter', OptionFilter)
+app.component('UserFilter', UserFilter)
+app.component('DeptFilter', DeptFilter)
+app.component('DateFilter', DateFilter)
+app.component('FieldConditionInput', FieldConditionInput)
+app.component('FieldCheckboxInput', FieldCheckboxInput)
+app.component('FieldNumberInput', FieldNumberInput)
 // 全局方法挂载
 app.config.globalProperties.useDict = useDict
 app.config.globalProperties.download = download
@@ -64,7 +83,7 @@ app.component('ImageUpload', ImageUpload)
 app.component('ImagePreview', ImagePreview)
 app.component('RightToolbar', RightToolbar)
 app.component('Editor', Editor)
-
+app.directive('click-outside', ClickOutside)
 app.use(router)
 app.use(store)
 app.use(plugins)

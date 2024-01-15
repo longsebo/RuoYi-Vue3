@@ -8,20 +8,20 @@
       <el-scrollbar always>
         <el-form ref="formRef" :model="formData" label-width="100px" :label-position="formLabelPosition" status-icon style="width: 100%">
           <el-divider content-position="left">基本信息</el-divider>
-          <el-form-item prop="field" label="字段" required :rules="{ pattern: /^[a-zA-Z_][a-zA-Z0-9_]*$/, message: '必须以字母或下划线开头' }">
-            <el-input v-model="formData.field" />
+          <el-form-item prop="fieldEnName" label="字段" required :rules="{ pattern: /^[a-zA-Z_][a-zA-Z0-9_]*$/, message: '必须以字母或下划线开头' }">
+            <el-input v-model="formData.fieldEnName" />
           </el-form-item>
-          <el-form-item prop="label" label="标签" required>
-            <el-input v-model="formData.label" />
+          <el-form-item prop="fieldCnName" label="标签" required>
+            <el-input v-model="formData.fieldCnName" />
           </el-form-item>
-          <el-form-item prop="remark" label="说明">
-            <el-input v-model="formData.remark" />
+          <el-form-item prop="ffieldRemark" label="说明">
+            <el-input v-model="formData.ffieldRemark" />
           </el-form-item>
-          <el-form-item prop="width" label="宽度" required>
-            <el-input-number v-model="formData.width" :min="1" :controls="false" style="width: 100%" />
+          <el-form-item prop="fieldWidth" label="宽度" required>
+            <el-input-number v-model="formData.fieldWidth" :min="1" :controls="false" style="width: 100%" />
           </el-form-item>
-          <el-form-item prop="type" label="类型" required>
-            <el-select v-model="formData.type" @change="v => formData.scheme.type = v" style="width: 100%">
+          <el-form-item prop="fieldType" label="类型" required>
+            <el-select v-model="formData.fieldType" @change="v => formData.scheme.type = v" style="width: 100%">
               <el-option label="数字" value="number" />
               <el-option label="文本" value="text" />
               <el-option label="选项" value="option" />
@@ -32,7 +32,7 @@
             </el-select>
           </el-form-item>
           <el-divider content-position="left">组件配置</el-divider>
-          <component :form-data="formData" :is="schemeConfigComponentMap[formData.type]"/>
+          <component :form-data="formData" :is="schemeConfigComponentMap[formData.fieldType]"/>
 
         </el-form>
       </el-scrollbar>
@@ -52,7 +52,7 @@ import UserSchemeConfig from "./form/UserSchemeConfig.vue";
 import DeptSchemeConfig from "./form/DeptSchemeConfig.vue";
 import DateSchemeConfig from "./form/DateSchemeConfig.vue";
 import DateRangeSchemeConfig from "./form/DateRangeSchemeConfig.vue";
-import { useModelingFieldApi } from "@/service/modeling/field";
+import {addField} from '@/api/business/field.js'
 import {useFieldStore} from "@/store/field-config";
 import { formLabelPosition } from "@/store/layout";
 
@@ -68,11 +68,11 @@ const store = useFieldStore()
 // @ts-ignore
 const formData = ref<ModelingFieldAddParam>({
   mkey: store.mkey,
-  field: '',
-  label: '',
-  remark: '',
-  width: 16,
-  type: 'number',
+  fieldEnName: '',
+  fieldCnName: '',
+  ffieldRemark: '',
+  fieldWidth: 16,
+  fieldType: 'number',
   scope: store.scope,
   scheme: {
     type: 'number'
@@ -95,7 +95,6 @@ function handleCancel() {
 }
 
 const loading = ref(false)
-const { addField } = useModelingFieldApi(loading)
 
 const formRef = ref<InstanceType<typeof ElForm>>()
 async function handleConfirm() {
@@ -108,9 +107,23 @@ async function handleConfirm() {
 
   formData.value.scope = store.scope
   const result = await addField(formData.value)
-  if (result) {
+  if (result.code ==200) {
+    //清空form
+    resetForm();
     emits('close')
     emits('success')
+  }
+}
+function resetForm(){
+  formData.value.mkey=store.mkey;
+  formData.value.fieldEnName= '';
+  formData.value.fieldCnName= '';
+  formData.value.ffieldRemark= '';
+  formData.value.fieldWidth= 16;
+  formData.value.fieldType= 'number';
+  formData.value.scope= store.scope;
+  formData.value.scheme= {
+      type: 'number'
   }
 }
 </script>

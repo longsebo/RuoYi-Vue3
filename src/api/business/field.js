@@ -42,4 +42,11 @@ export function delField(id) {
     method: 'delete'
   })
 }
-
+// 非翻页查询模型字段列表
+export function listAllField(query) {
+  return request({
+    url: '/business/field/listAll',
+    method: 'get',
+    params: query
+  })
+}
