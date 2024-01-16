@@ -39,7 +39,7 @@
 
 <script lang="ts" setup>
 import { ElForm, ElFormItem, ElButton, ElInput, ElInputNumber, ElScrollbar, ElSelect, ElOption } from "element-plus";
-import { inject, ref, markRaw } from "vue";
+import {inject, ref, markRaw, watch} from "vue";
 import {updateField} from '@/api/business/field.js'
 import NumberSchemeConfig from "./form/NumberSchemeConfig.vue";
 import TextSchemeConfig from "./form/TextSchemeConfig.vue";
@@ -78,7 +78,20 @@ const formData = ref<ModelingFieldUpdateParam>({
   fieldEnName:props.field.fieldEnName,
   fieldCnName:props.field.fieldCnName,
 })
-
+watch(() => props.field, val => {
+  // debugger;
+  formData.value = {
+    id: val.id,
+    ffieldRemark: val.ffieldRemark,
+    fieldWidth: val.fieldWidth,
+    fieldType:val.fieldType,
+    scheme: val.scheme,
+    fieldEnName:val.fieldEnName,
+    fieldCnName:val.fieldCnName,
+  }
+  // console.log('val:'+JSON.stringify(val))
+  // console.log('formData:'+JSON.stringify(formData.value))
+});
 function handleCancel() {
   emits('close')
 }

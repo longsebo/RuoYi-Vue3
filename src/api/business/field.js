@@ -50,3 +50,19 @@ export function listAllField(query) {
     params: query
   })
 }
+// 查询某实体模型所有字段
+export function listModelField(query) {
+  return request({
+    url: '/business/field/listModelField',
+    method: 'get',
+    params: query
+  })
+}
+// 删除引用模型字段(用于全局字段)
+export function removeByExtModelField(data) {
+  return request({
+    url: '/business/field/removeByExtModelField',
+    method: 'post',
+    data: data
+  })
+}

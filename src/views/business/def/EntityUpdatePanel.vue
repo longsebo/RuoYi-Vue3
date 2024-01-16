@@ -12,7 +12,19 @@
             <el-input v-model="formData.enName" placeholder="请输入英文名" />
           </el-form-item>
           <el-form-item label="数据源名称" prop="datasourceName">
-            <el-input v-model="formData.datasourceName" placeholder="请输入数据源名称" />
+            <el-select
+                v-model="formData.datasourceName"
+                placeholder="请选择数据源"
+                clearable
+                style="width: 240px"
+            >
+              <el-option
+                  v-for="item in dataSourceList"
+                  :key="item.datasourceName"
+                  :label="item.datasourceName"
+                  :value="item.datasourceName"
+              />
+            </el-select>
           </el-form-item>
           <el-form-item label="表类型" prop="tableType">
             <el-select
@@ -68,14 +80,14 @@ import {  updateDef } from "@/api/business/def";
 import { formLabelPosition } from "@/store/layout";
 import {modelingEntityKey} from "../../modeling/keys";
 import { listData } from "@/api/system/dict/data";
-
+import {listAllDatasource} from "@/api/business/datasource"
 
 const entity = inject(modelingEntityKey)!
 
 
 const activeStateList=ref([])
 const tableTypeList = ref([])
-
+const dataSourceList = ref([])
 const { proxy } = getCurrentInstance();
 const formData = ref<ModelingEntityUpdateParam>({
   id: entity.value.id,
@@ -85,6 +97,7 @@ const formData = ref<ModelingEntityUpdateParam>({
   tableType:entity.value.tableType,
   remark: entity.value.remark,
   status: entity.value.status,
+  datasourceName:entity.value.datasourceName
 })
 
 const queryTableTypeDictParams=ref({
@@ -118,7 +131,13 @@ function getDictList() {
     activeStateList.value = response.rows;
   });
 }
-
+/**
+ * 获取所有数据源列表
+ */
+async function getAllDataSourceList() {
+  let temp = await listAllDatasource();
+  dataSourceList.value = temp.data
+}
 const rules: FormRules = {
   cnName: [
     { required: true, message: "中文名不能为空", trigger: "blur" }
@@ -138,4 +157,5 @@ const rules: FormRules = {
 
 const formRef = ref<InstanceType<typeof ElForm>>()
 getDictList()
+getAllDataSourceList()
 </script>

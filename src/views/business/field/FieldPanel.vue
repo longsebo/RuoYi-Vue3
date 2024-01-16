@@ -4,7 +4,7 @@
         <span style="color: red; font-weight: bold; margin-left: 10px;">右键编辑字段</span>
     </div>
     <div style="width: 100%; height: calc(100% - 44px); ">
-      <el-tabs  type="border-card" style="height: 100%">
+      <el-tabs  type="border-card" style="height:95vh;">
         <el-tab-pane label="私有字段">
           <el-button :icon="Plus" plain type="primary" @click="handleAddField">新增</el-button>
           <field-table @edit="handleEditField" @delete="handleDeleteField" :loading="loading" :data="privateFields" />
@@ -19,16 +19,20 @@
       </el-tabs>
       <div v-if="refVisible" style="margin-top: 10px">
         <el-form ref="formRef" :model="formData" label-width="100px">
-          <el-form-item prop="field_id" label="全局字段" required>
-            <el-select v-model="formData.field_id">
+          <el-form-item prop="extModelFieldId" label="全局字段" required>
+            <el-select v-model="formData.extModelFieldId">
               <el-option
                 v-for="field in globalFields"
                 :key="field.id"
-                :label="field.label"
+                :label="field.fieldCnName"
                 :value="field.id"
                 :disabled="selectedGlobalFields.map(it => it.id).includes(field.id)"
               />
             </el-select>
+          </el-form-item>
+          <el-form-item>
+              <el-button @click="refVisible = false">取消</el-button>
+              <el-button plain type="primary" @click="handleConfirmRef">确定</el-button>
           </el-form-item>
         </el-form>
 
@@ -50,28 +54,25 @@ import { ElButton, ElTabs, ElTabPane, ElSelect, ElOption, ElForm, ElFormItem, El
 import { Plus, Link } from "@element-plus/icons-vue";
 import MaskWindow from '@/components/dialog/MaskWindow.vue';
 import FieldAddPanel from '@/views/modeling/field/FieldAddPanel.vue';
-import { useModelingFieldApi } from '@/service/modeling/field';
 import FieldTable from '@/views/modeling/field/FieldTable.vue';
 import FieldUpdatePanel from '@/views/modeling/field/FieldUpdatePanel.vue';
-import {useFieldStore} from "@/store/field-config";
+import {listModelField,listAllField,removeByExtModelField} from "@/api/business/field.js"
+import {addRef} from "@/api/business/ref.js"
 
 
 const loading = ref<boolean>(false)
 const visible = ref(false)
 import {modelingEntityKey} from "../../modeling/keys";
 const entity = inject(modelingEntityKey)!
+const modelingFields = ref([]);
+const defaultEntityFields = ref([]);
+const defaultWorkflowFields = ref([]);
+const globalFields = ref([]);
 
 
-const {
-  modelingFields, findModelingFields,
-  defaultEntityFields, findDefaultEntityFields,
-  defaultWorkflowFields, findDefaultWorkflowFields,
-  globalFields, findGlobalFields,
-  refField, unrefField, deleteField,
-} = useModelingFieldApi(loading)
-
+console.log('entity:'+JSON.stringify(entity.value))
 const defaultFields = computed(() => {
-  if (entity.tableType=='02') {
+  if (entity.value.tableType=='02') {
     return modelingFields.value.filter(it => it.scope === 'WORKFLOW_DEFAULT')
   } else {
     return modelingFields.value.filter(it => it.scope === 'ENTITY_DEFAULT')
@@ -84,8 +85,14 @@ const privateFields = computed(() => {
 const selectedGlobalFields = computed(() => modelingFields.value.filter(it => it.scope === 'GLOBAL'))
 
 onBeforeMount(loadFields)
-function loadFields() {
-  findModelingFields(store.module, store.mkey)
+async function loadFields() {
+  let parameter = {
+    'datasourceName': entity.value.datasourceName,
+    'enName': entity.value.enName
+  }
+  let temp = await listModelField(parameter);
+  modelingFields.value = temp.data;
+  console.log('defaultFields:'+JSON.stringify(defaultFields.value))
 }
 
 
@@ -95,13 +102,17 @@ function handleAddField() {
 
 const refVisible = ref(false)
 async function handleRefField() {
-  await findGlobalFields()
+  let parameter={
+    'scope':'GLOBAL'
+  }
+  let temp = await listAllField(parameter)
+  globalFields.value = temp.data;
   refVisible.value = true
 }
 
 const formData = ref<ModelingFieldRefParam>({
-  module: store.module,
-  mkey: store.mkey,
+  datasourceName:entity.value.datasourceName,
+  enName:entity.value.enName,
   field_id: '',
 })
 
@@ -113,10 +124,10 @@ async function handleConfirmRef() {
     return
   }
 
-  const result = await refField(formData.value)
-  if (result) {
+  const result = await addRef(formData.value)
+  if (result.code==200) {
     await loadFields()
-    formData.value.field_id = ''
+    formData.value.extModelFieldId = ''
     refVisible.value = false
   }
 
@@ -136,7 +147,13 @@ async function handleDeleteField(row: ModelingFieldDefView) {
 }
 
 async function handleUnrefField(row: ModelingFieldDefView) {
-  (await unrefField({module: store.module, mkey: store.mkey, field_id: row.id})) && loadFields()
+   let parameter={
+     'datasourceName':entity.value.datasourceName,
+     'enName':entity.value.enName,
+     'id':row.id
+   }
+   await removeByExtModelField(row);
+   loadFields()
 }
 
 function handleEditGlobalField() {

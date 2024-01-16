@@ -150,8 +150,20 @@
           <el-form-item label="英文名" prop="enName">
             <el-input v-model="form.enName" placeholder="请输入英文名" />
           </el-form-item>
-          <el-form-item label="数据源名称" prop="datasourceName">
-            <el-input v-model="form.datasourceName" placeholder="请输入数据源名称" />
+          <el-form-item label="数据源名称" prop="datasourceName" label-width="auto">
+            <el-select
+                v-model="form.datasourceName"
+                placeholder="请选择数据源"
+                clearable
+                style="width: 240px"
+            >
+              <el-option
+                  v-for="item in dataSourceList"
+                  :key="item.datasourceName"
+                  :label="item.datasourceName"
+                  :value="item.datasourceName"
+              />
+            </el-select>
           </el-form-item>
           <el-form-item label="表类型" prop="tableType">
             <el-select
@@ -196,6 +208,7 @@ import {getCurrentInstance, provide, reactive, ref, toRefs} from "vue";
 import ModelingConfigTabs from "./ModelingConfigTabs.vue";
 import {modelingEntityKey} from "../../modeling/keys";
 import { listData } from "@/api/system/dict/data";
+import {listAllDatasource} from "@/api/business/datasource"
 const router = useRouter();
 const { proxy } = getCurrentInstance();
 
@@ -226,6 +239,7 @@ const columns = ref([
   { key: 5, label: `状态`, visible: true },
   { key: 6, label: `创建时间`, visible: true }
 ])
+const dataSourceList = ref([])
 
 const data = reactive({
   form: {},
@@ -307,12 +321,17 @@ function resetQuery() {
 /** 删除按钮操作 */
 function handleDelete(row) {
   const _ids = row.id || ids.value;
-  proxy.$modal.confirm('是否确认删除模型定义编号为"' + _ids + '"的数据项？').then(function() {
-    return delDef(_ids);
-  }).then(() => {
-    getList();
-    proxy.$modal.msgSuccess("删除成功");
-  }).catch(() => {});
+  if(_ids) {
+    proxy.$modal.confirm('是否确认删除模型定义编号为"' + _ids + '"的数据项？').then(function () {
+      return delDef(_ids);
+    }).then(() => {
+      getList();
+      proxy.$modal.msgSuccess("删除成功");
+    }).catch(() => {
+    });
+  }else{
+    proxy.$modal.alertWarning("请选择行！")
+  }
 }
 /** 导出按钮操作 */
 function handleExport() {
@@ -324,7 +343,7 @@ function handleExport() {
 
 /** 选择条数  */
 function handleSelectionChange(selection) {
-  ids.value = selection.map(item => item.userId);
+  ids.value = selection.map(item => item.id);
   single.value = selection.length != 1;
   multiple.value = !selection.length;
 }
@@ -354,11 +373,17 @@ function cancel() {
 }
 /** 新增按钮操作 */
 function handleAdd() {
+  //判断是否选择功能节点
+  if(!form.value.businessCode){
+    proxy.$modal.alertWarning("请选择功能树节点！")
+    return;
+  }
   addPanelVisible.value = true;
 }
 /** 修改按钮操作 */
 function handleUpdate(row) {
   srcRow.value = row;
+  console.log('srcRow:'+JSON.stringify(srcRow.value))
   updatePanelVisible.value = true;
 }
 function handleCloseUpdatePanel() {
@@ -367,18 +392,18 @@ function handleCloseUpdatePanel() {
 }
 /** 提交按钮 */
 function submitForm() {
-  proxy.$refs["userRef"].validate(valid => {
+  proxy.$refs["defRef"].validate(valid => {
     if (valid) {
-      if (form.value.userId != undefined) {
-        updateUser(form.value).then(response => {
+      if (form.value.id != undefined) {
+        updateDef(form.value).then(response => {
           proxy.$modal.msgSuccess("修改成功");
           updatePanelVisible.value = false;
           getList();
         });
       } else {
-        addUser(form.value).then(response => {
+        addDef(form.value).then(response => {
           proxy.$modal.msgSuccess("新增成功");
-          updatePanelVisible.value = false;
+          addPanelVisible.value = false;
           getList();
         });
       }
@@ -401,7 +426,16 @@ function getTableTypeList() {
 function  formatTableType(row, column){
   return tableTypeList.value.find(k => k.dictValue === row.tableType)?.dictLablel ?? '';
 }
+
+/**
+ * 获取所有数据源列表
+ */
+async function getAllDataSourceList() {
+  let temp = await listAllDatasource();
+  dataSourceList.value = temp.data
+}
 getFunctionTree();
 getList();
 getTableTypeList();
+getAllDataSourceList()
 </script>

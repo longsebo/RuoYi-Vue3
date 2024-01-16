@@ -49,3 +49,10 @@ export function checkConnect(id) {
     method: 'get'
   })
 }
+// 查询所有数据源定义列表
+export function listAllDatasource() {
+  return request({
+    url: '/business/datasource/listAll',
+    method: 'get'
+  })
+}
