@@ -18,19 +18,19 @@
   <el-form-item :prop="['scheme', 'optionTypeId']" label="数据源" required>
     <el-select
       v-model="props.formData.scheme.optionTypeId"
-      @change="v => findModelingOptionValues({typeId: v})"
+      @change="v => changeDictType(v)"
       :disabled="props.disabled"
       style="width: 100%;"
     >
       <el-option
         v-for="type in modelingOptionTypes"
-        :key="type.id" :label="type.name"
-        :value="type.id"
+        :key="type.dictType" :label="type.dictName"
+        :value="type.dictType"
       />
     </el-select>
   </el-form-item>
   <el-form-item :prop="['scheme', 'optionDefaultValue']" label="默认值">
-    <el-tree-select
+    <!-- <el-tree-select
       :key="defValKey"
       v-model="props.formData.scheme.optionDefaultValue"
       filterable clearable fit-input-width
@@ -44,15 +44,30 @@
       :props="{ label: 'name', children: 'children', disabled: 'disabled' }"
       :data="modelingOptionValues"
       style="width: 100%;"
-    />
+    /> -->
+    <el-select
+        v-model="props.formData.scheme.optionDefaultValue"
+        value-key="dictValue"
+        multiple
+        :disabled="props.disabled"
+        :multiple-limit="props.formData.scheme.multiple ? 0 : 1"
+        placeholder="Select"
+        style="width: 100%;"
+    >
+      <el-option
+          v-for="item in modelingOptionValues"
+          :key="item.dictValue"
+          :label="item.dictLabel"
+          :value="item.dictValue"
+      />
+    </el-select>
   </el-form-item>
 </template>
 <script lang="ts" setup>
-import { useModelingOptionApi } from "@/service/modeling/option";
-import { ElFormItem, ElRadioGroup, ElRadioButton, ElSelect, ElOption, ElTreeSelect } from "element-plus";
 import { onBeforeMount, ref } from "vue";
 import {useFieldStore} from "@/store/field-config";
-
+import {optionselect} from "@/api/system/dict/type"
+import {getDicts} from "@/api/system/dict/data"
 interface Props {
   disabled?: boolean
   formData: ModelingFieldAddParam
@@ -61,21 +76,28 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   disabled: false,
 })
-
+const modelingOptionTypes =ref([]);
+const modelingOptionValues =ref([]);
 const loading = ref(false)
-const {
-  modelingOptionTypes, findModelingOptionTypes,
-  modelingOptionValues, findModelingOptionValues
-} = useModelingOptionApi(loading)
 
 const store = useFieldStore()
 
-onBeforeMount(() => findModelingOptionTypes({ scope: store.scope as OptionScope, mkey: store.mkey }))
-onBeforeMount(() => props.formData.scheme.optionTypeId && findModelingOptionValues({ typeId: props.formData.scheme.optionTypeId }))
+onBeforeMount(loadDict)
+
 
 // 切换单选多选时 需要重载 select / tree-select组件， 否则会异常
 const defValKey = ref(0)
-
+async function loadDict() {
+  let tmp = await optionselect();
+  modelingOptionTypes.value = tmp.data;
+  if (props.formData.scheme.optionTypeId) {
+    changeDictType(props.formData.scheme.optionTypeId)
+  }
+}
+async function changeDictType(dictType) {
+  let tmp = await getDicts(dictType)
+  modelingOptionValues.value = tmp.data
+}
 function handleComponentChange() {
   defValKey.value++;
   props.formData.scheme.optionDefaultValue = []
