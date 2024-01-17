@@ -50,3 +50,11 @@ export function functionTreeSelect(query){
     data:query
   })
 }
+//判断功能节点是否为末级
+export function isLastLevel(query){
+  return request({
+    url: '/business/function/isLastLevel',
+    method: 'post',
+    data:query
+  })
+}

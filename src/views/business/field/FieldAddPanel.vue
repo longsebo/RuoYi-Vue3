@@ -67,7 +67,7 @@ const store = useFieldStore()
 
 // @ts-ignore
 const formData = ref<ModelingFieldAddParam>({
-  mkey: store.mkey,
+  enName: store.enName,
   fieldEnName: '',
   fieldCnName: '',
   ffieldRemark: '',
@@ -76,7 +76,8 @@ const formData = ref<ModelingFieldAddParam>({
   scope: store.scope,
   scheme: {
     type: 'number'
-  }
+  },
+  datasourceName:store.datasourceName
 })
 
 const schemeConfigComponentMap: Record<FieldType, Component> = {

@@ -202,7 +202,7 @@
 <script setup name="ModelEntity" lang="ts">
 
 import { listDef, getDef, delDef, addDef, updateDef } from "@/api/business/def";
-import { functionTreeSelect } from "@/api/business/function";
+import { functionTreeSelect,isLastLevel } from "@/api/business/function";
 import {useRouter} from "vue-router";
 import {getCurrentInstance, provide, reactive, ref, toRefs} from "vue";
 import ModelingConfigTabs from "./ModelingConfigTabs.vue";
@@ -215,7 +215,7 @@ const { proxy } = getCurrentInstance();
 
 const defList = ref([]);
 const updatePanelVisible = ref(false);
-const loading = ref(true);
+const loading = ref(false);
 const showSearch = ref(true);
 const ids = ref([]);
 const single = ref(true);
@@ -372,11 +372,23 @@ function cancel() {
   reset();
 }
 /** 新增按钮操作 */
-function handleAdd() {
+async function handleAdd() {
   //判断是否选择功能节点
-  if(!form.value.businessCode){
+  if (!form.value.businessCode) {
     proxy.$modal.alertWarning("请选择功能树节点！")
     return;
+  } else {
+    //判断是否为末级节点
+    let parameter = {
+      businessCode: form.value.businessCode
+    }
+    let resp = await isLastLevel(parameter);
+    if(resp.code==200){
+       if(resp.data==false){
+         proxy.$modal.alertWarning("请选择末级功能树节点！")
+         return;
+       }
+    }
   }
   addPanelVisible.value = true;
 }
@@ -434,8 +446,10 @@ async function getAllDataSourceList() {
   let temp = await listAllDatasource();
   dataSourceList.value = temp.data
 }
+loading.value = true;
 getFunctionTree();
-getList();
+//getList();
 getTableTypeList();
 getAllDataSourceList()
+loading.value = false;
 </script>

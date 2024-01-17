@@ -131,13 +131,13 @@
 import {markRaw, ref, watch} from "vue";
 import * as refApi from "@/api/flowable/ref"
 import {listAll} from "@/api/flowable/def"
-import NumberSchemeConfig from "@/views/modeling/field/form/NumberSchemeConfig.vue";
-import TextSchemeConfig from "@/views/modeling/field/form/TextSchemeConfig.vue";
-import OptionSchemeConfig from "@/views/modeling/field/form/OptionSchemeConfig.vue";
-import UserSchemeConfig from "@/views/modeling/field/form/UserSchemeConfig.vue";
-import DeptSchemeConfig from "@/views/modeling/field/form/DeptSchemeConfig.vue";
-import DateSchemeConfig from "@/views/modeling/field/form/DateSchemeConfig.vue";
-import DateRangeSchemeConfig from "@/views/modeling/field/form/DateRangeSchemeConfig.vue";
+import NumberSchemeConfig from "@/views/business/field/form/NumberSchemeConfig.vue";
+import TextSchemeConfig from "@/views/business/field/form/TextSchemeConfig.vue";
+import OptionSchemeConfig from "@/views/business/field/form/OptionSchemeConfig.vue";
+import UserSchemeConfig from "@/views/business/field/form/UserSchemeConfig.vue";
+import DeptSchemeConfig from "@/views/business/field/form/DeptSchemeConfig.vue";
+import DateSchemeConfig from "@/views/business/field/form/DateSchemeConfig.vue";
+import DateRangeSchemeConfig from "@/views/business/field/form/DateRangeSchemeConfig.vue";
 interface Props {
   mkey: string,
   version: string

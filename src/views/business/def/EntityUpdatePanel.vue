@@ -32,6 +32,7 @@
                 placeholder="请选择表类型"
                 clearable
                 style="width: 240px"
+                @change="changeTableType"
             >
               <el-option
                   v-for="item in tableTypeList"
@@ -89,6 +90,7 @@ const activeStateList=ref([])
 const tableTypeList = ref([])
 const dataSourceList = ref([])
 const { proxy } = getCurrentInstance();
+console.log('entity：'+JSON.stringify(entity.value))
 const formData = ref<ModelingEntityUpdateParam>({
   id: entity.value.id,
   cnName: entity.value.cnName,
@@ -138,6 +140,16 @@ async function getAllDataSourceList() {
   let temp = await listAllDatasource();
   dataSourceList.value = temp.data
 }
+
+/**
+ * 修改表类型
+ * @param newTableType
+ */
+function changeTableType(newTableType){
+  entity.value.tableType = newTableType;
+  console.log('entity value:'+JSON.stringify(entity))
+}
+
 const rules: FormRules = {
   cnName: [
     { required: true, message: "中文名不能为空", trigger: "blur" }

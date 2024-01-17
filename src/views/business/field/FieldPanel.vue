@@ -17,7 +17,8 @@
           <field-table @edit="ElMessage.warning('默认字段不允许编辑')" @delete="ElMessage.error('默认字段不允许删除')" :loading="loading" :data="defaultFields" />
         </el-tab-pane>
       </el-tabs>
-      <div v-if="refVisible" style="margin-top: 10px">
+
+        <mask-window v-model="refVisible" teleport-to="#field-container">
         <el-form ref="formRef" :model="formData" label-width="100px">
           <el-form-item prop="extModelFieldId" label="全局字段" required>
             <el-select v-model="formData.extModelFieldId">
@@ -35,8 +36,8 @@
               <el-button plain type="primary" @click="handleConfirmRef">确定</el-button>
           </el-form-item>
         </el-form>
+        </mask-window>
 
-      </div>
     </div>
 
     <mask-window v-model="visible" teleport-to="#field-container">
@@ -53,24 +54,23 @@ import {computed, inject, onBeforeMount, ref} from 'vue';
 import { ElButton, ElTabs, ElTabPane, ElSelect, ElOption, ElForm, ElFormItem, ElMessage } from "element-plus";
 import { Plus, Link } from "@element-plus/icons-vue";
 import MaskWindow from '@/components/dialog/MaskWindow.vue';
-import FieldAddPanel from '@/views/modeling/field/FieldAddPanel.vue';
-import FieldTable from '@/views/modeling/field/FieldTable.vue';
-import FieldUpdatePanel from '@/views/modeling/field/FieldUpdatePanel.vue';
-import {listModelField,listAllField,removeByExtModelField} from "@/api/business/field.js"
+import FieldAddPanel from '@/views/business/field/FieldAddPanel.vue';
+import FieldTable from './FieldTable.vue';
+import FieldUpdatePanel from '@/views/business/field/FieldUpdatePanel.vue';
+import {listModelField,listAllField,removeByExtModelField,delField} from "@/api/business/field.js"
 import {addRef} from "@/api/business/ref.js"
 
 
 const loading = ref<boolean>(false)
 const visible = ref(false)
 import {modelingEntityKey} from "../../modeling/keys";
+import {useFieldStore} from "../../../store/field-config";
 const entity = inject(modelingEntityKey)!
 const modelingFields = ref([]);
-const defaultEntityFields = ref([]);
-const defaultWorkflowFields = ref([]);
+const store = useFieldStore()
 const globalFields = ref([]);
 
 
-console.log('entity:'+JSON.stringify(entity.value))
 const defaultFields = computed(() => {
   if (entity.value.tableType=='02') {
     return modelingFields.value.filter(it => it.scope === 'WORKFLOW_DEFAULT')
@@ -86,18 +86,22 @@ const selectedGlobalFields = computed(() => modelingFields.value.filter(it => it
 
 onBeforeMount(loadFields)
 async function loadFields() {
+  loading.value = true;
   let parameter = {
     'datasourceName': entity.value.datasourceName,
     'enName': entity.value.enName
   }
   let temp = await listModelField(parameter);
   modelingFields.value = temp.data;
-  console.log('defaultFields:'+JSON.stringify(defaultFields.value))
+  loading.value = false;
 }
 
 
 function handleAddField() {
   visible.value = true
+  store.scope = 'PRIVATE'
+  store.enName = entity.value.enName
+  store.datasourceName = entity.value.datasourceName
 }
 
 const refVisible = ref(false)
@@ -123,7 +127,7 @@ async function handleConfirmRef() {
   } catch (e) {
     return
   }
-
+  formData.value.scope='GLOBAL';
   const result = await addRef(formData.value)
   if (result.code==200) {
     await loadFields()
@@ -143,7 +147,8 @@ function handleEditField(row: ModelingFieldDefView) {
 }
 
 async function handleDeleteField(row: ModelingFieldDefView) {
-  (await deleteField(row.id)) && loadFields()
+  await delField(row.id)
+  loadFields()
 }
 
 async function handleUnrefField(row: ModelingFieldDefView) {
@@ -152,7 +157,7 @@ async function handleUnrefField(row: ModelingFieldDefView) {
      'enName':entity.value.enName,
      'id':row.id
    }
-   await removeByExtModelField(row);
+   await removeByExtModelField(parameter);
    loadFields()
 }
 
