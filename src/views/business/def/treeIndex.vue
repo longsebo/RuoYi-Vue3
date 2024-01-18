@@ -122,7 +122,7 @@
              <el-table-column label="英文名" align="center" prop="enName" />
              <el-table-column label="数据源名称" align="center" prop="datasourceName" />
              <el-table-column label="表类型" align="center" prop="tableType" :formatter="formatTableType" />
-             <el-table-column label="状态" align="center" prop="status" />
+             <el-table-column label="状态" align="center" prop="status" :formatter="formatActiveState" />
              <el-table-column label="备注" align="center" prop="remark" />
              <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
                <template #default="scope">
@@ -211,8 +211,8 @@ import { listData } from "@/api/system/dict/data";
 import {listAllDatasource} from "@/api/business/datasource"
 const router = useRouter();
 const { proxy } = getCurrentInstance();
-
-
+const { active_state } = proxy.useDict("active_state");
+console.log('active_state value:'+JSON.stringify(active_state.value))
 const defList = ref([]);
 const updatePanelVisible = ref(false);
 const loading = ref(false);
@@ -397,9 +397,11 @@ function handleUpdate(row) {
   srcRow.value = row;
   console.log('srcRow:'+JSON.stringify(srcRow.value))
   updatePanelVisible.value = true;
+
 }
 function handleCloseUpdatePanel() {
   updatePanelVisible.value = false
+  console.log('handleCloseUpdatePanel enter')
   getList();
 }
 /** 提交按钮 */
@@ -436,9 +438,17 @@ function getTableTypeList() {
  * @returns {*|string}
  */
 function  formatTableType(row, column){
-  return tableTypeList.value.find(k => k.dictValue === row.tableType)?.dictLablel ?? '';
+  return tableTypeList.value.find(k => k.dictValue === row.tableType)?.dictLabel ?? '';
 }
 
+/**
+ * 翻译激活状态
+ * @param row
+ * @param column
+ */
+function formatActiveState(row,column){
+  return active_state.value.find(k=>k.value == row.status)?.label??'';
+}
 /**
  * 获取所有数据源列表
  */

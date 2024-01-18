@@ -89,7 +89,7 @@ const activeStateList=ref([])
 const tableTypeList = ref([])
 const dataSourceList = ref([])
 const { proxy } = getCurrentInstance();
-console.log('entity：'+JSON.stringify(entity.value))
+
 const formData = ref<ModelingEntityUpdateParam>({
   id: entity.value.id,
   cnName: entity.value.cnName,
