@@ -192,8 +192,8 @@
         </template>
       </el-dialog>
       <!-- 修改模型实体对话框 -->
-     <el-dialog title="修改模型实体" v-model="updatePanelVisible" :fullscreen="true" append-to-body>
-       <ModelingConfigTabs @close="handleCloseUpdatePanel"  />
+     <el-dialog title="修改模型实体" v-model="updatePanelVisible" :fullscreen="true" @close="handleCloseUpdatePanel" append-to-body>
+       <ModelingConfigTabs   />
      </el-dialog>
 
    </div>
