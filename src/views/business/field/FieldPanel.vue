@@ -50,7 +50,7 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, inject, onBeforeMount, ref} from 'vue';
+import {computed, inject, onBeforeMount, ref, watch} from 'vue';
 import { ElButton, ElTabs, ElTabPane, ElSelect, ElOption, ElForm, ElFormItem, ElMessage } from "element-plus";
 import { Plus, Link } from "@element-plus/icons-vue";
 import MaskWindow from '@/components/dialog/MaskWindow.vue';
@@ -96,6 +96,10 @@ async function loadFields() {
   loading.value = false;
 }
 
+watch(() => entity.value, val => {
+  console.log('enter watch');
+  loadFields();
+});
 
 function handleAddField() {
   visible.value = true

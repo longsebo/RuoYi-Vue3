@@ -11,7 +11,7 @@
           <el-form-item label="英文名" prop="enName">
             <el-input v-model="formData.enName" placeholder="请输入英文名" />
           </el-form-item>
-          <el-form-item label="数据源名称" prop="datasourceName">
+          <el-form-item label="数据源名称" prop="datasourceName" label-width="auto">
             <el-select
                 v-model="formData.datasourceName"
                 placeholder="请选择数据源"
@@ -32,7 +32,6 @@
                 placeholder="请选择表类型"
                 clearable
                 style="width: 240px"
-                @change="changeTableType"
             >
               <el-option
                   v-for="item in tableTypeList"
@@ -76,7 +75,7 @@ import {
   ElForm,  FormRules, ElScrollbar,
   ElPopconfirm,
 } from "element-plus";
-import {getCurrentInstance, inject, ref} from "vue";
+import {getCurrentInstance, inject, ref, watch} from "vue";
 import {  updateDef } from "@/api/business/def";
 import { formLabelPosition } from "@/store/layout";
 import {modelingEntityKey} from "../../modeling/keys";
@@ -117,10 +116,22 @@ const queryActiveStateDictParams= ref({
   status: undefined
 })
 
-
+watch(() => entity.value, val => {
+  formData.value={
+    id: val.id,
+    cnName: val.cnName,
+    enName: val.enName,
+    businessCode:val.businessCode,
+    tableType:val.tableType,
+    remark: val.remark,
+    status: val.status,
+    datasourceName:val.datasourceName
+  }
+});
 function handleUpdate() {
   updateDef(formData.value).then(response => {
     proxy.$modal.msgSuccess("修改成功");
+    entity.value.tableType = formData.value.tableType
   });
 }
 /** 查询字典数据列表 */
@@ -145,10 +156,10 @@ async function getAllDataSourceList() {
  * 修改表类型
  * @param newTableType
  */
-function changeTableType(newTableType){
-  entity.value.tableType = newTableType;
-  console.log('entity value:'+JSON.stringify(entity))
-}
+// function changeTableType(newTableType){
+//   entity.value.tableType = newTableType;
+//   console.log('entity value:'+JSON.stringify(entity))
+// }
 
 const rules: FormRules = {
   cnName: [
