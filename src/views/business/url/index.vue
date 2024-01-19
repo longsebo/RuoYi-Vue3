@@ -67,7 +67,6 @@
 
     <el-table v-loading="loading" :data="urlList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="id" />
       <el-table-column label="名称" align="center" prop="name" />
       <el-table-column label="URL" align="center" prop="url" />
       <el-table-column label="备注" align="center" prop="remark" />
@@ -78,7 +77,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
