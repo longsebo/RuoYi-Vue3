@@ -147,8 +147,8 @@
                <template #default="scope">
                  <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['business:interface:edit']">修改</el-button>
                  <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['business:interface:remove']">删除</el-button>
-                 <el-button link type="primary" icon="Edit" @click="handleParameterMaintenance(scope.row)" v-hasPermi="['business:interface:parametermaintenance']">接口参数维护</el-button>
-                 <el-button link type="primary" icon="Edit" @click="handleReturnMaintenance(scope.row)" v-hasPermi="['business:interface:returnmaintenance']">接口返回值维护</el-button>
+                 <el-button link type="primary" :icon="parameterSetIcon" @click="handleParameterMaintenance(scope.row)" v-hasPermi="['business:interface:parametermaintenance']">接口参数维护</el-button>
+                 <el-button link type="primary" :icon="returnValSetIcon" @click="handleReturnMaintenance(scope.row)" v-hasPermi="['business:interface:returnmaintenance']">接口返回值维护</el-button>
                </template>
              </el-table-column>
            </el-table>
@@ -194,7 +194,14 @@
          </div>
        </template>
      </el-dialog>
-
+     <!-- 参数维护--->
+     <el-dialog title="参数维护" v-model="parameterOpen" :fullscreen="true"  @close="parameterOpen=false" append-to-body>
+       <ParameterMaintenance :interfaceId="interfaceId" />
+     </el-dialog>
+     <!-- 返回值维护-->
+     <el-dialog title="返回值维护" v-model="returnValOpen" :fullscreen="true" @close="returnValOpen=false" append-to-body>
+       <ReturnValueMaintenance :intefaceCode="intefaceCode" />
+     </el-dialog>
    </div>
 </template>
 
@@ -204,10 +211,12 @@ import { listDef, getDef, delDef, addDef, updateDef } from "@/api/business/def";
 import { functionTreeSelect,isLastLevel } from "@/api/business/function";
 import {useRouter} from "vue-router";
 import {getCurrentInstance, provide, reactive, ref, toRefs} from "vue";
-import ModelingConfigTabs from "./ModelingConfigTabs.vue";
 import {modelingEntityKey} from "../../modeling/keys";
 import { listData } from "@/api/system/dict/data";
 import {listAllDatasource} from "@/api/business/datasource"
+import { useIcon } from "@/components/common/util";
+import ParameterMaintenance from "@/views/business/parameter/index.vue"
+import ReturnValueMaintenance from  "@/views/business/value/index.vue"
 const router = useRouter();
 const { proxy } = getCurrentInstance();
 const { active_state } = proxy.useDict("active_state");
@@ -221,12 +230,18 @@ const single = ref(true);
 const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
-const addPanelVisible = ref(false);
+const open = ref(false);
 
 const businessFunctionName = ref("");
 const businessFunctionOptions = ref(undefined);
 const tableTypeList = ref([])
 const srcRow = ref({})
+const parameterSetIcon = useIcon('ali_parameter')
+const returnValSetIcon = useIcon('ali_returnval')
+const intefaceCode=ref(0)
+const parameterOpen = ref(false)
+const returnValOpen =ref(false)
+
 provide(modelingEntityKey, srcRow)
 // 列显隐信息
 const columns = ref([
@@ -245,11 +260,15 @@ const data = reactive({
   queryParams: {
     pageNum: 1,
     pageSize: 10,
-    cnName: null,
-    enName: null,
-    datasourceName: null,
-    status: null,
-    businessCode:'',
+    interfaceName: null,
+    interfaceCode: null,
+    interfaceUrl: null,
+    interfaceMethod: null,
+    interfaceType: null,
+    interfaceDatasourceName: null,
+    isSelectDatasource: null,
+    isCommonUrl: null,
+    businessCode:null
   },
   queryDictParams: {
     pageNum: 1,
@@ -259,18 +278,21 @@ const data = reactive({
     status: undefined
   },
   rules: {
-    cnName: [
-      { required: true, message: "中文名不能为空", trigger: "blur" }
+    interfaceName: [
+      { required: true, message: "接口名称不能为空", trigger: "blur" }
     ],
-    enName: [
-      { required: true, trigger: "blur",pattern: /^[a-zA-Z_]+\w?$/,
-        message: '必须以字母或下划线开头' }
+    interfaceCode: [
+      { required: true, trigger: "blur",
+        message: '接口编码不能为空' }
     ],
-    datasourceName: [
-      { required: true, message: "数据源名称不能为空", trigger: "blur" }
+    interfaceUrl: [
+      { required: true, message: "接口url不能为空", trigger: "blur" }
     ],
-    tableType: [
-      { required: true, message: "表类型不能为空", trigger: "blur" }
+    interfaceMethod: [
+      { required: true, message: "接口方法不能为空", trigger: "blur" }
+    ],
+    interfaceType: [
+      { required: true, message: "接口类型不能为空", trigger: "blur" }
     ],
   }
 })
@@ -347,27 +369,43 @@ function handleSelectionChange(selection) {
   multiple.value = !selection.length;
 }
 
-
+/** 返回值维护 **/
+function handleReturnMaintenance(row) {
+  if(row.id){
+    intefaceCode.value = row.id
+    returnValOpen.value = true
+  }
+}
+/**参数维护 **/
+function handleParameterMaintenance(row) {
+  if(row.id){
+    intefaceCode.value = row.id
+    parameterOpen.value = true
+  }
+}
 /** 重置操作表单 */
 function reset() {
   form.value = {
     id: null,
-    cnName: null,
-    enName: null,
-    datasourceName: null,
-    status: null,
-    remark: null,
+    interfaceName: null,
+    interfaceCode: null,
+    interfaceUrl: null,
+    interfaceMethod: null,
+    interfaceType: null,
+    interfaceDatasourceName: null,
+    isSelectDatasource: null,
+    isCommonUrl: null,
     createBy: null,
     createTime: null,
     updateBy: null,
     updateTime: null,
     businessCode:null
   };
-  proxy.resetForm("defRef");
+  proxy.resetForm("interfaceRef");
 }
 /** 取消按钮 */
 function cancel() {
-  addPanelVisible.value = false;
+  open.value = false;
   reset();
 }
 /** 新增按钮操作 */
@@ -389,7 +427,7 @@ async function handleAdd() {
        }
     }
   }
-  addPanelVisible.value = true;
+  open.value = true;
 }
 /** 修改按钮操作 */
 function handleUpdate(row) {
@@ -416,7 +454,7 @@ function submitForm() {
       } else {
         addDef(form.value).then(response => {
           proxy.$modal.msgSuccess("新增成功");
-          addPanelVisible.value = false;
+          open.value = false;
           getList();
         });
       }

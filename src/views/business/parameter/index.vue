@@ -25,6 +25,22 @@
           @keyup.enter="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="参数格式" prop="parameterFormat">
+        <el-input
+          v-model="queryParams.parameterFormat"
+          placeholder="请输入参数格式"
+          clearable
+          @keyup.enter="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="父参数id" prop="parentId">
+        <el-input
+          v-model="queryParams.parentId"
+          placeholder="请输入父参数id"
+          clearable
+          @keyup.enter="handleQuery"
+        />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
         <el-button icon="Refresh" @click="resetQuery">重置</el-button>
@@ -75,11 +91,12 @@
 
     <el-table v-loading="loading" :data="parameterList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="ID" align="center" prop="id" />
       <el-table-column label="参数名称" align="center" prop="parameterName" />
       <el-table-column label="参数描述" align="center" prop="parameterDesc" />
       <el-table-column label="前端是否可见" align="center" prop="isFrontpageVisible" />
       <el-table-column label="参数类型" align="center" prop="parameterType" />
+      <el-table-column label="参数格式" align="center" prop="parameterFormat" />
+      <el-table-column label="父参数id" align="center" prop="parentId" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['business:parameter:edit']">修改</el-button>
@@ -87,7 +104,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -108,6 +125,12 @@
         <el-form-item label="前端是否可见" prop="isFrontpageVisible">
           <el-input v-model="form.isFrontpageVisible" placeholder="请输入前端是否可见" />
         </el-form-item>
+        <el-form-item label="参数格式" prop="parameterFormat">
+          <el-input v-model="form.parameterFormat" placeholder="请输入参数格式" />
+        </el-form-item>
+        <el-form-item label="父参数id" prop="parentId">
+          <el-input v-model="form.parentId" placeholder="请输入父参数id" />
+        </el-form-item>
       </el-form>
       <template #footer>
         <div class="dialog-footer">
@@ -119,11 +142,14 @@
   </div>
 </template>
 
-<script setup name="Parameter">
+<script setup name="Parameter" lang="ts">
 import { listParameter, getParameter, delParameter, addParameter, updateParameter } from "@/api/business/parameter";
+import {watch} from "vue";
 
 const { proxy } = getCurrentInstance();
-
+interface Props {
+  intefaceCode: string
+}
 const parameterList = ref([]);
 const open = ref(false);
 const loading = ref(true);
@@ -133,6 +159,7 @@ const single = ref(true);
 const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
+const props = defineProps<Props>()
 
 const data = reactive({
   form: {},
@@ -143,6 +170,9 @@ const data = reactive({
     parameterDesc: null,
     isFrontpageVisible: null,
     parameterType: null,
+    parameterFormat: null,
+    parentId: null,
+    intefaceCode:null
   },
   rules: {
   }
@@ -153,6 +183,7 @@ const { queryParams, form, rules } = toRefs(data);
 /** 查询接口参数列表 */
 function getList() {
   loading.value = true;
+  queryParams.value.intefaceCode = props.intefaceCode;
   listParameter(queryParams.value).then(response => {
     parameterList.value = response.rows;
     total.value = response.total;
@@ -177,7 +208,9 @@ function reset() {
     createBy: null,
     createTime: null,
     updateBy: null,
-    updateTime: null
+    updateTime: null,
+    parameterFormat: null,
+    parentId: null
   };
   proxy.resetForm("parameterRef");
 }
@@ -257,6 +290,8 @@ function handleExport() {
     ...queryParams.value
   }, `parameter_${new Date().getTime()}.xlsx`)
 }
-
+watch(() => props.intefaceCode, () => {
+  getList()
+})
 getList();
 </script>
