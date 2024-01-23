@@ -18,12 +18,7 @@
         />
       </el-form-item>
       <el-form-item label="前端是否可见" prop="isFrontpageVisible">
-        <el-input
-          v-model="queryParams.isFrontpageVisible"
-          placeholder="请输入前端是否可见"
-          clearable
-          @keyup.enter="handleQuery"
-        />
+        <el-checkbox v-model="queryParams.isFrontpageVisible" label="前端是否可见" size="large" />
       </el-form-item>
       <el-form-item label="参数格式" prop="parameterFormat">
         <el-input
@@ -33,13 +28,10 @@
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="父参数id" prop="parentId">
-        <el-input
-          v-model="queryParams.parentId"
-          placeholder="请输入父参数id"
-          clearable
-          @keyup.enter="handleQuery"
-        />
+      <el-form-item label="参数类型" prop="parameterType">
+        <el-select >
+          <el-option v-for="item in parameterTypeList" :key="item.value" :value="item.value" :label="item.label"/>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
@@ -93,14 +85,24 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="参数名称" align="center" prop="parameterName" />
       <el-table-column label="参数描述" align="center" prop="parameterDesc" />
-      <el-table-column label="前端是否可见" align="center" prop="isFrontpageVisible" />
-      <el-table-column label="参数类型" align="center" prop="parameterType" />
+      <el-table-column label="前端是否可见" align="center" prop="isFrontpageVisible" >
+        <template #default="scope">
+        <el-checkbox v-model="isFrontpageVisible" label="前端是否可见" size="large" />
+        </template>
+      </el-table-column>
+      <el-table-column label="参数类型" align="center" prop="parameterType" >
+        <template #default="scope">
+          <el-select >
+            <el-option v-for="item in parameterTypeList" :key="item.value" :value="item.value" :label="item.label"/>
+          </el-select>
+        </template>
+      </el-table-column>
       <el-table-column label="参数格式" align="center" prop="parameterFormat" />
-      <el-table-column label="父参数id" align="center" prop="parentId" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['business:parameter:edit']">修改</el-button>
           <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['business:parameter:remove']">删除</el-button>
+          <el-button link type="primary" icon="Plus" @click="handleAddChild(scope.row)" v-hasPermi="['business:parameter:add']">添加下级参数</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -128,8 +130,8 @@
         <el-form-item label="参数格式" prop="parameterFormat">
           <el-input v-model="form.parameterFormat" placeholder="请输入参数格式" />
         </el-form-item>
-        <el-form-item label="父参数id" prop="parentId">
-          <el-input v-model="form.parentId" placeholder="请输入父参数id" />
+        <el-form-item label="父参数" prop="parentName">
+          <el-input v-model="form.parentName" readonly="true" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -143,7 +145,7 @@
 </template>
 
 <script setup name="Parameter" lang="ts">
-import { listParameter, getParameter, delParameter, addParameter, updateParameter } from "@/api/business/parameter";
+import { parameterTreeSelect, getParameter, delParameter, addParameter, updateParameter } from "@/api/business/parameter";
 import {watch} from "vue";
 
 const { proxy } = getCurrentInstance();
@@ -160,7 +162,7 @@ const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
 const props = defineProps<Props>()
-
+const { parameterTypeList } = proxy.useDict("parameter_type");
 const data = reactive({
   form: {},
   queryParams: {
@@ -184,7 +186,7 @@ const { queryParams, form, rules } = toRefs(data);
 function getList() {
   loading.value = true;
   queryParams.value.intefaceCode = props.intefaceCode;
-  listParameter(queryParams.value).then(response => {
+  parameterTreeSelect(queryParams.value).then(response => {
     parameterList.value = response.rows;
     total.value = response.total;
     loading.value = false;
@@ -210,7 +212,8 @@ function reset() {
     updateBy: null,
     updateTime: null,
     parameterFormat: null,
-    parentId: null
+    parentId: null,
+    parentName:null
   };
   proxy.resetForm("parameterRef");
 }
@@ -240,7 +243,14 @@ function handleAdd() {
   open.value = true;
   title.value = "添加接口参数";
 }
-
+/**添加下级参数 */
+function handleAddChild(row){
+  reset();
+  form.value.parentId = row.id
+  form.value.parentName = row.parameterName
+  open.value = true;
+  title.value = "添加接口下级参数";
+}
 /** 修改按钮操作 */
 function handleUpdate(row) {
   reset();

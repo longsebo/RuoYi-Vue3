@@ -138,11 +138,9 @@
               <el-table-column label="接口名称" align="center" prop="interfaceName" />
              <el-table-column label="接口编码" align="center" prop="interfaceCode" />
              <el-table-column label="接口URL" align="center" prop="interfaceUrl" />
-             <el-table-column label="接口METHOD" align="center" prop="interfaceMethod" />
-             <el-table-column label="接口类型" align="center" prop="interfaceType" />
+             <el-table-column label="接口METHOD" align="center" prop="interfaceMethod" :formatter="formatInterfaceMethod" />
+             <el-table-column label="接口类型" align="center" prop="interfaceType" :formatter="formatInterfaceType" />
              <el-table-column label="接口数据源名称" align="center" prop="interfaceDatasourceName" />
-             <el-table-column label="是否选数据源" align="center" prop="isSelectDatasource" />
-             <el-table-column label="是否通用URL" align="center" prop="isCommonUrl" />
              <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
                <template #default="scope">
                  <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['business:interface:edit']">修改</el-button>
@@ -171,21 +169,34 @@
          <el-form-item label="接口编码" prop="interfaceCode">
            <el-input v-model="form.interfaceCode" placeholder="请输入接口编码" />
          </el-form-item>
+         <el-form-item label="是否通用URL" prop="isCommonUrl">
+           <el-checkbox v-model="form.isCommonUrl" label="是否通用URL" size="large" />
+         </el-form-item>
          <el-form-item label="接口URL" prop="interfaceUrl">
-           <el-input v-model="form.interfaceUrl" placeholder="请输入接口URL" />
+           <el-input v-model="form.interfaceUrl" v-show="!form.isCommonUrl" placeholder="请输入接口URL" />
+
          </el-form-item>
          <el-form-item label="接口METHOD" prop="interfaceMethod">
-           <el-input v-model="form.interfaceMethod" placeholder="请输入接口METHOD" />
+           <el-select v-model="form.interfaceMethod" placeholder="请选择接口方法" >
+             <el-option v-for="item in interfaceMethodList" :key="item.value" :value="item.value" :label="item.label"/>
+           </el-select>
          </el-form-item>
-         <el-form-item label="接口数据源名称" prop="interfaceDatasourceName">
-           <el-input v-model="form.interfaceDatasourceName" placeholder="请输入接口数据源名称" />
+         <el-form-item label="接口类型" prop="interfaceType">
+           <el-select v-model="form.interfaceType" placeholder="请选择接口类型" >
+             <el-option v-for="item in interfaceTypeList" :key="item.value" :value="item.value" :label="item.label"/>
+           </el-select>
          </el-form-item>
-         <el-form-item label="是否选数据源" prop="isSelectDatasource">
+         <el-form-item label="接口数据源名称" v-show="form.isCommonUrl"  prop="interfaceDatasourceName">
+           <el-select  v-model="form.interfaceDatasourceName">
+             <el-option v-for="item in dataSourceList" :key="item.datasourceName" :value="item.datasourceName" :label="item.datasourceName"/>
+           </el-select>
+         </el-form-item>
+        <!-- <el-form-item label="是否选数据源" prop="isSelectDatasource">
            <el-input v-model="form.isSelectDatasource" placeholder="请输入是否选数据源" />
          </el-form-item>
          <el-form-item label="是否通用URL" prop="isCommonUrl">
            <el-input v-model="form.isCommonUrl" placeholder="请输入是否通用URL" />
-         </el-form-item>
+         </el-form-item> -->
        </el-form>
        <template #footer>
          <div class="dialog-footer">
@@ -196,11 +207,11 @@
      </el-dialog>
      <!-- 参数维护--->
      <el-dialog title="参数维护" v-model="parameterOpen" :fullscreen="true"  @close="parameterOpen=false" append-to-body>
-       <ParameterMaintenance :interfaceId="interfaceId" />
+       <ParameterMaintenance :interfaceCode="interfaceCode" />
      </el-dialog>
      <!-- 返回值维护-->
      <el-dialog title="返回值维护" v-model="returnValOpen" :fullscreen="true" @close="returnValOpen=false" append-to-body>
-       <ReturnValueMaintenance :intefaceCode="intefaceCode" />
+       <ReturnValueMaintenance :interfaceCode="interfaceCode" />
      </el-dialog>
    </div>
 </template>
@@ -212,15 +223,14 @@ import { functionTreeSelect,isLastLevel } from "@/api/business/function";
 import {useRouter} from "vue-router";
 import {getCurrentInstance, provide, reactive, ref, toRefs} from "vue";
 import {modelingEntityKey} from "../../modeling/keys";
-import { listData } from "@/api/system/dict/data";
 import {listAllDatasource} from "@/api/business/datasource"
 import { useIcon } from "@/components/common/util";
 import ParameterMaintenance from "@/views/business/parameter/index.vue"
 import ReturnValueMaintenance from  "@/views/business/value/index.vue"
 const router = useRouter();
 const { proxy } = getCurrentInstance();
-const { active_state } = proxy.useDict("active_state");
-console.log('active_state value:'+JSON.stringify(active_state.value))
+const { interfaceMethodList,interfaceTypeList } = proxy.useDict("interface_method","interface_type");
+
 const defList = ref([]);
 const updatePanelVisible = ref(false);
 const loading = ref(false);
@@ -234,11 +244,10 @@ const open = ref(false);
 
 const businessFunctionName = ref("");
 const businessFunctionOptions = ref(undefined);
-const tableTypeList = ref([])
 const srcRow = ref({})
 const parameterSetIcon = useIcon('ali_parameter')
 const returnValSetIcon = useIcon('ali_returnval')
-const intefaceCode=ref(0)
+const interfaceCode=ref(0)
 const parameterOpen = ref(false)
 const returnValOpen =ref(false)
 
@@ -443,7 +452,7 @@ function handleCloseUpdatePanel() {
 }
 /** 提交按钮 */
 function submitForm() {
-  proxy.$refs["defRef"].validate(valid => {
+  proxy.$refs["interfaceRef"].validate(valid => {
     if (valid) {
       if (form.value.id != undefined) {
         updateDef(form.value).then(response => {
@@ -461,31 +470,8 @@ function submitForm() {
     }
   });
 };
-/** 查询TableType字典数据列表 */
-function getTableTypeList() {
 
-  listData(queryDictParams.value).then(response => {
-    tableTypeList.value = response.rows;
-  });
-}
-/**
- * 翻译表类型编码
- * @param row
- * @param column
- * @returns {*|string}
- */
-function  formatTableType(row, column){
-  return tableTypeList.value.find(k => k.dictValue === row.tableType)?.dictLabel ?? '';
-}
 
-/**
- * 翻译激活状态
- * @param row
- * @param column
- */
-function formatActiveState(row,column){
-  return active_state.value.find(k=>k.value == row.status)?.label??'';
-}
 /**
  * 获取所有数据源列表
  */
@@ -493,10 +479,25 @@ async function getAllDataSourceList() {
   let temp = await listAllDatasource();
   dataSourceList.value = temp.data
 }
+
+/**
+ * 翻译接口方法
+ * @param row
+ * @param column
+ */
+function formatInterfaceMethod(row,column){
+  return interfaceMethodList.value.find(k=>k.value == row.interfaceMethod)?.label??'';
+}
+/**
+ * 翻译接口类型
+ * @param row
+ * @param column
+ */
+function formatInterfaceType(row,column){
+  return interfaceTypeList.value.find(k=>k.value == row.interfaceType)?.label??'';
+}
 loading.value = true;
 getFunctionTree();
-//getList();
-getTableTypeList();
 getAllDataSourceList()
 loading.value = false;
 </script>

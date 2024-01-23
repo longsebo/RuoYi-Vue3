@@ -42,3 +42,11 @@ export function delValue(id) {
     method: 'delete'
   })
 }
+//查询返回值树
+export function returnValTreeSelect(query){
+  return request({
+    url: '/business/value/tree',
+    method: 'post',
+    data:query
+  })
+}

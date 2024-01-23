@@ -42,3 +42,11 @@ export function delParameter(id) {
     method: 'delete'
   })
 }
+//查询参数树
+export function parameterTreeSelect(query){
+  return request({
+    url: '/business/parameter/tree',
+    method: 'post',
+    data:query
+  })
+}

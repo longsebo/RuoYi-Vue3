@@ -18,12 +18,7 @@
         />
       </el-form-item>
       <el-form-item label="前端是否可见" prop="isFrontpageVisible">
-        <el-input
-          v-model="queryParams.isFrontpageVisible"
-          placeholder="请输入前端是否可见"
-          clearable
-          @keyup.enter="handleQuery"
-        />
+        <el-checkbox v-model="queryParams.isFrontpageVisible" label="前端是否可见" />
       </el-form-item>
       <el-form-item label="返回值格式" prop="returnFormat">
         <el-input
@@ -33,13 +28,10 @@
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="父参数id" prop="parentId">
-        <el-input
-          v-model="queryParams.parentId"
-          placeholder="请输入父参数id"
-          clearable
-          @keyup.enter="handleQuery"
-        />
+      <el-form-item label="参数类型" prop="parameterType">
+        <el-select >
+          <el-option v-for="item in parameterTypeList" :key="item.value" :value="item.value" :label="item.label"/>
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
@@ -93,10 +85,19 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="返回值名称" align="center" prop="returnName" />
       <el-table-column label="返回值描述" align="center" prop="returnDesc" />
-      <el-table-column label="前端是否可见" align="center" prop="isFrontpageVisible" />
-      <el-table-column label="返回值类型" align="center" prop="returnType" />
+      <el-table-column label="前端是否可见" align="center" prop="isFrontpageVisible" >
+        <template #default="scope">
+          <el-checkbox v-model="isFrontpageVisible" label="前端是否可见" size="large" />
+        </template>
+      </el-table-column>
+      <el-table-column label="参数类型" align="center" prop="returnType" >
+        <template #default="scope">
+          <el-select >
+            <el-option v-for="item in parameterTypeList" :key="item.value" :value="item.value" :label="item.label"/>
+          </el-select>
+        </template>
+      </el-table-column>
       <el-table-column label="返回值格式" align="center" prop="returnFormat" />
-      <el-table-column label="父参数id" align="center" prop="parentId" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['business:value:edit']">修改</el-button>
@@ -128,8 +129,8 @@
         <el-form-item label="返回值格式" prop="returnFormat">
           <el-input v-model="form.returnFormat" placeholder="请输入返回值格式" />
         </el-form-item>
-        <el-form-item label="父参数id" prop="parentId">
-          <el-input v-model="form.parentId" placeholder="请输入父参数id" />
+        <el-form-item label="父参数" prop="parentName">
+          <el-input v-model="form.parentName" readonly="true" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -143,7 +144,7 @@
 </template>
 
 <script setup name="Value" lang="ts">
-import { listValue, getValue, delValue, addValue, updateValue } from "@/api/business/value";
+import { returnValTreeSelect, getValue, delValue, addValue, updateValue } from "@/api/business/value";
 import {watch} from "vue";
 interface Props {
   intefaceCode: string
@@ -160,7 +161,7 @@ const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
 const props = defineProps<Props>()
-
+const { parameterTypeList } = proxy.useDict("parameter_type");
 const data = reactive({
   form: {},
   queryParams: {
@@ -184,7 +185,7 @@ const { queryParams, form, rules } = toRefs(data);
 function getList() {
   loading.value = true;
   queryParams.value.intefaceCode = props.intefaceCode;
-  listValue(queryParams.value).then(response => {
+  returnValTreeSelect(queryParams.value).then(response => {
     valueList.value = response.rows;
     total.value = response.total;
     loading.value = false;
