@@ -42,3 +42,11 @@ export function delUrl(id) {
     method: 'delete'
   })
 }
+// 查询所有通用URL列表
+export function listAllUrl(query) {
+  return request({
+    url: '/business/url/listAll',
+    method: 'get',
+    params: query
+  })
+}

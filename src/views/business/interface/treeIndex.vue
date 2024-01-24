@@ -45,7 +45,7 @@
                    @keyup.enter="handleQuery"
                />
              </el-form-item>
-             <el-form-item label="接口URL" prop="interfaceUrl">
+             <el-form-item label="接口URL" prop="interfaceUrl" label-width="auto">
                <el-input
                    v-model="queryParams.interfaceUrl"
                    placeholder="请输入接口URL"
@@ -53,7 +53,7 @@
                    @keyup.enter="handleQuery"
                />
              </el-form-item>
-             <el-form-item label="接口METHOD" prop="interfaceMethod">
+             <el-form-item label="接口METHOD" prop="interfaceMethod" label-width="auto">
                <el-input
                    v-model="queryParams.interfaceMethod"
                    placeholder="请输入接口METHOD"
@@ -61,26 +61,10 @@
                    @keyup.enter="handleQuery"
                />
              </el-form-item>
-             <el-form-item label="接口数据源名称" prop="interfaceDatasourceName">
+             <el-form-item label="接口数据源名称" prop="interfaceDatasourceName" label-width="auto">
                <el-input
                    v-model="queryParams.interfaceDatasourceName"
                    placeholder="请输入接口数据源名称"
-                   clearable
-                   @keyup.enter="handleQuery"
-               />
-             </el-form-item>
-             <el-form-item label="是否选数据源" prop="isSelectDatasource">
-               <el-input
-                   v-model="queryParams.isSelectDatasource"
-                   placeholder="请输入是否选数据源"
-                   clearable
-                   @keyup.enter="handleQuery"
-               />
-             </el-form-item>
-             <el-form-item label="是否通用URL" prop="isCommonUrl">
-               <el-input
-                   v-model="queryParams.isCommonUrl"
-                   placeholder="请输入是否通用URL"
                    clearable
                    @keyup.enter="handleQuery"
                />
@@ -129,8 +113,8 @@
                    @click="handleExport"
                    v-hasPermi="['business:interface:export']"
                >导出</el-button>
-               <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
              </el-col>
+             <right-toolbar v-model:showSearch="showSearch" @queryTable="getList" :columns="columns"></right-toolbar>
             </el-row>
 
            <el-table v-loading="loading" :data="interfaceList" @selection-change="handleSelectionChange">
@@ -169,24 +153,26 @@
          <el-form-item label="接口编码" prop="interfaceCode">
            <el-input v-model="form.interfaceCode" placeholder="请输入接口编码" />
          </el-form-item>
-         <el-form-item label="是否通用URL" prop="isCommonUrl">
+         <el-form-item label="是否通用URL" prop="isCommonUrl" label-width="auto" true-label="Y" false-label="N">
            <el-checkbox v-model="form.isCommonUrl" label="是否通用URL" size="large" />
          </el-form-item>
          <el-form-item label="接口URL" prop="interfaceUrl">
-           <el-input v-model="form.interfaceUrl" v-show="!form.isCommonUrl" placeholder="请输入接口URL" />
-
+           <el-input v-model="form.interfaceUrl" v-if="form.isCommonUrl=='N'" placeholder="请输入接口URL" />
+           <el-select v-model="form.interfaceUrl"  v-if="form.isCommonUrl=='Y'" placeholder="请选择通用URL" >
+             <el-option v-for="item in commonUrlList" :key="item.url" :value="item.url" :label="item.name"/>
+           </el-select>
          </el-form-item>
-         <el-form-item label="接口METHOD" prop="interfaceMethod">
+         <el-form-item label="接口METHOD" prop="interfaceMethod" label-width="auto">
            <el-select v-model="form.interfaceMethod" placeholder="请选择接口方法" >
-             <el-option v-for="item in interfaceMethodList" :key="item.value" :value="item.value" :label="item.label"/>
+             <el-option v-for="item in interface_method" :key="item.value" :value="item.value" :label="item.label"/>
            </el-select>
          </el-form-item>
          <el-form-item label="接口类型" prop="interfaceType">
            <el-select v-model="form.interfaceType" placeholder="请选择接口类型" >
-             <el-option v-for="item in interfaceTypeList" :key="item.value" :value="item.value" :label="item.label"/>
+             <el-option v-for="item in interface_type" :key="item.value" :value="item.value" :label="item.label"/>
            </el-select>
          </el-form-item>
-         <el-form-item label="接口数据源名称" v-show="form.isCommonUrl"  prop="interfaceDatasourceName">
+         <el-form-item label="接口数据源名称" v-show="form.isCommonUrl=='Y'"  prop="interfaceDatasourceName" label-width="auto">
            <el-select  v-model="form.interfaceDatasourceName">
              <el-option v-for="item in dataSourceList" :key="item.datasourceName" :value="item.datasourceName" :label="item.datasourceName"/>
            </el-select>
@@ -218,7 +204,8 @@
 
 <script setup name="ModelEntity" lang="ts">
 
-import { listDef, getDef, delDef, addDef, updateDef } from "@/api/business/def";
+
+import { listInterface, getInterface, delInterface, addInterface, updateInterface } from "@/api/business/interface";
 import { functionTreeSelect,isLastLevel } from "@/api/business/function";
 import {useRouter} from "vue-router";
 import {getCurrentInstance, provide, reactive, ref, toRefs} from "vue";
@@ -227,11 +214,13 @@ import {listAllDatasource} from "@/api/business/datasource"
 import { useIcon } from "@/components/common/util";
 import ParameterMaintenance from "@/views/business/parameter/index.vue"
 import ReturnValueMaintenance from  "@/views/business/value/index.vue"
+import {listAllUrl} from "@/api/business/url"
+
 const router = useRouter();
 const { proxy } = getCurrentInstance();
-const { interfaceMethodList,interfaceTypeList } = proxy.useDict("interface_method","interface_type");
-
-const defList = ref([]);
+const { interface_method,interface_type } = proxy.useDict("interface_method","interface_type");
+//console.log('interface_method value:'+JSON.stringify(interface_method.value))
+const interfaceList = ref([]);
 const updatePanelVisible = ref(false);
 const loading = ref(false);
 const showSearch = ref(true);
@@ -250,7 +239,7 @@ const returnValSetIcon = useIcon('ali_returnval')
 const interfaceCode=ref(0)
 const parameterOpen = ref(false)
 const returnValOpen =ref(false)
-
+const commonUrlList = ref([])
 provide(modelingEntityKey, srcRow)
 // 列显隐信息
 const columns = ref([
@@ -324,10 +313,16 @@ function getFunctionTree() {
 /** 查询模型表列表 */
 function getList() {
   loading.value = true;
-  listDef(queryParams.value).then(response => {
-    defList.value = response.rows;
+  listInterface(queryParams.value).then(response => {
+    interfaceList.value = response.rows;
     total.value = response.total;
     loading.value = false;
+  });
+}
+/** 查询所有url列表 */
+function getAllUrlList() {
+  listAllUrl(queryParams.value).then(response => {
+    commonUrlList.value = response.data;
   });
 }
 /** 节点单击事件 */
@@ -353,7 +348,7 @@ function handleDelete(row) {
   const _ids = row.id || ids.value;
   if(_ids) {
     proxy.$modal.confirm('是否确认删除模型定义编号为"' + _ids + '"的数据项？').then(function () {
-      return delDef(_ids);
+      return delInterface(_ids);
     }).then(() => {
       getList();
       proxy.$modal.msgSuccess("删除成功");
@@ -381,14 +376,14 @@ function handleSelectionChange(selection) {
 /** 返回值维护 **/
 function handleReturnMaintenance(row) {
   if(row.id){
-    intefaceCode.value = row.id
+    interfaceCode.value = row.id
     returnValOpen.value = true
   }
 }
 /**参数维护 **/
 function handleParameterMaintenance(row) {
   if(row.id){
-    intefaceCode.value = row.id
+    interfaceCode.value = row.id
     parameterOpen.value = true
   }
 }
@@ -455,13 +450,13 @@ function submitForm() {
   proxy.$refs["interfaceRef"].validate(valid => {
     if (valid) {
       if (form.value.id != undefined) {
-        updateDef(form.value).then(response => {
+        updateInterface(form.value).then(response => {
           proxy.$modal.msgSuccess("修改成功");
           updatePanelVisible.value = false;
           getList();
         });
       } else {
-        addDef(form.value).then(response => {
+        addInterface(form.value).then(response => {
           proxy.$modal.msgSuccess("新增成功");
           open.value = false;
           getList();
@@ -486,7 +481,7 @@ async function getAllDataSourceList() {
  * @param column
  */
 function formatInterfaceMethod(row,column){
-  return interfaceMethodList.value.find(k=>k.value == row.interfaceMethod)?.label??'';
+  return interface_method.value.find(k=>k.value == row.interfaceMethod)?.label??'';
 }
 /**
  * 翻译接口类型
@@ -494,10 +489,11 @@ function formatInterfaceMethod(row,column){
  * @param column
  */
 function formatInterfaceType(row,column){
-  return interfaceTypeList.value.find(k=>k.value == row.interfaceType)?.label??'';
+  return interface_type.value.find(k=>k.value == row.interfaceType)?.label??'';
 }
 loading.value = true;
 getFunctionTree();
 getAllDataSourceList()
+getAllUrlList()
 loading.value = false;
 </script>
