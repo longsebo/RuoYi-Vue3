@@ -153,11 +153,11 @@
          <el-form-item label="接口编码" prop="interfaceCode">
            <el-input v-model="form.interfaceCode" placeholder="请输入接口编码" />
          </el-form-item>
-         <el-form-item label="是否通用URL" prop="isCommonUrl" label-width="auto" true-label="Y" false-label="N">
-           <el-checkbox v-model="form.isCommonUrl" label="是否通用URL" size="large" />
+         <el-form-item label="是否通用URL" prop="isCommonUrl" label-width="auto" >
+           <el-checkbox v-model="form.isCommonUrl" label="是否通用URL" size="large" true-label="Y" false-label="N" />
          </el-form-item>
          <el-form-item label="接口URL" prop="interfaceUrl">
-           <el-input v-model="form.interfaceUrl" v-if="form.isCommonUrl=='N'" placeholder="请输入接口URL" />
+           <el-input v-model="form.interfaceUrl" v-if="form.isCommonUrl!='Y'" placeholder="请输入接口URL" />
            <el-select v-model="form.interfaceUrl"  v-if="form.isCommonUrl=='Y'" placeholder="请选择通用URL" >
              <el-option v-for="item in commonUrlList" :key="item.url" :value="item.url" :label="item.name"/>
            </el-select>
