@@ -221,7 +221,7 @@ const { proxy } = getCurrentInstance();
 const { interface_method,interface_type } = proxy.useDict("interface_method","interface_type");
 //console.log('interface_method value:'+JSON.stringify(interface_method.value))
 const interfaceList = ref([]);
-const updatePanelVisible = ref(false);
+
 const loading = ref(false);
 const showSearch = ref(true);
 const ids = ref([]);
@@ -233,14 +233,14 @@ const open = ref(false);
 
 const businessFunctionName = ref("");
 const businessFunctionOptions = ref(undefined);
-const srcRow = ref({})
+
 const parameterSetIcon = useIcon('ali_parameter')
 const returnValSetIcon = useIcon('ali_returnval')
 const interfaceCode=ref(0)
 const parameterOpen = ref(false)
 const returnValOpen =ref(false)
 const commonUrlList = ref([])
-provide(modelingEntityKey, srcRow)
+
 // 列显隐信息
 const columns = ref([
   { key: 0, label: `模型表编号`, visible: true },
@@ -402,8 +402,7 @@ function reset() {
     createBy: null,
     createTime: null,
     updateBy: null,
-    updateTime: null,
-    businessCode:null
+    updateTime: null
   };
   proxy.resetForm("interfaceRef");
 }
@@ -431,28 +430,32 @@ async function handleAdd() {
        }
     }
   }
+  let businessCode = form.value.businessCode
+  reset();
+  form.value.businessCode = businessCode
   open.value = true;
 }
 /** 修改按钮操作 */
 function handleUpdate(row) {
-  srcRow.value = row;
-  console.log('srcRow:'+JSON.stringify(srcRow.value))
-  updatePanelVisible.value = true;
+  form.value = row;
+
+  open.value = true;
 
 }
 function handleCloseUpdatePanel() {
-  updatePanelVisible.value = false
+  open.value = false
   console.log('handleCloseUpdatePanel enter')
   getList();
 }
 /** 提交按钮 */
 function submitForm() {
+  form.value.isSelectDatasource = form.value.isCommonUrl;
   proxy.$refs["interfaceRef"].validate(valid => {
     if (valid) {
       if (form.value.id != undefined) {
         updateInterface(form.value).then(response => {
           proxy.$modal.msgSuccess("修改成功");
-          updatePanelVisible.value = false;
+          open.value = false;
           getList();
         });
       } else {
