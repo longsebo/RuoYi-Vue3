@@ -18,7 +18,7 @@
         />
       </el-form-item>
       <el-form-item label="前端是否可见" prop="isFrontpageVisible" label-width="auto">
-        <el-checkbox v-model="queryParams.isFrontpageVisible" label="前端是否可见" size="small" />
+        <el-checkbox v-model="queryParams.isFrontpageVisible" label="前端是否可见" size="small" true-label="Y" false-label="N" />
       </el-form-item>
       <el-form-item label="参数格式" prop="parameterFormat">
         <el-input
@@ -85,18 +85,8 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="参数名称" align="center" prop="parameterName" />
       <el-table-column label="参数描述" align="center" prop="parameterDesc" />
-      <el-table-column label="前端是否可见" align="center" prop="isFrontpageVisible" >
-        <template #default="scope">
-        <el-checkbox v-model="isFrontpageVisible" label="前端是否可见" size="large" />
-        </template>
-      </el-table-column>
-      <el-table-column label="参数类型" align="center" prop="parameterType" >
-        <template #default="scope">
-          <el-select >
-            <el-option v-for="item in parameter_type" :key="item.value" :value="item.value" :label="item.label"/>
-          </el-select>
-        </template>
-      </el-table-column>
+      <el-table-column label="前端是否可见" align="center" prop="isFrontpageVisible" :formatter="formatFrontPageVisible" />
+      <el-table-column label="参数类型" align="center" prop="parameterType" :formatter="formatParameterType" />
       <el-table-column label="参数格式" align="center" prop="parameterFormat" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
@@ -123,8 +113,13 @@
         <el-form-item label="参数描述" prop="parameterDesc">
           <el-input v-model="form.parameterDesc" placeholder="请输入参数描述" />
         </el-form-item>
-        <el-form-item label="前端是否可见" prop="isFrontpageVisible">
-          <el-input v-model="form.isFrontpageVisible" placeholder="请输入前端是否可见" />
+        <el-form-item label="前端是否可见" prop="isFrontpageVisible" label-width="auto">
+          <el-checkbox v-model="queryParams.isFrontpageVisible" label="前端是否可见" size="small" true-label="Y" false-label="N"/>
+        </el-form-item>
+        <el-form-item label="参数类型" prop="parameterType">
+          <el-select v-model="form.parameterType" >
+            <el-option v-for="item in parameter_type" :key="item.value" :value="item.value" :label="item.label"/>
+          </el-select>
         </el-form-item>
         <el-form-item label="参数格式" prop="parameterFormat">
           <el-input v-model="form.parameterFormat" placeholder="请输入参数格式" />
@@ -169,7 +164,7 @@ const data = reactive({
     pageSize: 10,
     parameterName: null,
     parameterDesc: null,
-    isFrontpageVisible: true,
+    isFrontpageVisible: '',
     parameterType: null,
     parameterFormat: null,
     parentId: null,
@@ -215,7 +210,7 @@ function reset() {
     id: null,
     parameterName: null,
     parameterDesc: null,
-    isFrontpageVisible: true,
+    isFrontpageVisible: 'Y',
     parameterType: null,
     createBy: null,
     createTime: null,
@@ -275,6 +270,7 @@ function handleUpdate(row) {
 
 /** 提交按钮 */
 function submitForm() {
+  form.value.interfaceCode = props.interfaceCode
   proxy.$refs["parameterRef"].validate(valid => {
     if (valid) {
       if (form.value.id != null) {
@@ -314,6 +310,27 @@ function handleExport() {
 watch(() => props.interfaceCode, () => {
   getList()
 })
-
+/**
+ * 翻译前端是否可见
+ * @param row
+ * @param column
+ * @returns {*|string}
+ */
+function  formatFrontPageVisible(row, column){
+  if(row.isFrontpageVisible=='Y'){
+    return '是'
+  }else{
+    return '否';
+  }
+}
+/**
+ * 翻译参数类型
+ * @param row
+ * @param column
+ * @returns {*|string}
+ */
+function  formatParameterType(row, column){
+  return parameter_type.value.find(k => k.value === row.parameterType)?.label ?? '';
+}
 getList();
 </script>
