@@ -18,7 +18,7 @@
         />
       </el-form-item>
       <el-form-item label="前端是否可见" prop="isFrontpageVisible" label-width="auto">
-        <el-checkbox v-model="queryParams.isFrontpageVisible" label="前端是否可见" size="small" true-label="Y" false-label="N" />
+        <el-checkbox v-model="queryParams.isFrontpageVisible"  size="small" true-label="Y" false-label="N" />
       </el-form-item>
       <el-form-item label="参数格式" prop="parameterFormat">
         <el-input
@@ -81,7 +81,7 @@
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="parameterList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="parameterList" @selection-change="handleSelectionChange" row-key="id">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="参数名称" align="center" prop="parameterName" />
       <el-table-column label="参数描述" align="center" prop="parameterDesc" />
@@ -92,7 +92,7 @@
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['business:parameter:edit']">修改</el-button>
           <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['business:parameter:remove']">删除</el-button>
-          <el-button link type="primary" icon="Plus" @click="handleAddChild(scope.row)" v-hasPermi="['business:parameter:add']">添加下级参数</el-button>
+          <el-button link type="primary" icon="Plus" @click="handleAddChild(scope.row)" v-hasPermi="['business:parameter:add']">下级参数</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -114,7 +114,7 @@
           <el-input v-model="form.parameterDesc" placeholder="请输入参数描述" />
         </el-form-item>
         <el-form-item label="前端是否可见" prop="isFrontpageVisible" label-width="auto">
-          <el-checkbox v-model="queryParams.isFrontpageVisible" label="前端是否可见" size="small" true-label="Y" false-label="N"/>
+          <el-checkbox v-model="form.isFrontpageVisible"  size="small" true-label="Y" false-label="N"/>
         </el-form-item>
         <el-form-item label="参数类型" prop="parameterType">
           <el-select v-model="form.parameterType" >

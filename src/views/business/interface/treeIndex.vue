@@ -129,8 +129,8 @@
                <template #default="scope">
                  <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['business:interface:edit']">修改</el-button>
                  <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['business:interface:remove']">删除</el-button>
-                 <el-button link type="primary" :icon="parameterSetIcon" @click="handleParameterMaintenance(scope.row)" v-hasPermi="['business:interface:parametermaintenance']">接口参数维护</el-button>
-                 <el-button link type="primary" :icon="returnValSetIcon" @click="handleReturnMaintenance(scope.row)" v-hasPermi="['business:interface:returnmaintenance']">接口返回值维护</el-button>
+                 <el-button link type="primary" :icon="parameterSetIcon" @click="handleParameterMaintenance(scope.row)" v-hasPermi="['business:interface:parametermaintenance']">参数</el-button>
+                 <el-button link type="primary" :icon="returnValSetIcon" @click="handleReturnMaintenance(scope.row)" v-hasPermi="['business:interface:returnmaintenance']">返回值</el-button>
                </template>
              </el-table-column>
            </el-table>
@@ -376,14 +376,13 @@ function handleSelectionChange(selection) {
 /** 返回值维护 **/
 function handleReturnMaintenance(row) {
   if(row.id){
-    interfaceCode.value = row.id
+    interfaceCode.value = row.interfaceCode
     returnValOpen.value = true
   }
 }
 /**参数维护 **/
 function handleParameterMaintenance(row) {
   if(row.id){
-    debugger;
     interfaceCode.value = row.interfaceCode
     parameterOpen.value = true
   }

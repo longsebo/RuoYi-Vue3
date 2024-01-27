@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="返回值名称" prop="returnName">
+      <el-form-item label="返回值名称" prop="returnName" label-width="auto">
         <el-input
           v-model="queryParams.returnName"
           placeholder="请输入返回值名称"
@@ -9,7 +9,7 @@
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="返回值描述" prop="returnDesc">
+      <el-form-item label="返回值描述" prop="returnDesc" label-width="auto">
         <el-input
           v-model="queryParams.returnDesc"
           placeholder="请输入返回值描述"
@@ -17,10 +17,10 @@
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="前端是否可见" prop="isFrontpageVisible">
-        <el-checkbox v-model="queryParams.isFrontpageVisible" label="前端是否可见" />
+      <el-form-item label="前端是否可见" prop="isFrontpageVisible" label-width="auto">
+        <el-checkbox v-model="queryParams.isFrontpageVisible" true-label="Y" false-label="N" />
       </el-form-item>
-      <el-form-item label="返回值格式" prop="returnFormat">
+      <el-form-item label="返回值格式" prop="returnFormat" label-width="auto">
         <el-input
           v-model="queryParams.returnFormat"
           placeholder="请输入返回值格式"
@@ -28,9 +28,9 @@
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="参数类型" prop="parameterType">
+      <el-form-item label="返回值类型" prop="returnType">
         <el-select >
-          <el-option v-for="item in parameterTypeList" :key="item.value" :value="item.value" :label="item.label"/>
+          <el-option v-for="item in parameter_type" :key="item.value" :value="item.value" :label="item.label"/>
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -81,27 +81,18 @@
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="valueList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="valueList" @selection-change="handleSelectionChange" row-key="id">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="返回值名称" align="center" prop="returnName" />
       <el-table-column label="返回值描述" align="center" prop="returnDesc" />
-      <el-table-column label="前端是否可见" align="center" prop="isFrontpageVisible" >
-        <template #default="scope">
-          <el-checkbox v-model="isFrontpageVisible" label="前端是否可见" size="large" />
-        </template>
-      </el-table-column>
-      <el-table-column label="参数类型" align="center" prop="returnType" >
-        <template #default="scope">
-          <el-select >
-            <el-option v-for="item in parameterTypeList" :key="item.value" :value="item.value" :label="item.label"/>
-          </el-select>
-        </template>
-      </el-table-column>
+      <el-table-column label="前端是否可见" align="center" prop="isFrontpageVisible" :formatter="formatFrontPageVisible" />
+      <el-table-column label="返回值类型" align="center" prop="returnType" :formatter="formatParameterType" />
       <el-table-column label="返回值格式" align="center" prop="returnFormat" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['business:value:edit']">修改</el-button>
           <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['business:value:remove']">删除</el-button>
+          <el-button link type="primary" icon="Plus" @click="handleAddChild(scope.row)" v-hasPermi="['business:value:add']">下级参数</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -109,28 +100,33 @@
     <pagination
       v-show="total>0"
       :total="total"
-      v-model:page="queryParams.pageNum"
-      v-model:limit="queryParams.pageSize"
-      @pagination="getList"
+      :page-count="queryParams.pageNum"
+      :page-size="queryParams.pageSize"
+      @change="getList"
     />
 
     <!-- 添加或修改接口返回值对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
       <el-form ref="valueRef" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="返回值名称" prop="returnName">
+        <el-form-item label="返回值名称" prop="returnName" label-width="auto">
           <el-input v-model="form.returnName" placeholder="请输入返回值名称" />
         </el-form-item>
-        <el-form-item label="返回值描述" prop="returnDesc">
+        <el-form-item label="返回值描述" prop="returnDesc" label-width="auto">
           <el-input v-model="form.returnDesc" placeholder="请输入返回值描述" />
         </el-form-item>
-        <el-form-item label="前端是否可见" prop="isFrontpageVisible">
-          <el-input v-model="form.isFrontpageVisible" placeholder="请输入前端是否可见" />
+        <el-form-item label="前端是否可见" prop="isFrontpageVisible" label-width="auto">
+          <el-checkbox v-model="form.isFrontpageVisible"  size="small" true-label="Y" false-label="N"/>
         </el-form-item>
-        <el-form-item label="返回值格式" prop="returnFormat">
+        <el-form-item label="返回值类型" prop="returnType" label-width="auto">
+          <el-select v-model="form.returnType" >
+            <el-option v-for="item in parameter_type" :key="item.value" :value="item.value" :label="item.label"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="返回值格式" prop="returnFormat" label-width="auto">
           <el-input v-model="form.returnFormat" placeholder="请输入返回值格式" />
         </el-form-item>
         <el-form-item label="父参数" prop="parentName">
-          <el-input v-model="form.parentName" readonly="true" />
+          <el-input v-model="form.parentName" :readonly="true" />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -145,15 +141,15 @@
 
 <script setup name="Value" lang="ts">
 import { returnValTreeSelect, getValue, delValue, addValue, updateValue } from "@/api/business/value";
-import {watch} from "vue";
+import {toRefs, watch} from "vue";
 interface Props {
-  intefaceCode: string
+  interfaceCode: string
 }
 const { proxy } = getCurrentInstance();
 
 const valueList = ref([]);
 const open = ref(false);
-const loading = ref(true);
+const loading = ref(false);
 const showSearch = ref(true);
 const ids = ref([]);
 const single = ref(true);
@@ -161,7 +157,7 @@ const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
 const props = defineProps<Props>()
-const { parameterTypeList } = proxy.useDict("parameter_type");
+const { parameter_type } = proxy.useDict("parameter_type");
 const data = reactive({
   form: {},
   queryParams: {
@@ -173,7 +169,7 @@ const data = reactive({
     returnType: null,
     returnFormat: null,
     parentId: null,
-    intefaceCode:null
+    interfaceCode:null
   },
   rules: {
   }
@@ -182,14 +178,13 @@ const data = reactive({
 const { queryParams, form, rules } = toRefs(data);
 
 /** 查询接口返回值列表 */
-function getList() {
+async function getList() {
   loading.value = true;
-  queryParams.value.intefaceCode = props.intefaceCode;
-  returnValTreeSelect(queryParams.value).then(response => {
-    valueList.value = response.rows;
-    total.value = response.total;
-    loading.value = false;
-  });
+  queryParams.value.interfaceCode = props.interfaceCode;
+  let response = await returnValTreeSelect(queryParams.value)
+  valueList.value = response.rows;
+  total.value = response.total;
+  loading.value = false;
 }
 
 // 取消按钮
@@ -255,6 +250,7 @@ function handleUpdate(row) {
 
 /** 提交按钮 */
 function submitForm() {
+  form.value.interfaceCode = props.interfaceCode
   proxy.$refs["valueRef"].validate(valid => {
     if (valid) {
       if (form.value.id != null) {
@@ -291,8 +287,39 @@ function handleExport() {
     ...queryParams.value
   }, `value_${new Date().getTime()}.xlsx`)
 }
-watch(() => props.intefaceCode, () => {
+/**添加下级参数 */
+function handleAddChild(row){
+  reset();
+  form.value.parentId = row.id
+  form.value.parentName = row.returnName
+  open.value = true;
+  title.value = "添加接口下级参数";
+}
+/**
+ * 翻译前端是否可见
+ * @param row
+ * @param column
+ * @returns {*|string}
+ */
+function  formatFrontPageVisible(row, column){
+  if(row.isFrontpageVisible=='Y'){
+    return '是'
+  }else{
+    return '否';
+  }
+}
+/**
+ * 翻译返回值类型
+ * @param row
+ * @param column
+ * @returns {*|string}
+ */
+function  formatParameterType(row, column){
+  return parameter_type.value.find(k => k.value === row.returnType)?.label ?? '';
+}
+watch(() => props.interfaceCode, () => {
   getList()
 })
 getList();
+
 </script>
