@@ -17,8 +17,8 @@
           @keyup.enter="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="前端是否可见" prop="isFrontpageVisible">
-        <el-checkbox v-model="queryParams.isFrontpageVisible" label="前端是否可见" size="large" />
+      <el-form-item label="前端是否可见" prop="isFrontpageVisible" label-width="auto">
+        <el-checkbox v-model="queryParams.isFrontpageVisible" label="前端是否可见" size="small" />
       </el-form-item>
       <el-form-item label="参数格式" prop="parameterFormat">
         <el-input
@@ -30,7 +30,7 @@
       </el-form-item>
       <el-form-item label="参数类型" prop="parameterType">
         <el-select >
-          <el-option v-for="item in parameterTypeList" :key="item.value" :value="item.value" :label="item.label"/>
+          <el-option v-for="item in parameter_type" :key="item.value" :value="item.value" :label="item.label"/>
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -93,7 +93,7 @@
       <el-table-column label="参数类型" align="center" prop="parameterType" >
         <template #default="scope">
           <el-select >
-            <el-option v-for="item in parameterTypeList" :key="item.value" :value="item.value" :label="item.label"/>
+            <el-option v-for="item in parameter_type" :key="item.value" :value="item.value" :label="item.label"/>
           </el-select>
         </template>
       </el-table-column>
@@ -108,11 +108,10 @@
     </el-table>
 
     <pagination
-      v-show="total>0"
       :total="total"
-      v-model:page="queryParams.pageNum"
-      v-model:limit="queryParams.pageSize"
-      @pagination="getList"
+      :page-count="queryParams.pageNum"
+      :page-size="queryParams.pageSize"
+      @change ="getList"
     />
 
     <!-- 添加或修改接口参数对话框 -->
@@ -146,15 +145,15 @@
 
 <script setup name="Parameter" lang="ts">
 import { parameterTreeSelect, getParameter, delParameter, addParameter, updateParameter } from "@/api/business/parameter";
-import {watch} from "vue";
+import {watch, onBeforeMount} from "vue";
 
 const { proxy } = getCurrentInstance();
 interface Props {
-  intefaceCode: string
+  interfaceCode: string
 }
 const parameterList = ref([]);
 const open = ref(false);
-const loading = ref(true);
+const loading = ref(false);
 const showSearch = ref(true);
 const ids = ref([]);
 const single = ref(true);
@@ -162,7 +161,7 @@ const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
 const props = defineProps<Props>()
-const { parameterTypeList } = proxy.useDict("parameter_type");
+const { parameter_type } = proxy.useDict("parameter_type");
 const data = reactive({
   form: {},
   queryParams: {
@@ -170,11 +169,11 @@ const data = reactive({
     pageSize: 10,
     parameterName: null,
     parameterDesc: null,
-    isFrontpageVisible: null,
+    isFrontpageVisible: true,
     parameterType: null,
     parameterFormat: null,
     parentId: null,
-    intefaceCode:null
+    interfaceCode:null
   },
   rules: {
   }
@@ -183,14 +182,25 @@ const data = reactive({
 const { queryParams, form, rules } = toRefs(data);
 
 /** 查询接口参数列表 */
-function getList() {
+async function getList() {
+  if(loading.value){
+    return;
+  }
+ try{
   loading.value = true;
-  queryParams.value.intefaceCode = props.intefaceCode;
-  parameterTreeSelect(queryParams.value).then(response => {
-    parameterList.value = response.rows;
-    total.value = response.total;
-    loading.value = false;
-  });
+  debugger;
+  console.log('props.interfaceCode:'+props.interfaceCode)
+  queryParams.value.interfaceCode = props.interfaceCode;
+  let response = await parameterTreeSelect(queryParams.value)
+  parameterList.value = response.rows;
+  total.value = response.total;
+  loading.value = false;
+  }
+  catch(err) {
+    console.log(err)
+  }finally {
+   loading.value = false;
+  }
 }
 
 // 取消按钮
@@ -205,7 +215,7 @@ function reset() {
     id: null,
     parameterName: null,
     parameterDesc: null,
-    isFrontpageVisible: null,
+    isFrontpageVisible: true,
     parameterType: null,
     createBy: null,
     createTime: null,
@@ -221,6 +231,7 @@ function reset() {
 /** 搜索按钮操作 */
 function handleQuery() {
   queryParams.value.pageNum = 1;
+  debugger;
   getList();
 }
 
@@ -300,8 +311,9 @@ function handleExport() {
     ...queryParams.value
   }, `parameter_${new Date().getTime()}.xlsx`)
 }
-watch(() => props.intefaceCode, () => {
+watch(() => props.interfaceCode, () => {
   getList()
 })
+
 getList();
 </script>

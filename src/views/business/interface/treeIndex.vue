@@ -202,7 +202,7 @@
    </div>
 </template>
 
-<script setup name="ModelEntity" lang="ts">
+<script setup lang="ts">
 
 
 import { listInterface, getInterface, delInterface, addInterface, updateInterface } from "@/api/business/interface";
@@ -236,7 +236,7 @@ const businessFunctionOptions = ref(undefined);
 
 const parameterSetIcon = useIcon('ali_parameter')
 const returnValSetIcon = useIcon('ali_returnval')
-const interfaceCode=ref(0)
+const interfaceCode=ref('')
 const parameterOpen = ref(false)
 const returnValOpen =ref(false)
 const commonUrlList = ref([])
@@ -383,7 +383,8 @@ function handleReturnMaintenance(row) {
 /**参数维护 **/
 function handleParameterMaintenance(row) {
   if(row.id){
-    interfaceCode.value = row.id
+    debugger;
+    interfaceCode.value = row.interfaceCode
     parameterOpen.value = true
   }
 }
@@ -449,24 +450,38 @@ function handleCloseUpdatePanel() {
 }
 /** 提交按钮 */
 function submitForm() {
-  form.value.isSelectDatasource = form.value.isCommonUrl;
-  proxy.$refs["interfaceRef"].validate(valid => {
-    if (valid) {
-      if (form.value.id != undefined) {
-        updateInterface(form.value).then(response => {
-          proxy.$modal.msgSuccess("修改成功");
-          open.value = false;
-          getList();
-        });
-      } else {
-        addInterface(form.value).then(response => {
-          proxy.$modal.msgSuccess("新增成功");
-          open.value = false;
-          getList();
-        });
-      }
-    }
-  });
+
+ // 根据界面url判断是否为数据源选择
+ form.value.isSelectDatasource = form.value.isCommonUrl;
+   // 表单验证
+   proxy.$refs["interfaceRef"].validate(valid => {
+     // 如果验证成功
+     if (valid) {
+       // 如果界面url存在id，则更新接口信息
+       if (form.value.id != undefined) {
+         // 调用更新接口的函数
+         updateInterface(form.value).then(response => {
+           // 提示修改成功
+           proxy.$modal.msgSuccess("修改成功");
+           // 关闭窗口
+           open.value = false;
+           // 获取列表
+           getList();
+         });
+       } else {
+         // 如果界面url不存在id，则添加接口信息
+         addInterface(form.value).then(response => {
+           // 提示新增成功
+           proxy.$modal.msgSuccess("新增成功");
+           // 关闭窗口
+           open.value = false;
+           // 获取列表
+           getList();
+         });
+       }
+     }
+   });
+
 };
 
 
