@@ -1,23 +1,23 @@
 import request from '@/utils/request'
 
-// 查询接口列表
+// 查询页面接口关系列表
 export function listInterface(query) {
   return request({
-    url: '/business/interface/list',
+    url: '/business/pageInterface/list',
     method: 'get',
     params: query
   })
 }
 
-// 查询接口详细
+// 查询页面接口关系详细
 export function getInterface(id) {
   return request({
-    url: '/business/interface/' + id,
+    url: '/business/pageInterface/' + id,
     method: 'get'
   })
 }
 
-// 新增接口
+// 新增页面接口关系
 export function addInterface(data) {
   return request({
     url: '/business/interface',
@@ -26,7 +26,7 @@ export function addInterface(data) {
   })
 }
 
-// 修改接口
+// 修改页面接口关系
 export function updateInterface(data) {
   return request({
     url: '/business/interface',
@@ -35,18 +35,10 @@ export function updateInterface(data) {
   })
 }
 
-// 删除接口
+// 删除页面接口关系
 export function delInterface(id) {
   return request({
-    url: '/business/interface/' + id,
+    url: '/business/pageInterface/' + id,
     method: 'delete'
-  })
-}
-// 非查询接口列表
-export function listInterfaceAll(query) {
-  return request({
-    url: '/business/interface/listAll',
-    method: 'get',
-    params: query
   })
 }

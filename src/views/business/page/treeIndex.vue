@@ -30,12 +30,9 @@
          <el-col :span="20" :xs="24">
            <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
              <el-form-item label="模块" prop="module">
-               <el-input
-                   v-model="queryParams.module"
-                   placeholder="请输入模块"
-                   clearable
-                   @keyup.enter="handleQuery"
-               />
+               <el-select v-model="queryParams.module"   placeholder="请选择模块" >
+                 <el-option v-for="item in system_module_type" :key="item.url" :value="item.url" :label="item.name"/>
+               </el-select>
              </el-form-item>
              <el-form-item label="页面编码" prop="pageCode">
                <el-input
@@ -111,15 +108,17 @@
 
            <el-table v-loading="loading" :data="pageList" @selection-change="handleSelectionChange">
              <el-table-column type="selection" width="55" align="center" />
-             <el-table-column label="模块" align="center" prop="module" />
+             <el-table-column label="模块" align="center" prop="module" :formatter="formatSystemModule" />
              <el-table-column label="页面编码" align="center" prop="pageCode" />
              <el-table-column label="页面名称" align="center" prop="pageName" />
-             <el-table-column label="页面类型编码" align="center" prop="pageTypeCode" />
-             <el-table-column label="页面参数" align="center" prop="pageParameter" />
+             <el-table-column label="页面类型" align="center" prop="pageTypeCode" :formatter="formatPageType" />
              <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
                <template #default="scope">
                  <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['business:page:edit']">修改</el-button>
                  <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['business:page:remove']">删除</el-button>
+                 <el-button link type="primary" :icon="pageDesignIcon" @click="handlePageDesign(scope.row)" v-hasPermi="['business:page:design']">页面设计</el-button>
+                 <el-button link type="primary" :icon="interfaceIcon" @click="handleInterfaceRela(scope.row)" v-hasPermi="['business:page:interface']">页面接口</el-button>
+                 <el-button link type="primary" :icon="parameterIcon" @click="handlePageParameter(scope.row)" v-hasPermi="['business:page:parameter']">页面参数</el-button>
                </template>
              </el-table-column>
            </el-table>
@@ -137,7 +136,9 @@
      <el-dialog :title="title" v-model="open" width="500px" append-to-body>
        <el-form ref="pageRef" :model="form" :rules="rules" label-width="80px">
          <el-form-item label="模块" prop="module">
-           <el-input v-model="form.module" placeholder="请输入模块" />
+           <el-select v-model="form.module"   placeholder="请选择模块" >
+             <el-option v-for="item in system_module_type" :key="item.url" :value="item.url" :label="item.name"/>
+           </el-select>
          </el-form-item>
          <el-form-item label="页面编码" prop="pageCode">
            <el-input v-model="form.pageCode" placeholder="请输入页面编码" />
@@ -145,8 +146,10 @@
          <el-form-item label="页面名称" prop="pageName">
            <el-input v-model="form.pageName" placeholder="请输入页面名称" />
          </el-form-item>
-         <el-form-item label="页面类型编码" prop="pageTypeCode">
-           <el-input v-model="form.pageTypeCode" placeholder="请输入页面类型编码" />
+         <el-form-item label="页面类型" prop="pageTypeCode">
+           <el-select v-model="form.pageTypeCode"   placeholder="请选择模块" >
+             <el-option v-for="item in page_type" :key="item.url" :value="item.url" :label="item.name"/>
+           </el-select>
          </el-form-item>
        </el-form>
        <template #footer>
@@ -158,16 +161,16 @@
      </el-dialog>
 
      <!-- 页面设计维护--->
-     <el-dialog title="参数维护" v-model="parameterOpen" :fullscreen="true"  @close="parameterOpen=false" append-to-body>
+     <el-dialog title="页面设计维护" v-model="pageDesignOpen" :fullscreen="true"  @close="pageDesignOpen=false" append-to-body>
 
      </el-dialog>
      <!-- 引用接口维护-->
-     <el-dialog title="返回值维护" v-model="returnValOpen" :fullscreen="true" @close="returnValOpen=false" append-to-body>
-
+     <el-dialog title="引用接口维护" v-model="pageInterfaceOpen" :fullscreen="true" @close="pageInterfaceOpen=false" append-to-body>
+      <PageInterfaceRela :pageCode="pageCode" />
      </el-dialog>
      <!-- 页面参数维护--->
      <el-dialog title="参数维护" v-model="parameterOpen" :fullscreen="true"  @close="parameterOpen=false" append-to-body>
-
+      <PageParameter :pageCode="pageCode" />
      </el-dialog>
    </div>
 </template>
@@ -175,21 +178,17 @@
 <script setup lang="ts">
 
 
-import { listInterface, getInterface, delInterface, addInterface, updateInterface } from "@/api/business/interface";
+
+import {listPage, getPage, delPage, addPage, updatePage, exportPage} from "@/api/business/page";
 import { functionTreeSelect,isLastLevel } from "@/api/business/function";
 import {useRouter} from "vue-router";
-import {getCurrentInstance, provide, reactive, ref, toRefs} from "vue";
-import {modelingEntityKey} from "../../modeling/keys";
-import {listAllDatasource} from "@/api/business/datasource"
+import {getCurrentInstance,  reactive, ref, toRefs} from "vue";
 import { useIcon } from "@/components/common/util";
-import ParameterMaintenance from "@/views/business/parameter/index.vue"
-import ReturnValueMaintenance from  "@/views/business/value/index.vue"
-import {listAllUrl} from "@/api/business/url"
-
+import PageInterfaceRela from "@/views/business/pageInterfacerela/index.vue";
+import PageParameter from "@/views/business/pageParameter/index.vue";
 const router = useRouter();
 const { proxy } = getCurrentInstance();
 const { system_module_type,page_type } = proxy.useDict("system_module_type","page_type");
-//console.log('interface_method value:'+JSON.stringify(interface_method.value))
 const interfaceList = ref([]);
 
 const loading = ref(false);
@@ -200,16 +199,19 @@ const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
 const open = ref(false);
+const pageCode =ref("")
+const interfaceIcon = useIcon("ali_connect")
+const pageDesignIcon = useIcon("ali_pagedesign")
+const parameterIcon = useIcon('ali_parameter')
 
 const businessFunctionName = ref("");
 const businessFunctionOptions = ref(undefined);
 
 
-//const returnValSetIcon = useIcon('ali_returnval')
-const interfaceCode=ref('')
+
+const pageDesignOpen = ref(false)
 const parameterOpen = ref(false)
-const returnValOpen =ref(false)
-const commonUrlList = ref([])
+const pageInterfaceOpen =ref(false)
 
 
 
@@ -237,26 +239,22 @@ const data = reactive({
     status: undefined
   },
   rules: {
-    interfaceName: [
-      { required: true, message: "接口名称不能为空", trigger: "blur" }
+    module: [
+      { required: true, message: "模块类型不能为空", trigger: "blur" }
     ],
-    interfaceCode: [
-      { required: true, trigger: "blur",
-        message: '接口编码不能为空' }
+    pageCode: [
+      { required: true, message: "页面编码不能为空", trigger: "blur" }
     ],
-    interfaceUrl: [
-      { required: true, message: "接口url不能为空", trigger: "blur" }
+    pageName: [
+      { required: true, message: "页面名称不能为空", trigger: "blur" }
     ],
-    interfaceMethod: [
-      { required: true, message: "接口方法不能为空", trigger: "blur" }
-    ],
-    interfaceType: [
-      { required: true, message: "接口类型不能为空", trigger: "blur" }
+    pageTypeCode: [
+      { required: true, message: "页面类型不能为空", trigger: "blur" }
     ],
   }
 })
 
-const { queryParams, form, rules,queryDictParams } = toRefs(data)
+const { queryParams, form, rules } = toRefs(data)
 
 /** 通过条件过滤节点  */
 const filterNode = (value, data) => {
@@ -274,7 +272,7 @@ function getFunctionTree() {
 /** 查询模型表列表 */
 function getList() {
   loading.value = true;
-  listInterface(queryParams.value).then(response => {
+  listPage(queryParams.value).then(response => {
     interfaceList.value = response.rows;
     total.value = response.total;
     loading.value = false;
@@ -304,7 +302,7 @@ function handleDelete(row) {
   const _ids = row.id || ids.value;
   if(_ids) {
     proxy.$modal.confirm('是否确认删除模型定义编号为"' + _ids + '"的数据项？').then(function () {
-      return delInterface(_ids);
+      return delPage(_ids);
     }).then(() => {
       getList();
       proxy.$modal.msgSuccess("删除成功");
@@ -329,18 +327,25 @@ function handleSelectionChange(selection) {
   multiple.value = !selection.length;
 }
 
-/** 返回值维护 **/
-function handleReturnMaintenance(row) {
+/** 页面设计 **/
+function handlePageDesign(row) {
   if(row.id){
-    interfaceCode.value = row.interfaceCode
-    returnValOpen.value = true
+    pageCode.value = row.pageCode
+    pageDesignOpen.value = true
   }
 }
-/**参数维护 **/
-function handleParameterMaintenance(row) {
+/**页面参数维护 **/
+function handlePageParameter(row) {
   if(row.id){
-    interfaceCode.value = row.interfaceCode
+    pageCode.value = row.pageCode
     parameterOpen.value = true
+  }
+}
+/**页面接口引用维护 **/
+function handleInterfaceRela(row) {
+  if(row.id){
+    pageCode.value = row.pageCode
+    pageInterfaceOpen.value = true
   }
 }
 /** 重置操作表单 */
@@ -398,11 +403,7 @@ function handleUpdate(row) {
   open.value = true;
 
 }
-function handleCloseUpdatePanel() {
-  open.value = false
-  console.log('handleCloseUpdatePanel enter')
-  getList();
-}
+
 /** 提交按钮 */
 function submitForm() {
 
@@ -415,7 +416,7 @@ function submitForm() {
        // 如果界面url存在id，则更新接口信息
        if (form.value.id != undefined) {
          // 调用更新接口的函数
-         updateInterface(form.value).then(response => {
+         updatePage(form.value).then(response => {
            // 提示修改成功
            proxy.$modal.msgSuccess("修改成功");
            // 关闭窗口
@@ -425,7 +426,7 @@ function submitForm() {
          });
        } else {
          // 如果界面url不存在id，则添加接口信息
-         addInterface(form.value).then(response => {
+         addPage(form.value).then(response => {
            // 提示新增成功
            proxy.$modal.msgSuccess("新增成功");
            // 关闭窗口
