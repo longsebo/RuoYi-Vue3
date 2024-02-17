@@ -80,7 +80,6 @@
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
       <el-form ref="interfaceRef" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="接口编码" prop="interfaceCode">
-          <el-input v-model="form.interfaceCode" placeholder="请输入接口编码" />
           <el-select v-model="form.interfaceCode"   placeholder="请选择接口" >
             <el-option v-for="item in interfaceList" :key="item.interfaceCode" :value="item.interfaceCode" :label="item.interfaceName"/>
           </el-select>

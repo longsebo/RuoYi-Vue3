@@ -29,11 +29,11 @@
          <!--页面数据-->
          <el-col :span="20" :xs="24">
            <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
-             <el-form-item label="模块" prop="module">
+             <!--<el-form-item label="模块" prop="module">
                <el-select v-model="queryParams.module"   placeholder="请选择模块" >
                  <el-option v-for="item in system_module_type" :key="item.url" :value="item.url" :label="item.name"/>
                </el-select>
-             </el-form-item>
+             </el-form-item> -->
              <el-form-item label="页面编码" prop="pageCode">
                <el-input
                    v-model="queryParams.pageCode"
@@ -189,7 +189,7 @@ import PageParameter from "@/views/business/pageParameter/index.vue";
 const router = useRouter();
 const { proxy } = getCurrentInstance();
 const { system_module_type,page_type } = proxy.useDict("system_module_type","page_type");
-const interfaceList = ref([]);
+const pageList = ref([]);
 
 const loading = ref(false);
 const showSearch = ref(true);
@@ -229,7 +229,8 @@ const data = reactive({
     interfaceDatasourceName: null,
     isSelectDatasource: null,
     isCommonUrl: null,
-    businessCode:null
+    businessCode:null,
+    module:'business_module'
   },
   queryDictParams: {
     pageNum: 1,
@@ -273,7 +274,7 @@ function getFunctionTree() {
 function getList() {
   loading.value = true;
   listPage(queryParams.value).then(response => {
-    interfaceList.value = response.rows;
+    pageList.value = response.rows;
     total.value = response.total;
     loading.value = false;
   });
@@ -282,12 +283,15 @@ function getList() {
 /** 节点单击事件 */
 function handleNodeClick(data) {
   queryParams.value.businessCode = data.businessCode;
+  queryParams.value.module ='business_module'
   form.value.businessCode = data.businessCode;
+
   handleQuery();
 }
 /** 搜索按钮操作 */
 function handleQuery() {
   queryParams.value.pageNum = 1;
+  queryParams.value.module ='business_module'
   getList();
 }
 /** 重置按钮操作 */
@@ -301,7 +305,7 @@ function resetQuery() {
 function handleDelete(row) {
   const _ids = row.id || ids.value;
   if(_ids) {
-    proxy.$modal.confirm('是否确认删除模型定义编号为"' + _ids + '"的数据项？').then(function () {
+    proxy.$modal.confirm('是否确认删除页面：' + row.pageName + '？').then(function () {
       return delPage(_ids);
     }).then(() => {
       getList();
@@ -363,9 +367,10 @@ function reset() {
     createBy: null,
     createTime: null,
     updateBy: null,
-    updateTime: null
+    updateTime: null,
+    module:'business_module',
   };
-  proxy.resetForm("interfaceRef");
+  proxy.resetForm("pageRef");
 }
 /** 取消按钮 */
 function cancel() {
@@ -407,10 +412,8 @@ function handleUpdate(row) {
 /** 提交按钮 */
 function submitForm() {
 
- // 根据界面url判断是否为数据源选择
- form.value.isSelectDatasource = form.value.isCommonUrl;
    // 表单验证
-   proxy.$refs["interfaceRef"].validate(valid => {
+   proxy.$refs["pageRef"].validate(valid => {
      // 如果验证成功
      if (valid) {
        // 如果界面url存在id，则更新接口信息
@@ -425,7 +428,7 @@ function submitForm() {
            getList();
          });
        } else {
-         // 如果界面url不存在id，则添加接口信息
+         // 如果不存在id，则添加接口信息
          addPage(form.value).then(response => {
            // 提示新增成功
            proxy.$modal.msgSuccess("新增成功");
@@ -439,8 +442,6 @@ function submitForm() {
    });
 
 };
-
-
 
 
 loading.value = true;
