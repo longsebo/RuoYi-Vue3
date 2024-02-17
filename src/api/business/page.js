@@ -36,9 +36,9 @@ export function updatePage(data) {
 }
 
 // 删除页面定义
-export function delPage(id) {
+export function delPage(id,businessCode) {
   return request({
-    url: '/business/page/' + id,
+    url: '/business/page/' + id+'/'+businessCode,
     method: 'delete'
   })
 }

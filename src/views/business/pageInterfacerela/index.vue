@@ -260,5 +260,5 @@ function getInterfaceList(){
 }
 
 getList();
-getInterfaceList()
+getInterfaceList();
 </script>

@@ -108,7 +108,7 @@
 
            <el-table v-loading="loading" :data="pageList" @selection-change="handleSelectionChange">
              <el-table-column type="selection" width="55" align="center" />
-             <el-table-column label="模块" align="center" prop="module" :formatter="formatSystemModule" />
+             <!-- <el-table-column label="模块" align="center" prop="module" :formatter="formatSystemModule" /> -->
              <el-table-column label="页面编码" align="center" prop="pageCode" />
              <el-table-column label="页面名称" align="center" prop="pageName" />
              <el-table-column label="页面类型" align="center" prop="pageTypeCode" :formatter="formatPageType" />
@@ -135,11 +135,11 @@
      <!-- 添加或修改页面定义对话框 -->
      <el-dialog :title="title" v-model="open" width="500px" append-to-body>
        <el-form ref="pageRef" :model="form" :rules="rules" label-width="80px">
-         <el-form-item label="模块" prop="module">
+         <!--<el-form-item label="模块" prop="module">
            <el-select v-model="form.module"   placeholder="请选择模块" >
              <el-option v-for="item in system_module_type" :key="item.url" :value="item.url" :label="item.name"/>
            </el-select>
-         </el-form-item>
+         </el-form-item> -->
          <el-form-item label="页面编码" prop="pageCode">
            <el-input v-model="form.pageCode" placeholder="请输入页面编码" />
          </el-form-item>
@@ -147,8 +147,8 @@
            <el-input v-model="form.pageName" placeholder="请输入页面名称" />
          </el-form-item>
          <el-form-item label="页面类型" prop="pageTypeCode">
-           <el-select v-model="form.pageTypeCode"   placeholder="请选择模块" >
-             <el-option v-for="item in page_type" :key="item.url" :value="item.url" :label="item.name"/>
+           <el-select v-model="form.pageTypeCode"   placeholder="请选择页面类型" >
+             <el-option v-for="item in page_type" :key="item.value" :value="item.value" :label="item.label"/>
            </el-select>
          </el-form-item>
        </el-form>
@@ -165,11 +165,11 @@
 
      </el-dialog>
      <!-- 引用接口维护-->
-     <el-dialog title="引用接口维护" v-model="pageInterfaceOpen" :fullscreen="true" @close="pageInterfaceOpen=false" append-to-body>
+     <el-dialog title="引用接口维护" v-model="pageInterfaceOpen" width="80%" height="95vh" @close="pageInterfaceOpen=false" append-to-body>
       <PageInterfaceRela :pageCode="pageCode" />
      </el-dialog>
      <!-- 页面参数维护--->
-     <el-dialog title="参数维护" v-model="parameterOpen" :fullscreen="true"  @close="parameterOpen=false" append-to-body>
+     <el-dialog title="参数维护" v-model="parameterOpen" width="80%" height="80%"  @close="parameterOpen=false" append-to-body>
       <PageParameter :pageCode="pageCode" />
      </el-dialog>
    </div>
@@ -179,7 +179,7 @@
 
 
 
-import {listPage, getPage, delPage, addPage, updatePage, exportPage} from "@/api/business/page";
+import {listPage,  delPage, addPage, updatePage} from "@/api/business/page";
 import { functionTreeSelect,isLastLevel } from "@/api/business/function";
 import {useRouter} from "vue-router";
 import {getCurrentInstance,  reactive, ref, toRefs} from "vue";
@@ -306,7 +306,7 @@ function handleDelete(row) {
   const _ids = row.id || ids.value;
   if(_ids) {
     proxy.$modal.confirm('是否确认删除页面：' + row.pageName + '？').then(function () {
-      return delPage(_ids);
+      return delPage(_ids,queryParams.value.businessCode);
     }).then(() => {
       getList();
       proxy.$modal.msgSuccess("删除成功");
@@ -403,8 +403,9 @@ async function handleAdd() {
 }
 /** 修改按钮操作 */
 function handleUpdate(row) {
+  let businessCode = form.value.businessCode
   form.value = row;
-
+  form.value.businessCode = businessCode
   open.value = true;
 
 }
