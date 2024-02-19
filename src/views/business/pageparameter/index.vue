@@ -87,7 +87,7 @@
 </template>
 
 <script setup name="Parameter" lang="ts">
-import {listParameterAll,getParameter,addParameter,updateParameter,delParameter} from '@/api/business/pageparameter'
+import {getParameter,addParameter,updateParameter,delParameter,tree} from '@/api/business/pageparameter'
 import {watch, toRefs, getCurrentInstance, ref, reactive} from "vue";
 
 const { proxy } = getCurrentInstance();
@@ -119,7 +119,8 @@ async function getList() {
  try{
   loading.value = true;
   queryParams.value.pageCode = props.pageCode;
-  let response = await listParameterAll(queryParams)
+  debugger;
+  let response = await tree(queryParams);
    parameterList.value = response.data;
   loading.value = false;
   }

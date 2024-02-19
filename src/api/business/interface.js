@@ -50,3 +50,11 @@ export function listInterfaceAll(query) {
     params: query
   })
 }
+// 查询所有接口树列表
+export function tree(query) {
+  return request({
+    url: '/business/interface/tree',
+    method: 'get',
+    params: query
+  })
+}

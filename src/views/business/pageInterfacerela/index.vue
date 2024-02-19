@@ -82,7 +82,7 @@
         <el-form-item label="接口编码" prop="interfaceCode">
           <el-tree-select
               v-model="form.interfaceCode"
-              :data="interfaceList"
+              :data="treeInterface"
               :render-after-expand="false"
               style="width: 240px"
           />
@@ -102,10 +102,11 @@
 </template>
 
 <script setup name="Interface" lang="ts">
-import { listInterfaceAll } from "@/api/business/interface";
+import { tree,listInterfaceAll } from "@/api/business/interface";
 import {listInterface as listPageInterfaceRela,addInterface as addPageInterfaceRela,
     getInterface as getPageInterfaceRela,
   delInterface as delPageInterfaceRela,updateInterface as updatePageInterfaceRela} from "@/api/business/pageInterfacerela";
+
 import {getCurrentInstance, reactive, ref} from "vue";
 
 const { proxy } = getCurrentInstance();
@@ -120,7 +121,7 @@ const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
 const interfaceList = ref([])
-
+const treeInterface = ref([])
 interface Props {
   pageCode: string
 }
@@ -258,10 +259,18 @@ function formatInterfaceCode(row,column){
 function getInterfaceList(){
   let tmp={};
   listInterfaceAll(tmp).then(response => {
-    interfaceList.value = response.rows;
+    interfaceList.value = response.data;
+  });
+}
+/** 获取接口树列表 */
+function getTreeInterface(){
+  let tmp={};
+  tree(tmp).then(response => {
+    treeInterface.value = response.data;
   });
 }
 
 getList();
 getInterfaceList();
+getTreeInterface();
 </script>

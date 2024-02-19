@@ -50,3 +50,11 @@ export function listParameterAll(query) {
     params: query
   })
 }
+// 获取页面参数树结构
+export function tree(data) {
+  return request({
+    url: '/business/pageparameter/tree',
+    method: 'post',
+    data: data
+  })
+}

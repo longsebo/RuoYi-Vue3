@@ -20,7 +20,7 @@ export function getInterface(id) {
 // 新增页面接口关系
 export function addInterface(data) {
   return request({
-    url: '/business/interface',
+    url: '/business/pageInterface',
     method: 'post',
     data: data
   })
@@ -29,7 +29,7 @@ export function addInterface(data) {
 // 修改页面接口关系
 export function updateInterface(data) {
   return request({
-    url: '/business/interface',
+    url: '/business/pageInterface',
     method: 'put',
     data: data
   })

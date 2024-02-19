@@ -185,7 +185,7 @@ import {useRouter} from "vue-router";
 import {getCurrentInstance,  reactive, ref, toRefs} from "vue";
 import { useIcon } from "@/components/common/util";
 import PageInterfaceRela from "@/views/business/pageInterfacerela/index.vue";
-import PageParameter from "@/views/business/pageParameter/index.vue";
+import PageParameter from "@/views/business/pageparameter/index.vue";
 const router = useRouter();
 const { proxy } = getCurrentInstance();
 const { system_module_type,page_type } = proxy.useDict("system_module_type","page_type");
