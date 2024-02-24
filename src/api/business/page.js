@@ -42,3 +42,12 @@ export function delPage(id,businessCode) {
     method: 'delete'
   })
 }
+
+// 更新页面设计
+export function updateDesign(data) {
+  return request({
+    url: '/business/updatedesign',
+    method: 'post',
+    data: data
+  })
+}

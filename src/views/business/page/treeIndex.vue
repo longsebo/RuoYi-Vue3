@@ -162,7 +162,7 @@
 
      <!-- 页面设计维护--->
      <el-dialog title="页面设计维护" v-model="pageDesignOpen" :fullscreen="true"  @close="pageDesignOpen=false" append-to-body>
-
+       <FormDesigner name="UPDATE" :pageId="pageId" />
      </el-dialog>
      <!-- 引用接口维护-->
      <el-dialog title="引用接口维护" v-model="pageInterfaceOpen" width="80%" height="95vh" @close="pageInterfaceOpen=false" append-to-body>
@@ -186,6 +186,7 @@ import {getCurrentInstance,  reactive, ref, toRefs} from "vue";
 import { useIcon } from "@/components/common/util";
 import PageInterfaceRela from "@/views/business/pageInterfacerela/index.vue";
 import PageParameter from "@/views/business/pageparameter/index.vue";
+import FormDesigner from '@/views/modeling/form/designer.vue'
 const router = useRouter();
 const { proxy } = getCurrentInstance();
 const { system_module_type,page_type } = proxy.useDict("system_module_type","page_type");
@@ -203,7 +204,7 @@ const pageCode =ref("")
 const interfaceIcon = useIcon("ali_connect")
 const pageDesignIcon = useIcon("ali_pagedesign")
 const parameterIcon = useIcon('ali_parameter')
-
+const pageId= ref("");
 const businessFunctionName = ref("");
 const businessFunctionOptions = ref(undefined);
 
@@ -218,6 +219,7 @@ const pageInterfaceOpen =ref(false)
 
 const data = reactive({
   form: {},
+
   queryParams: {
     pageNum: 1,
     pageSize: 10,
@@ -335,6 +337,7 @@ function handleSelectionChange(selection) {
 function handlePageDesign(row) {
   if(row.id){
     pageCode.value = row.pageCode
+    pageId.value = row.id;
     pageDesignOpen.value = true
   }
 }

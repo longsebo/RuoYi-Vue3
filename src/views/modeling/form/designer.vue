@@ -10,9 +10,6 @@
           >
           </candidate-component-page>
         </el-tab-pane>
-        <el-tab-pane label="字段" name="field" style="width: 100%; height: 100%;">
-          <ModelingFieldPage v-bind="$props" />
-        </el-tab-pane>
       </el-tabs>
 
     </div>
@@ -20,7 +17,7 @@
       <div class="form-designer-toolbar">
         <div style="display: flex; align-items: center; padding-left: 10px; width: 400px">
           <span style="width: 100px; align-self: center; font-weight: bold">页面名称</span>
-          <el-input :disabled="props.module === 'ENTITY' || !!props.name" v-model="pageName" />
+          <el-input disabled="true" v-model="pageName" />
           <el-button text type="primary" :icon="saveIcon" @click="handleClickSave">保存</el-button>
         </div>
         <div>
@@ -111,21 +108,20 @@ import { getDeviceType } from "@/utils/common";
 import { useLayoutStore } from "@/store/layout";
 import { useThemeStore } from "@/store/theme";
 import VDialog from "@/components/dialog/VDialog.vue";
+import {getPage,updateDesign} from "@/api/business/page";
 const saveIcon = useIcon('Save')
 
 interface Props {
-  module: ModelingModule
-  mkey: string
-  name: string
+  pageId: string
 }
 
 const props = defineProps<Props>()
 
 const loading = ref(false)
-const { pageInfo, findPage, bindPage } = useModelingPageApi(loading)
 
+const pageInfo= ref({});
 
-const pageName = ref(props.name || '')
+const pageName = ref( '')
 
 const candidateActiveTab = ref<string>('component')
 
@@ -173,12 +169,12 @@ const labelPosition = computed(() => {
 
 
 onBeforeMount(async () => {
-  await findPage({ ...props })
-  if (pageInfo.value?.name) {
-    pageName.value = pageInfo.value.name
+  pageInfo.value = await getPage(props.pageId)
+  if (pageInfo.value.data?.pageName) {
+    pageName.value = pageInfo.value.data.pageName
   }
-  if (pageInfo.value?.pageScheme) {
-    formScheme.value = JSON.parse(pageInfo.value.pageScheme)
+  if (pageInfo.value.data?.pageScheme) {
+    formScheme.value = JSON.parse(pageInfo.value.data.pageScheme)
   }
 })
 
@@ -216,13 +212,11 @@ function handleClickViewJSON() {
 }
 
 async function handleClickSave() {
-  const param: ModelingPageBindParam = {
-    name: pageName.value,
-    module: props.module,
-    mkey: props.mkey,
+  const param = {
+    id: props.pageId,
     pageScheme: JSON.stringify(formScheme.value),
   }
-  bindPage(param)
+  updateDesign(param)
 }
 
 const formRenderRef = ref<InstanceType<typeof VFormRender>>()
