@@ -133,3 +133,11 @@ export function deptTreeSelect() {
     method: 'get'
   })
 }
+// 非翻页查询用户列表
+export function listAll(query) {
+  return request({
+    url: '/system/user/listAll',
+    method: 'get',
+    params: query
+  })
+}

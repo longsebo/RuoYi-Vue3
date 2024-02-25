@@ -44,18 +44,18 @@ declare interface UserUpdateParam {
 }
 
 declare interface UserView {
-  id: string
-  username: string;
-  dept_id: number
-  nickname: string;
-  phone: string;
+  userId: string
+  userName: string;
+  deptId: number
+  nickName: string;
+  phonenumber: string;
   email: string;
   avatar: string;
   status: number;
-  update_by: string;
+  updateBy: string;
   label: string;
-  pt_dept_ids: string[]
-  role_ids: string[]
+  postIds: string[]
+  roleIds: string[]
 }
 
 declare interface UserPageAdditional {

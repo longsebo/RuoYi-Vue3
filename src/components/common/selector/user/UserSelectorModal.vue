@@ -57,15 +57,15 @@
           </el-table-column>
           <el-table-column>
             <template #header>
-              <el-input v-model="formData.username" @change="handleSearch"></el-input>
+              <el-input v-model="formData.userName" @change="handleSearch"></el-input>
             </template>
-            <el-table-column width="120" label="工号" prop="username" align="left" header-align="left"/>
+            <el-table-column width="120" label="工号" prop="userName" align="left" header-align="left"/>
           </el-table-column>
           <el-table-column>
             <template #header>
-              <el-input v-model="formData.nickname" @change="handleSearch"></el-input>
+              <el-input v-model="formData.nickName" @change="handleSearch"></el-input>
             </template>
-            <el-table-column width="120" label="姓名" prop="nickname"/>
+            <el-table-column width="120" label="姓名" prop="nickName"/>
           </el-table-column>
           <el-table-column>
             <template #header>
@@ -80,7 +80,7 @@
         </el-table>
       </div>
       <div>
-        <el-pagination
+        <!-- <el-pagination
           ref="pagerRef"
           small
           layout="prev, pager, next"
@@ -88,6 +88,14 @@
           :page-size="pageData.page_size"
           v-model:current-page="pageData.page_idx"
           @current-change="handleSearch"
+        /> -->
+        <pagination
+            ref="pagerRef"
+            v-show="formData.total>0"
+            :total="formData.total"
+            v-model:page="formData.pageNum"
+            v-model:limit="formData.pageSize"
+            @current-change="handleSearch"
         />
       </div>
 
@@ -98,7 +106,7 @@
             :key="item.id"
             closable @close="handleRemoveUser(item)"
           >
-            {{ item.nickname }}
+            {{ item.nickName }}
           </el-tag>
         </el-scrollbar>
 
@@ -115,7 +123,7 @@ import {
   ElTable, ElTableColumn, ElRadio, ElForm, ElFormItem, ElInput, ElButton, ElScrollbar, ElTag,
   ElIcon, ElPagination,
 } from "element-plus";
-import { useUserData } from "@/service/system/user";
+import {listUser} from '@/api/system/user';
 import { Plus, Minus } from "@element-plus/icons-vue";
 import DeptSelectorInput from "../dept/DeptSelectorInput.vue";
 
@@ -144,7 +152,7 @@ const visible = computed<boolean>({
   set: v => emits('update:visible', v)
 })
 
-
+const pageData=ref({})
 
 const selectedRowId = computed<string>({
   get: () => {
@@ -194,24 +202,24 @@ const tableHeight = computed<string>(() => {
 onMounted(() => tableHeight.effect.scheduler())
 
 
-const { pageData, loadUserPageList } = useUserData(loading)
+
+
 const formData = ref<UserQueryParam>({
-  username: '',
-  nickname: '',
-  phone: '',
+  userName: '',
+  nickName: '',
+  phonenumber: '',
   email: '',
   deptId: '',
-  pageIdx: pageData.value.page_idx,
-  pageSize: pageData.value.page_size,
+  pageNum: 1,
+  pageSize:10
 })
 
-function handleSearch() {
-  loadUserPageList(formData.value).then(_ => {
-    const selectedUserId = new Set<string>(localSelectedUser.value.map(it => it.id))
-    pageData.value.data
-      .filter(it => selectedUserId.has(it.id))
-      .forEach(it => tableRef.value?.toggleRowSelection(it, true))
-  })
+async function handleSearch() {
+  pageData.value = await listUser(formData.value);
+  const selectedUserId = new Set<string>(localSelectedUser.value.map(it => it.id))
+  pageData.value.data
+        .filter(it => selectedUserId.has(it.id))
+        .forEach(it => tableRef.value?.toggleRowSelection(it, true))
 }
 
 function handleOpened() {

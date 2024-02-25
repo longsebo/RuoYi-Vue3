@@ -23,8 +23,8 @@
     >
       <el-option
         v-for="item in options"
-        :key="item.id"
-        :label="item.nickname"
+        :key="item.userId"
+        :label="item.nickName"
         :value="item"
       />
     </el-select>
@@ -41,7 +41,7 @@
 import { ElSelect, ElOption, ElMessage } from "element-plus";
 import { computed, inject, ref, toRaw, watch } from "vue";
 import UserSelectorModal from "./UserSelectorModal.vue";
-import { useUserData } from "@/service/system/user";
+import {listAll} from "@/api/system/user";
 import { useUserMap } from "@/config/app.hooks";
 
 interface Props {
@@ -128,18 +128,22 @@ watch(() => [selectedElems.value, options.value], () => {
 
 const selectKey = ref<number>(Math.random())
 const loading = ref<boolean>(false)
+const tableData = ref([]);
 
 function handleDblClick() {
   !props.disabled && (modalVisible.value = true)
 }
 
-const { tableData, searchUserList } = useUserData(loading)
+
 async function handleSearch(keyword: string) {
   if (!keyword) {
     return
   }
   try {
-    await searchUserList(keyword)
+    let queryParamer = {
+      nickName:keyword,
+    }
+    tableData.value = await listAll(queryParamer)
     const varOps = props.varOptions || []
     const varUserIds = new Set<string>(varOps.map(it => it.id))
     const selectedUserIds = new Set<string>(toRaw(selectedElems.value).map(it => it.id))
