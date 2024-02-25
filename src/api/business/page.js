@@ -46,7 +46,7 @@ export function delPage(id,businessCode) {
 // 更新页面设计
 export function updateDesign(data) {
   return request({
-    url: '/business/updatedesign',
+    url: '/business/page/updatedesign',
     method: 'post',
     data: data
   })
