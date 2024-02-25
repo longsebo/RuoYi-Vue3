@@ -446,7 +446,15 @@ function submitForm() {
    });
 
 };
-
+/**
+ * 翻译页面类型
+ * @param row
+ * @param column
+ * @returns {*|string}
+ */
+function  formatPageType(row, column){
+  return page_type.value.find(k => k.value === row.pageTypeCode)?.label ?? '';
+}
 
 loading.value = true;
 getFunctionTree();

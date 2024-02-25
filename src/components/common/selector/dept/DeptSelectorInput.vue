@@ -3,7 +3,7 @@
     <template v-if="props.preview">
 <!--      <span v-text="displayValue"></span>-->
       <div>
-        <el-tag v-for="option in selectedOptions" :key="option.id" v-text="option.title" type="success"></el-tag>
+        <el-tag v-for="option in selectedOptions" :key="option.id" v-text="option.label" type="success"></el-tag>
 
       </div>
     </template>
@@ -27,7 +27,7 @@
         default-expand-all
         ref="selectRef"
         style="width: 100%"
-        :props="{ label: 'title', children: 'children' }"
+        :props="{ value: 'id', label: 'label', children: 'children' }"
         :data="varTableOptions"
       >
 
@@ -47,13 +47,14 @@
 import { ElSelect, ElTreeSelect ,ElTag } from "element-plus";
 import { computed, onBeforeMount, ref } from "vue";
 import DeptSelectorModal from "./DeptSelectorModal.vue";
-import {useDeptInfo} from "@/service/system/dept";
+
+import { deptTreeSelect } from "@/api/system/user";
 import { findTreeItemById } from "@/utils/common";
 
 interface Props {
   multiple?: boolean
   placeholder?: string
-  modelValue?: string | string[] | null
+  modelValue?: string | string[] | number|number[]
   varOptions?: DeptView[]
   disabled?: boolean
   preview?: boolean
@@ -91,9 +92,8 @@ const selectedElems = computed<string[] | string>({
 
 const selectKey = ref<number>(Math.random())
 const loading = ref<boolean>(false)
-
-const { tableData, loadDept } = useDeptInfo(loading)
-onBeforeMount(loadDept)
+const tableData = ref([])
+onBeforeMount(loadDeptInfo)
 
 const varTableOptions = computed<DeptView[]>(() => {
   const data = tableData.value
@@ -103,7 +103,10 @@ const varTableOptions = computed<DeptView[]>(() => {
     return [...props.varOptions, ...tableData.value]
   }
 })
-
+async function loadDeptInfo() {
+  let temp = await deptTreeSelect();
+  tableData.value = temp.data;
+}
 
 function handleDblClick() {
   modalVisible.value = true

@@ -13,7 +13,7 @@
         <el-table
           v-loading="loading"
           ref="tableRef"
-          :data="pageData.data"
+          :data="pageData.rows"
           :max-height="tableHeight"
           row-key="id"
           stripe border
@@ -37,7 +37,7 @@
               </template>
             </template>
             <template #default="scope">
-              <template v-if="selectedUserIds.has(scope.row.id)">
+              <template v-if="selectedUserIds.has(scope.row.userId)">
                 <span @click="handleRemoveUser(scope.row)">
                   <el-icon><Minus/></el-icon>
                 </span>
@@ -52,7 +52,7 @@
           </el-table-column>
           <el-table-column width="40" align="center" header-align="center" :resizable="false" v-if="!props.multiple">
             <template #default="scope">
-              <el-radio class="user-selector" name="user-selector" :label="scope.row.id" v-model="selectedRowId"></el-radio>
+              <el-radio class="user-selector" name="user-selector" :label="scope.row.userId" v-model="selectedRowId"></el-radio>
             </template>
           </el-table-column>
           <el-table-column>
@@ -73,7 +73,7 @@
             </template>
             <el-table-column label="部门" prop="dept_id">
               <template #default="scope">
-                {{ pageData.additional.dept[scope.row.dept_id].title }}
+                {{scope.row.dept.deptName}}
               </template>
             </el-table-column>
           </el-table-column>
@@ -91,8 +91,8 @@
         /> -->
         <pagination
             ref="pagerRef"
-            v-show="formData.total>0"
-            :total="formData.total"
+            v-show="total>0"
+            :total="total"
             v-model:page="formData.pageNum"
             v-model:limit="formData.pageSize"
             @current-change="handleSearch"
@@ -103,7 +103,7 @@
         <el-scrollbar height="200px" always view-class="selected-tags">
           <el-tag
             v-for="item in localSelectedUser"
-            :key="item.id"
+            :key="item.userId"
             closable @close="handleRemoveUser(item)"
           >
             {{ item.nickName }}
@@ -145,7 +145,7 @@ const props = withDefaults(defineProps<Props>(), {
   title: '请选择用户',
 })
 const emits = defineEmits<Emits>()
-
+const total=ref(0);
 
 const visible = computed<boolean>({
   get: () => { return props.visible },
@@ -157,12 +157,12 @@ const pageData=ref({})
 const selectedRowId = computed<string>({
   get: () => {
     if (!props.multiple) {
-      return localSelectedUser.value?.[0]?.id || ''
+      return localSelectedUser.value?.[0]?.userId || ''
     } else return ''
   },
   set: v => {
     if (!props.multiple) {
-      localSelectedUser.value = [ pageData.value.data.find(it => it.id === v)! ]
+      localSelectedUser.value = [ pageData.value.rows.find(it => it.userId === v)! ]
     }
   },
 })
@@ -170,11 +170,11 @@ const loading = ref<boolean>(false)
 
 
 function handleRowClick(row: UserView) {
-  selectedRowId.value = row.id
+  selectedRowId.value = row.userId
 }
 
 function handleRowDbClick(row: UserView) {
-  selectedRowId.value = row.id
+  selectedRowId.value = row.userId
   if (!props.multiple) {
     handleConfirm()
   } else {
@@ -186,9 +186,9 @@ function handleRowDbClick(row: UserView) {
 
 
 const localSelectedUser = ref<UserView[]>(props.modelValue || [])
-const selectedUserIds = computed<Set<string>>(() => new Set<string>((localSelectedUser.value || []).map(it => it.id)))
+const selectedUserIds = computed<Set<string>>(() => new Set<string>((localSelectedUser.value || []).map(it => it.userId)))
 
-const isAllAdd = computed<boolean>(() => pageData.value.data?.filter(it => !selectedUserIds.value.has(it.id))?.length === 0)
+const isAllAdd = computed<boolean>(() => pageData.value.rows?.filter(it => !selectedUserIds.value.has(it.userId))?.length === 0)
 
 const tableRef = ref<InstanceType<typeof ElTable>>()
 const pagerRef = ref<InstanceType<typeof ElPagination>>()
@@ -216,9 +216,10 @@ const formData = ref<UserQueryParam>({
 
 async function handleSearch() {
   pageData.value = await listUser(formData.value);
-  const selectedUserId = new Set<string>(localSelectedUser.value.map(it => it.id))
-  pageData.value.data
-        .filter(it => selectedUserId.has(it.id))
+  total.value = pageData.value.total;
+  const selectedUserId = new Set<string>(localSelectedUser.value.map(it => it.userId))
+  pageData.value.rows
+        .filter(it => selectedUserId.has(it.userId))
         .forEach(it => tableRef.value?.toggleRowSelection(it, true))
 }
 
@@ -244,17 +245,17 @@ function handleAddUser(item: UserView) {
 }
 
 function handleRemoveUser(item: UserView) {
-  const idx = localSelectedUser.value.map(it => it.id).indexOf(item.id)
+  const idx = localSelectedUser.value.map(it => it.userId).indexOf(item.userId)
   idx !== -1 && localSelectedUser.value.splice(idx, 1)
 }
 
 function handleAddAll() {
-  pageData.value.data.filter(it => !selectedUserIds.value.has(it.id)).forEach(it => localSelectedUser.value.push(it))
+  pageData.value.rows.filter(it => !selectedUserIds.value.has(it.userId)).forEach(it => localSelectedUser.value.push(it))
 }
 
 function handleRemoveAll() {
-  pageData.value.data.filter(it => selectedUserIds.value.has(it.id)).forEach(it => {
-    const idx = localSelectedUser.value.map(it => it.id).indexOf(it.id)
+  pageData.value.rows.filter(it => selectedUserIds.value.has(it.userId)).forEach(it => {
+    const idx = localSelectedUser.value.map(it => it.userId).indexOf(it.userId)
     idx !== -1 && localSelectedUser.value.splice(idx, 1)
   })
 }

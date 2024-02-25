@@ -17,7 +17,7 @@
       <div class="form-designer-toolbar">
         <div style="display: flex; align-items: center; padding-left: 10px; width: 400px">
           <span style="width: 100px; align-self: center; font-weight: bold">页面名称</span>
-          <el-input disabled="true" v-model="pageName" />
+          <el-input :disabled="true" v-model="pageName" />
           <el-button text type="primary" :icon="saveIcon" @click="handleClickSave">保存</el-button>
         </div>
         <div>
@@ -112,7 +112,7 @@ import {getPage,updateDesign} from "@/api/business/page";
 const saveIcon = useIcon('Save')
 
 interface Props {
-  pageId: string
+  pageId: number
 }
 
 const props = defineProps<Props>()

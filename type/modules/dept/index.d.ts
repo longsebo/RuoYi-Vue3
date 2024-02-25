@@ -1,6 +1,6 @@
 declare interface DeptView extends Tree {
   id: string;
-  title: string;
+  label: string;
   simple_name: string;
   description: string;
   ident: string;

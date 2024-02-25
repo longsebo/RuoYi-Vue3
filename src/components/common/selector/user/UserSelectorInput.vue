@@ -76,24 +76,43 @@ const selectedElems = computed<UserView[]>({
       if(!(props.modelValue as string[]).every(it => userMap.has(it))) {
         console.warn('cannot find userInfo struct in userMap')
       }
-      return (props.modelValue as string[]).map(it => userMap?.get(it)!)
-
+      if(props.modelValue) {
+        let temp = (props.modelValue as string[]).map(it => userMap?.get(it)!)
+        if(temp!=null){
+          return temp;
+        }else{
+          return [];
+        }
+      }else{
+         return [];
+      }
     } else {
       if (props.modelValue && !userMap.has(props.modelValue as string)) {
         console.warn('cannot find userInfo struct in userMap')
       }
-      return props.modelValue ? [userMap.get(props.modelValue as string)!] : []
+      if(props.modelValue) {
+        let temp =  props.modelValue ? [userMap.get(props.modelValue as string)!] : []
+        if(temp!=null){
+          return temp;
+        }else{
+          return [];
+        }
+      }else{
+        return [];
+      }
     }
 
   },
   set: v => {
-    v.forEach(it => userMap?.set(it.id, it))
+    v.forEach(it => userMap?.set(it.userId.toString(), it))
     if (props.multiple) {
-      emits('update:modelValue', v?.length ? v.map(it => it.id) : [])
-      emits('change', v?.length ? v.map(it => it.id) : [])
+      let t = v?.length ? v.map(it => it.userId) : [];
+      console.log('t:'+JSON.stringify(t));
+      emits('update:modelValue', v?.length ? v.map(it => it.userId) : [])
+      emits('change', v?.length ? v.map(it => it.userId) : [])
     } else {
-      emits('update:modelValue', v?.length ? v[0].id : '')
-      emits('change', v?.length ? v[0].id : '')
+      emits('update:modelValue', v?.length ? v[0].userId : '')
+      emits('change', v?.length ? v[0].userId : '')
     }
 
   }
@@ -110,20 +129,23 @@ watch(() => [selectedElems.value, options.value], () => {
   }
 
   // 选项列表
-  const optionIdMap = new Set<string>(options.value.map(it => it.id))
+  const optionIdMap = new Set<string>(options.value.map(it => it.userId))
   // 已选列表
-  const selectedElemMap = new Map<string, UserView>(selectedElems.value.map(it => [it.id, it]))
+  // console.log('selectedElems:'+JSON.stringify(selectedElems.value));
+
+  const selectedElemMap = new Map<string, UserView>(selectedElems.value.map(it => [it.userId, it]))
 
   // 已选列表中存在一部分选项 不存在与选项列表中
-  if (!selectedElems.value.map(it => it.id).every(it => optionIdMap.has(it))) {
-    //
-    const candidateElems = selectedElems.value.map(it => it.id) // 转成id 列表
-      .filter(it => !optionIdMap.has(it)) // 过滤出 选项列表中不存在的选项id
-      .map(it => selectedElemMap.get(it)!) // 把不存在的选项id 转成选项列表
+  if(selectedElems!=null && selectedElems.value!=null) {
+    if (!selectedElems.value.map(it => it.userId).every(it => optionIdMap.has(it))) {
+      //
+      const candidateElems = selectedElems.value.map(it => it.userId) // 转成id 列表
+          .filter(it => !optionIdMap.has(it)) // 过滤出 选项列表中不存在的选项id
+          .map(it => selectedElemMap.get(it)!) // 把不存在的选项id 转成选项列表
 
-    options.value = [...options.value, ...candidateElems]
+      options.value = [...options.value, ...candidateElems]
+    }
   }
-
 }, { immediate: true })
 
 const selectKey = ref<number>(Math.random())
@@ -145,12 +167,12 @@ async function handleSearch(keyword: string) {
     }
     tableData.value = await listAll(queryParamer)
     const varOps = props.varOptions || []
-    const varUserIds = new Set<string>(varOps.map(it => it.id))
-    const selectedUserIds = new Set<string>(toRaw(selectedElems.value).map(it => it.id))
+    const varUserIds = new Set<string>(varOps.map(it => it.userId))
+    const selectedUserIds = new Set<string>(toRaw(selectedElems.value).map(it => it.userId))
     options.value = [
       ...varOps,
-      ...toRaw(selectedElems.value).filter(it => !varUserIds.has(it.id)),
-      ...toRaw(tableData.value).filter(it => !selectedUserIds.has(it.id))
+      ...toRaw(selectedElems.value).filter(it => !varUserIds.has(it.userId)),
+      ...toRaw(tableData.value).filter(it => !selectedUserIds.has(it.userId))
     ]
     // nextTick(() => selectRef.value?.focus())
   } catch (e) {
@@ -160,12 +182,12 @@ async function handleSearch(keyword: string) {
 
 function handleConfirm() {
   const varOps = props.varOptions || []
-  const varUserIds = new Set<string>(varOps.map(it => it.id))
+  const varUserIds = new Set<string>(varOps.map(it => it.userId))
   console.log('selectedElems', toRaw(selectedElems.value));
 
   options.value = [
     ...varOps,
-    ...selectedElems.value.filter(it => !varUserIds.has(it.id)),
+    ...selectedElems.value.filter(it => !varUserIds.has(it.userId)),
   ]
 }
 
