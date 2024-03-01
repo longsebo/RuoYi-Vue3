@@ -149,7 +149,6 @@
             </div>
 
           </div>
-
         </template>
 
         <template v-else-if="'display' === element.category">
@@ -175,7 +174,23 @@
 
           </div>
         </template>
+        <template v-else-if="'button' === element.category">
+          <el-form-item
+              :prop="element.id"
+              v-bind="element.formItemAttrs"
+              :label-width="element.formItemAttrs.hiddenLabel ? '0px' : undefined"
+              :label="element.formItemAttrs.hiddenLabel ? '' : element.formItemAttrs.label"
+              :rules="getRules(element)"
+          >
+            <component
+                :is="element.component"
+                v-bind="element.attrs"
+                v-model:value="formData[element.id]"
+            >
 
+            </component>
+          </el-form-item>
+        </template>
       </div>
 
     </template>
@@ -186,7 +201,7 @@
 <script lang="ts">
 import Draggable from "vuedraggable";
 import {defineComponent, inject, onUnmounted, PropType, ref, toRaw} from "vue";
-import { ElForm, ElFormItem, ElInput, ElSelect, ElRow, ElCol, ElCheckboxGroup, ElCheckbox, ElOption, FormItemRule } from "element-plus"
+import { ElForm, ElFormItem, ElInput, ElSelect, ElRow, ElCol, ElCheckboxGroup, ElCheckbox, ElOption, FormItemRule,ElButton } from "element-plus"
 import SVGIcon from "@/components/common/SVGIcon.vue";
 import emitter, {SelectMultipleChangedEvent} from "@/event/mitt";
 import UserSelectorInput from "@/components/common/selector/user/UserSelectorInput.vue";
@@ -200,6 +215,7 @@ import MultiSelect from "../components/select/MultiSelect.vue"
 import UserSelect from "../components/select/UserSelect.vue"
 import DeptSelect from "../components/select/DeptSelect.vue"
 import LabelField from "../components/display/LabelField.vue"
+import NormalButton from "../components/button/NormalButton.vue"
 import { vFormActiveElementKey } from "@/components/form/state.key";
 import { genId } from "@/components/form/designer/util/common";
 import { Plus, Delete, CopyDocument } from "@element-plus/icons-vue";
@@ -208,9 +224,9 @@ import { findTreeItemParentById } from "@/utils/common";
 export default defineComponent({
   name: "NestedDragItem",
   components: {
-    Draggable, ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElRow, ElCol, SVGIcon, ElCheckboxGroup, ElCheckbox,
+    Draggable, ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElRow, ElCol,ElButton, SVGIcon, ElCheckboxGroup, ElCheckbox,
     UserSelectorInput, DeptSelectorInput, NumberInput, TextInput, SingleSelect, MultiSelect, UserSelect, DeptSelect,
-    Plus, Delete, CopyDocument, DatePicker, DateRangePicker, LabelField,
+    Plus, Delete, CopyDocument, DatePicker, DateRangePicker, LabelField,NormalButton
   },
   props: {
     children: Array as PropType<ComponentConfig[]>

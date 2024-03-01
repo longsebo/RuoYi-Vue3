@@ -13,6 +13,32 @@ export const DisplayComponents: CandidateComponentConfig[] = [
   },
 ]
 
+export const ButtonComponents: CandidateComponentConfig[] = [
+  {
+    id: genId(),
+    icon: 'ali_button',
+    component: 'normal-button',
+    category: 'button',
+    title: "普通按钮",
+    formItemAttrs: {
+      label: "普通按钮",
+    },
+    attrs: {
+      size:'default',
+      type:'primary',
+      plain:false,
+      text:true,
+      bg:false,
+      link:false,
+      round:false,
+      circle:false,
+      loading:false,
+      disabled:false,
+      autofocus:false,
+      label:'按钮'
+    },
+  },
+]
 export const InputComponents: CandidateComponentConfig[] = [
   {
     id: genId(),

@@ -57,7 +57,7 @@
 </template>
 
 <script lang="ts">
-import { ElFormItem, ElSelect, ElOption, ElInput, ElRow, ElCol, FormItemRule } from 'element-plus'
+import { ElFormItem, ElSelect, ElOption, ElInput, ElRow, ElCol, FormItemRule,ElButton } from 'element-plus'
 import { defineComponent, PropType } from "vue";
 import UserSelectorInput from "@/components/common/selector/user/UserSelectorInput.vue";
 import DeptSelectorInput from "@/components/common/selector/dept/DeptSelectorInput.vue";
@@ -70,12 +70,14 @@ import DeptSelect from "../components/select/DeptSelect.vue"
 import DatePicker from "../components/date/DatePicker.vue"
 import DateRangePicker from "../components/date/DateRangePicker.vue"
 import LabelField from "@/components/form/components/display/LabelField.vue";
+import NormalButton from "../components/button/NormalButton.vue"
 
 export default defineComponent({
   name: 'VFormNestedItem',
   components: {
-    ElFormItem, ElSelect, ElOption, ElInput, ElRow, ElCol, NumberInput, UserSelectorInput, DeptSelectorInput, TextInput,
+    ElFormItem, ElSelect, ElOption, ElInput, ElRow, ElCol,ElButton, NumberInput, UserSelectorInput, DeptSelectorInput, TextInput,
     SingleSelect, MultiSelect, UserSelect, DeptSelect, DatePicker, DateRangePicker, LabelField,
+    NormalButton
   },
   props: {
     item: {

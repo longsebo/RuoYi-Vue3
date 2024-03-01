@@ -7,6 +7,7 @@
             :display-components="DisplayComponents"
             :input-components="InputComponents"
             :layout-components="LayoutComponents"
+            :button-components="ButtonComponents"
           >
           </candidate-component-page>
         </el-tab-pane>
@@ -23,7 +24,7 @@
         <div>
           <el-button text type="primary" :icon="Delete" @click="handleClickClear">清空</el-button>
           <el-button text type="primary" :icon="View" @click="handleClickPreview">预览</el-button>
-          <el-button text type="primary" :icon="View" @click="handleClickViewJSON">查看JSON</el-button>
+          <!-- <el-button text type="primary" :icon="View" @click="handleClickViewJSON">查看JSON</el-button> -->
         </div>
 
       </div>
@@ -99,7 +100,7 @@ import CandidateComponentPage from "@/components/form/designer/candidate/Candida
 import ModelingFieldPage from "@/components/form/designer/candidate/ModelingFieldPage.vue";
 import { useIcon } from "@/components/common/util";
 import JsonEditor from "@/components/common/JsonEditor.vue";
-import { InputComponents, LayoutComponents, DisplayComponents } from "@/components/form/designer/data"
+import { InputComponents, LayoutComponents, DisplayComponents,ButtonComponents } from "@/components/form/designer/data"
 import VFormRender from "@/components/form/designer/VFormRender.vue";
 import { formModeKey, vFormActiveElementKey, vFormSchemeKey } from "@/components/form/state.key";
 import { useModelingPageApi } from "@/service/modeling/page";
