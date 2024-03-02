@@ -85,7 +85,12 @@
         <el-radio-button :label="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
-
+    <el-form-item prop="operationtype" label="按钮操作类型">
+      <el-radio-group v-model="vFormSelectElem.attrs.operationtype">
+        <el-radio-button label="api">调用接口</el-radio-button>
+        <el-radio-button label="page">打开页面</el-radio-button>
+      </el-radio-group>
+    </el-form-item>
 
     <el-form-item prop="mode" label="模式">
       <el-checkbox-group v-model="mode" :min="0" :max="1">

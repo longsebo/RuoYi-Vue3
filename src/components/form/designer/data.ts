@@ -32,7 +32,9 @@ export const ButtonComponents: CandidateComponentConfig[] = [
       loading:false,
       disabled:false,
       autofocus:false,
-      label:'按钮'
+      label:'按钮',
+      operationtype:'api',//有效值:api,page
+      operationdata:'',//操作数据
     },
   },
 ]
