@@ -53,7 +53,9 @@
   <template v-else-if="item.category === 'display'">
     <component :is="item.component" v-bind="item.attrs"></component>
   </template>
-
+  <template v-else-if="item.category === 'button'">
+    <component :is="item.component" v-bind="item.attrs"></component>
+  </template>
 </template>
 
 <script lang="ts">

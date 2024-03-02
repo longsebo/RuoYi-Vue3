@@ -175,13 +175,6 @@
           </div>
         </template>
         <template v-else-if="'button' === element.category">
-          <el-form-item
-              :prop="element.id"
-              v-bind="element.formItemAttrs"
-              :label-width="element.formItemAttrs.hiddenLabel ? '0px' : undefined"
-              :label="element.formItemAttrs.hiddenLabel ? '' : element.formItemAttrs.label"
-              :rules="getRules(element)"
-          >
             <component
                 :is="element.component"
                 v-bind="element.attrs"
@@ -189,7 +182,6 @@
             >
 
             </component>
-          </el-form-item>
         </template>
       </div>
 

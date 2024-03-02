@@ -117,17 +117,6 @@ const mode = computed({
   }
 })
 
-function handleChangeTextType(textarea: boolean) {
-  if (textarea) {
-    vFormSelectElem.value.attrs.rows = 2
-    vFormSelectElem.value.attrs.autoresize = true
-    vFormSelectElem.value.attrs.resize = 'both'
-  } else {
-    vFormSelectElem.value.attrs.rows = undefined
-    vFormSelectElem.value.attrs.autoresize = undefined
-    vFormSelectElem.value.attrs.resize = undefined
-  }
-}
 
 </script>
 

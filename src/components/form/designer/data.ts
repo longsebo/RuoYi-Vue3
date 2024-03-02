@@ -20,9 +20,6 @@ export const ButtonComponents: CandidateComponentConfig[] = [
     component: 'normal-button',
     category: 'button',
     title: "普通按钮",
-    formItemAttrs: {
-      label: "普通按钮",
-    },
     attrs: {
       size:'default',
       type:'primary',
