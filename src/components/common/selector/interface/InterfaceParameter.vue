@@ -19,6 +19,9 @@
 </template>
 
 <script lang="ts" setup>
+import {ref} from "vue";
+
+const parameterList = ref([])
 interface Emits {
   (e: 'ok', val: object): void
   (e: 'cancel'): void

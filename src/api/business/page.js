@@ -51,3 +51,11 @@ export function updateDesign(data) {
     data: data
   })
 }
+// 查询所有页面树列表
+export function tree(query) {
+  return request({
+    url: '/business/page/tree',
+    method: 'get',
+    params: query
+  })
+}

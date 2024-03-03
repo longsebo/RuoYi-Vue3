@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="interfaceRef" :model="form" :rules="rules" label-width="80px">
+  <el-form ref="interfaceRef" :model="form"  label-width="80px">
     <el-form-item label="选择接口" prop="interfaceCode">
       <el-tree-select
           v-model="interfaceCode"
@@ -9,7 +9,7 @@
           @change="handleSelectChange"
       />
     </el-form-item>
-    <el-form-item label="" prop="parameterList">
+    <el-form-item label="" >
       <el-button type="primary" @click="open=true">参数设置</el-button>
     </el-form-item>
   </el-form>
@@ -30,6 +30,7 @@ interface Props {
   interfaceCode: string,
   parameterList: object
 }
+const open = ref(false)
 const emits = defineEmits<Emits>()
 const { proxy } = getCurrentInstance();
 const { parameter_type } = proxy.useDict("parameter_type");
@@ -105,5 +106,19 @@ function  formatParameterType(row, column){
   return parameter_type.value.find(k => k.value === row.parameterType)?.label ?? '';
 }
 
+/**
+ * 改变参数列表
+ */
+function changeParameters(value){
+  parameterList.value = value;
+  open.value = false;
+}
+
+/**
+ * 取消改变参数列表
+ */
+function cancelChange(){
+  open.value = false;
+}
 getTreeInterface();
 </script>

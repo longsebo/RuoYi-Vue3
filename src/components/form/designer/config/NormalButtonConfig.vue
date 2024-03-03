@@ -91,7 +91,12 @@
         <el-radio-button label="page">打开页面</el-radio-button>
       </el-radio-group>
     </el-form-item>
-
+    <el-form-item prop="operationtype" label="操作设置">
+      <InterfaceSelect v-show="vFormSelectElem.attrs.operationtype=='api'" :interfaceCode="vFormSelectElem.attrs.operationData.interfaceCode"
+                       :parameterList="vFormSelectElem.attrs.operationData.parameterList"/>
+      <PageSelect v-show="vFormSelectElem.attrs.operationtype=='page'" :pageCode="vFormSelectElem.attrs.operationData.pageCode"
+                       :parameterList="vFormSelectElem.attrs.operationData.parameterList"/>
+    </el-form-item>
     <el-form-item prop="mode" label="模式">
       <el-checkbox-group v-model="mode" :min="0" :max="1">
         <el-checkbox-button label="design">设计</el-checkbox-button>
@@ -108,7 +113,8 @@ import {
 } from 'element-plus'
 import { computed, inject } from "vue";
 import { vFormActiveElementKey } from "@/components/form/state.key";
-
+import InterfaceSelect from    "@/components/common/selector/interface/InterfaceSelect.vue";
+import PageSelect from    "@/components/common/selector/page/PageSelect.vue";
 const vFormSelectElem = inject(vFormActiveElementKey)
 
 const mode = computed({
