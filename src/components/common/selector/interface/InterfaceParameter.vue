@@ -1,5 +1,5 @@
 <template>
-  <el-table v-loading="loading" :data="parameterList"  row-key="id">
+  <el-table  :data="parameterList"  row-key="id">
     <el-table-column type="selection" width="55" align="center" />
     <el-table-column label="参数名称" align="center" prop="parameterName" />
     <el-table-column label="参数描述" align="center" prop="parameterDesc" />
@@ -19,20 +19,66 @@
 </template>
 
 <script lang="ts" setup>
-import {ref} from "vue";
+import {getCurrentInstance, ref, watch} from "vue";
+const { proxy } = getCurrentInstance();
+const { parameter_type } = proxy.useDict("parameter_type");
 
-const parameterList = ref([])
+interface Props {
+  interfaceCode: string,
+  parameterList: object
+}
+const parameterList = ref(props.parameterList)
+const props = defineProps<Props>()
 interface Emits {
   (e: 'ok', val: object): void
   (e: 'cancel'): void
 }
 const emits = defineEmits<Emits>()
+watch(() => [props.parameterList.value], () => {
+  parameterList.value = props.parameterList.value;
+  console.log('parameterList in InterfaceParameter.vue', JSON.stringify(parameterList.value))
+}, { immediate: true })
+
 function submitForm(){
   emits('ok', parameterList);
 }
 function cancel(){
   emits('cancel');
 }
+/**
+ * 翻译参数类型
+ * @param row
+ * @param column
+ * @returns {*|string}
+ */
+function  formatParameterType(row, column){
+  return parameter_type.value.find(k => k.value === row.parameterType)?.label ?? '';
+}
+/**
+ * 翻译前端是否可见
+ * @param row
+ * @param column
+ * @returns {*|string}
+ */
+function  formatFrontPageVisible(row, column){
+  if(row.isFrontpageVisible=='Y'){
+    return '是'
+  }else{
+    return '否';
+  }
+}
+/**
+ * 显示参数输入框
+ * @param row
+ */
+function showParameterInput(row){
+  if(row.parameterType!='object' && row.parameterType!='array'){
+    return true;
+  }else{
+    return false;
+  }
+}
+
 </script>
 
 <style scoped>

@@ -19,8 +19,9 @@
 </template>
 
 <script lang="ts" setup>
-import {ref} from "vue";
-
+import {getCurrentInstance, ref} from "vue";
+const { proxy } = getCurrentInstance();
+const { parameter_type } = proxy.useDict("parameter_type");
 const parameterList = ref([])
 interface Emits {
   (e: 'ok', val: object): void
@@ -32,6 +33,39 @@ function submitForm(){
 }
 function cancel(){
   emits('cancel');
+}
+/**
+ * 显示参数输入框
+ * @param row
+ */
+function showParameterInput(row){
+  if(row.parameterType!='object' && row.parameterType!='array'){
+    return true;
+  }else{
+    return false;
+  }
+}
+/**
+ * 翻译参数类型
+ * @param row
+ * @param column
+ * @returns {*|string}
+ */
+function  formatParameterType(row, column){
+  return parameter_type.value.find(k => k.value === row.parameterType)?.label ?? '';
+}
+/**
+ * 翻译前端是否可见
+ * @param row
+ * @param column
+ * @returns {*|string}
+ */
+function  formatFrontPageVisible(row, column){
+  if(row.isFrontpageVisible=='Y'){
+    return '是'
+  }else{
+    return '否';
+  }
 }
 </script>
 

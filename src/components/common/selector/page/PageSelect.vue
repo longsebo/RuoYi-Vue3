@@ -14,7 +14,7 @@
     </el-form-item>
   </el-form>
   <!-- 添加或修改业务功能对话框 -->
-  <el-dialog :title="title" v-model="open" width="500px" append-to-body>
+  <el-dialog title="参数设置" v-model="open" width="500px" append-to-body>
     <PageParameter
         ref="PageParameterRef" :pageCode="pageCode" :parameterList="parameterList" @ok="changeParameters" @cancel="cancelChange" />
   </el-dialog>
@@ -29,6 +29,9 @@ import PageParameter from "./PageParameter.vue";
 interface Props {
   pageCode: string,
   parameterList: object
+}
+interface Emits {
+  (e: 'change',pageCode:string,parameterList: object): void
 }
 const open =ref(false)
 const emits = defineEmits<Emits>()
@@ -111,6 +114,7 @@ function  formatParameterType(row, column){
  */
 function changeParameters(value){
   parameterList.value = value;
+  emits("change",pageCode.value,parameterList.value);
   open.value = false;
 }
 

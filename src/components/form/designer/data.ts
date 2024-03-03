@@ -34,7 +34,11 @@ export const ButtonComponents: CandidateComponentConfig[] = [
       autofocus:false,
       label:'按钮',
       operationtype:'api',//有效值:api,page
-      operationdata:'',//操作数据
+      //操作数据
+      operationdata:{interfaceCode:'',
+        pageCode:'',
+        parameterList:[]}
+
     },
   },
 ]

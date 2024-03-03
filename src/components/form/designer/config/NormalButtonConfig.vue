@@ -3,7 +3,7 @@
     v-if="vFormSelectElem?.attrs"
     :model="vFormSelectElem?.attrs"
     label-position="left"
-    label-width="120px"
+    label-width="200px"
     style="padding: 5px;"
   >
     <el-form-item prop="label" label="标题">
@@ -86,16 +86,20 @@
       </el-radio-group>
     </el-form-item>
     <el-form-item prop="operationtype" label="按钮操作类型">
-      <el-radio-group v-model="vFormSelectElem.attrs.operationtype">
-        <el-radio-button label="api">调用接口</el-radio-button>
-        <el-radio-button label="page">打开页面</el-radio-button>
+      <el-radio-group v-model="vFormSelectElem.attrs.operationtype" @change="changeOperationType" >
+        <el-radio-button label="api" >调用接口</el-radio-button>
+        <el-radio-button label="page" >打开页面</el-radio-button>
       </el-radio-group>
     </el-form-item>
-    <el-form-item prop="operationtype" label="操作设置">
-      <InterfaceSelect v-show="vFormSelectElem.attrs.operationtype=='api'" :interfaceCode="vFormSelectElem.attrs.operationData.interfaceCode"
-                       :parameterList="vFormSelectElem.attrs.operationData.parameterList"/>
-      <PageSelect v-show="vFormSelectElem.attrs.operationtype=='page'" :pageCode="vFormSelectElem.attrs.operationData.pageCode"
-                       :parameterList="vFormSelectElem.attrs.operationData.parameterList"/>
+    <el-form-item  label="操作设置">
+      <div v-show="vFormSelectElem.attrs.operationtype==='api'">
+      <InterfaceSelect  :interfaceCode="vFormSelectElem.attrs.operationdata.interfaceCode"
+                       :parameterList="vFormSelectElem.attrs.operationdata.parameterList" @change="updateInterfacceConfig"/>
+      </div>
+      <div v-show="vFormSelectElem.attrs.operationtype==='page'">
+      <PageSelect  :pageCode="vFormSelectElem.attrs.operationdata.pageCode"
+                       :parameterList="vFormSelectElem.attrs.operationdata.parameterList" @change="updatePageConfig"/>
+      </div>
     </el-form-item>
     <el-form-item prop="mode" label="模式">
       <el-checkbox-group v-model="mode" :min="0" :max="1">
@@ -111,12 +115,12 @@
 import {
   ElForm, ElFormItem, ElInput, ElCheckboxGroup, ElRadioGroup, ElRadioButton, ElCheckboxButton, ElSelect, ElOption, ElInputNumber,
 } from 'element-plus'
-import { computed, inject } from "vue";
+import {computed, inject, ref} from "vue";
 import { vFormActiveElementKey } from "@/components/form/state.key";
 import InterfaceSelect from    "@/components/common/selector/interface/InterfaceSelect.vue";
 import PageSelect from    "@/components/common/selector/page/PageSelect.vue";
 const vFormSelectElem = inject(vFormActiveElementKey)
-
+const operationtype = ref('api');
 const mode = computed({
   get: () => vFormSelectElem.value.attrs.mode ? [vFormSelectElem.value.attrs.mode] : [],
   set: v => {
@@ -128,7 +132,27 @@ const mode = computed({
   }
 })
 
-
+/**
+ * 更新接口配置
+ * @param interfaceCode
+ * @param parameterList
+ */
+function updateInterfacceConfig(interfaceCode,parameterList){
+  vFormSelectElem.value.attrs.operationdata.interfaceCode = interfaceCode;
+  vFormSelectElem.value.attrs.operationdata.parameterList = parameterList;
+}
+/**
+ * 更新页面配置
+ * @param pageCode
+ * @param parameterList
+ */
+function updatePageConfig(pageCode,parameterList){
+  vFormSelectElem.value.attrs.operationdata.pageCode = pageCode;
+  vFormSelectElem.value.attrs.operationdata.parameterList = parameterList;
+}
+function changeOperationType(value){
+  console.log('operation type:'+JSON.stringify(value));
+}
 </script>
 
 <style scoped>
