@@ -2,9 +2,7 @@
   <el-form
     v-if="vFormSelectElem?.attrs"
     :model="vFormSelectElem?.attrs"
-    label-position="left"
-    label-width="200px"
-    style="padding: 5px;"
+    style="padding: 2px;"
   >
     <el-form-item prop="label" label="标题">
       <el-input v-model="vFormSelectElem.attrs.label"></el-input>
@@ -91,15 +89,13 @@
         <el-radio-button label="page" >打开页面</el-radio-button>
       </el-radio-group>
     </el-form-item>
-    <el-form-item  label="操作设置">
-      <div v-show="vFormSelectElem.attrs.operationtype==='api'">
+    <el-form-item  label="操作设置" v-show="vFormSelectElem.attrs.operationtype==='api'">
       <InterfaceSelect  :interfaceCode="vFormSelectElem.attrs.operationdata.interfaceCode"
                        :parameterList="vFormSelectElem.attrs.operationdata.parameterList" @change="updateInterfacceConfig"/>
-      </div>
-      <div v-show="vFormSelectElem.attrs.operationtype==='page'">
-      <PageSelect  :pageCode="vFormSelectElem.attrs.operationdata.pageCode"
-                       :parameterList="vFormSelectElem.attrs.operationdata.parameterList" @change="updatePageConfig"/>
-      </div>
+    </el-form-item>
+    <el-form-item  label="操作设置" v-show="vFormSelectElem.attrs.operationtype==='page'">
+        <PageSelect  :pageCode="vFormSelectElem.attrs.operationdata.pageCode"
+                     :parameterList="vFormSelectElem.attrs.operationdata.parameterList" @change="updatePageConfig"/>
     </el-form-item>
     <el-form-item prop="mode" label="模式">
       <el-checkbox-group v-model="mode" :min="0" :max="1">
