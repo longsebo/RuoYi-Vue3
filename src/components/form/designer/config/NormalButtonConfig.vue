@@ -134,8 +134,11 @@ const mode = computed({
  * @param parameterList
  */
 function updateInterfacceConfig(interfaceCode,parameterList){
+
   vFormSelectElem.value.attrs.operationdata.interfaceCode = interfaceCode;
   vFormSelectElem.value.attrs.operationdata.parameterList = parameterList;
+  console.log("vFormSelectElem.value.attrs.operationdata:"+JSON.stringify(vFormSelectElem.value.attrs.operationdata));
+
 }
 /**
  * 更新页面配置
@@ -145,6 +148,7 @@ function updateInterfacceConfig(interfaceCode,parameterList){
 function updatePageConfig(pageCode,parameterList){
   vFormSelectElem.value.attrs.operationdata.pageCode = pageCode;
   vFormSelectElem.value.attrs.operationdata.parameterList = parameterList;
+  console.log("vFormSelectElem.value.attrs.operationdata:"+JSON.stringify(vFormSelectElem.value.attrs.operationdata));
 }
 function changeOperationType(value){
   console.log('operation type:'+JSON.stringify(value));

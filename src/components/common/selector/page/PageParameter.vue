@@ -24,7 +24,6 @@ const { proxy } = getCurrentInstance();
 const { parameter_type } = proxy.useDict("parameter_type");
 
 interface Props {
-  interfaceCode: string,
   parameterList: object
 }
 const parameterList = ref([])
@@ -34,8 +33,8 @@ interface Emits {
   (e: 'cancel'): void
 }
 const emits = defineEmits<Emits>()
-watch(() => [props.parameterList.value], () => {
-  parameterList.value = props.parameterList.value;
+watch(() => [props.parameterList], () => {
+  parameterList.value = props.parameterList;
   //console.log('parameterList in InterfaceParameter.vue', JSON.stringify(parameterList.value))
 }, { immediate: true })
 
