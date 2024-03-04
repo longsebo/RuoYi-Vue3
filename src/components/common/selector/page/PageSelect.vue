@@ -14,7 +14,7 @@
     </el-form-item>
   </el-form>
   <!-- 添加或修改业务功能对话框 -->
-  <el-dialog title="参数设置" v-model="open" width="500px" append-to-body>
+  <el-dialog title="参数设置" v-model="open" width="70%" height="95vh" append-to-body>
     <PageParameter
         ref="PageParameterRef" :pageCode="pageCode" :parameterList="parameterList" @ok="changeParameters" @cancel="cancelChange" />
   </el-dialog>
@@ -36,7 +36,7 @@ interface Emits {
 const open =ref(false)
 const emits = defineEmits<Emits>()
 const { proxy } = getCurrentInstance();
-const { parameter_type } = proxy.useDict("parameter_type");
+
 const props = defineProps<Props>()
 const loading = ref(false)
 const parameterList = props.parameterList;
@@ -68,17 +68,7 @@ async function handleSelectChange(value) {
     loading.value = false;
   }
 }
-/**
- * 显示参数输入框
- * @param row
- */
-function showParameterInput(row){
-  if(row.parameterType!='object' && row.parameterType!='array'){
-    return true;
-  }else{
-    return false;
-  }
-}
+
 /** 获取接口树列表 */
 function getTreeInterface(){
   let tmp={};
@@ -86,28 +76,7 @@ function getTreeInterface(){
     treePage.value = response.data;
   });
 }
-/**
- * 翻译前端是否可见
- * @param row
- * @param column
- * @returns {*|string}
- */
-function  formatFrontPageVisible(row, column){
-  if(row.isFrontpageVisible=='Y'){
-    return '是'
-  }else{
-    return '否';
-  }
-}
-/**
- * 翻译参数类型
- * @param row
- * @param column
- * @returns {*|string}
- */
-function  formatParameterType(row, column){
-  return parameter_type.value.find(k => k.value === row.parameterType)?.label ?? '';
-}
+
 
 /**
  * 改变参数列表

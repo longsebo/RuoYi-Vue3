@@ -1,5 +1,5 @@
 <template>
-  <el-table v-loading="loading" :data="parameterList"  row-key="id">
+  <el-table :data="parameterList"  row-key="id">
     <el-table-column type="selection" width="55" align="center" />
     <el-table-column label="参数名称" align="center" prop="parameterName" />
     <el-table-column label="参数描述" align="center" prop="parameterDesc" />
@@ -19,15 +19,26 @@
 </template>
 
 <script lang="ts" setup>
-import {getCurrentInstance, ref} from "vue";
+import {getCurrentInstance, ref, watch} from "vue";
 const { proxy } = getCurrentInstance();
 const { parameter_type } = proxy.useDict("parameter_type");
+
+interface Props {
+  interfaceCode: string,
+  parameterList: object
+}
 const parameterList = ref([])
+const props = defineProps<Props>()
 interface Emits {
   (e: 'ok', val: object): void
   (e: 'cancel'): void
 }
 const emits = defineEmits<Emits>()
+watch(() => [props.parameterList.value], () => {
+  parameterList.value = props.parameterList.value;
+  //console.log('parameterList in InterfaceParameter.vue', JSON.stringify(parameterList.value))
+}, { immediate: true })
+
 function submitForm(){
   emits('ok', parameterList);
 }
