@@ -16,7 +16,7 @@
   <!-- 添加或修改业务功能对话框 -->
   <el-dialog title="参数设置" v-model="open" width="70%" height="95vh" append-to-body>
     <PageParameter
-        ref="PageParameterRef" :pageCode="pageCode" :parameterList="parameterList" @ok="changeParameters" @cancel="cancelChange" />
+        ref="PageParameterRef"  :parameterList="parameterList" @ok="changeParameters" @cancel="cancelChange" />
   </el-dialog>
 
 </template>

@@ -8,7 +8,7 @@
     <el-table-column label="参数格式" align="center" prop="parameterFormat" />
     <el-table-column label="参数值" align="center"  prop="parameterValue">
       <template #default="scope">
-        <el-input type="text" v-show="showParameterInput(scope.row)" v-model="scope.row.parameterValue" placeholder="请输入参数表达式"></el-input>
+        <ComponentInput v-show="showParameterInput(scope.row)" :selectVariable="scope.row.parameterValue" />
       </template>
     </el-table-column>
   </el-table>
@@ -20,6 +20,7 @@
 
 <script lang="ts" setup>
 import {getCurrentInstance, ref, watch} from "vue";
+import ComponentInput from "@/components/common/selector/component/ComponentInput.vue";
 const { proxy } = getCurrentInstance();
 const { parameter_type } = proxy.useDict("parameter_type");
 
@@ -34,7 +35,7 @@ interface Emits {
 }
 const emits = defineEmits<Emits>()
 watch(() => [props.parameterList], () => {
-  parameterList.value = props.parameterList;
+  parameterList.value = props.parameterList.value;
   //console.log('parameterList in InterfaceParameter.vue', JSON.stringify(parameterList.value))
 }, { immediate: true })
 

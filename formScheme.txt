@@ -1,0 +1,160 @@
+{
+	"mode": "edit",
+	"size": "default",
+	"style": "",
+	"children": [{
+		"id": "number1",
+		"key": 1,
+		"attrs": {
+			"max": 100,
+			"min": null,
+			"style": "width: 100%",
+			"clearable": false,
+			"placeholder": "输入数字"
+		},
+		"category": "form-item",
+		"children": [],
+		"component": "number-input",
+		"formItemAttrs": {
+			"label": "数字"
+		}
+	}, {
+		"id": "text1",
+		"component": "text-input",
+		"category": "form-item",
+		"formItemAttrs": {
+			"label": "文本框"
+		},
+		"attrs": {
+			"placeholder": "输入字符串",
+			"clearable": false,
+			"showWordLimit": false,
+			"autofocus": false,
+			"validateEvent": false,
+			"style": "width: 100%"
+		},
+		"children": [],
+		"key": 1
+	}, {
+		"id": "normal-button_dc6jyofuspk",
+		"component": "normal-button",
+		"category": "button",
+		"attrs": {
+			"size": "small",
+			"type": "primary",
+			"plain": false,
+			"text": false,
+			"bg": false,
+			"link": false,
+			"round": false,
+			"circle": false,
+			"loading": false,
+			"disabled": false,
+			"autofocus": false,
+			"label": "按钮1",
+			"operationtype": "page",
+			"operationdata": {
+				"interfaceCode": "addCustomer",
+				"pageCode": "001",
+				"parameterList": [{
+					"createBy": "admin",
+					"createTime": "2024-01-27 11:55:40",
+					"updateBy": "admin",
+					"updateTime": "2024-01-27 15:51:01",
+					"remark": null,
+					"id": 1,
+					"parameterName": "person",
+					"parameterDesc": "人员信息",
+					"isFrontpageVisible": "N",
+					"parameterType": "object",
+					"parameterFormat": null,
+					"parentId": null,
+					"interfaceCode": null,
+					"children": [{
+						"createBy": "admin",
+						"createTime": "2024-01-27 15:44:04",
+						"updateBy": null,
+						"updateTime": null,
+						"remark": null,
+						"id": 2,
+						"parameterName": "name",
+						"parameterDesc": "姓名",
+						"isFrontpageVisible": "Y",
+						"parameterType": "string",
+						"parameterFormat": null,
+						"parentId": 1,
+						"interfaceCode": null,
+						"children": [],
+						"parameterValue": "${name2}"
+					}, {
+						"createBy": "admin",
+						"createTime": "2024-01-27 15:52:08",
+						"updateBy": "admin",
+						"updateTime": "2024-01-27 15:53:02",
+						"remark": null,
+						"id": 4,
+						"parameterName": "education",
+						"parameterDesc": "学历",
+						"isFrontpageVisible": "Y",
+						"parameterType": "array",
+						"parameterFormat": null,
+						"parentId": 1,
+						"interfaceCode": null,
+						"children": [{
+							"createBy": "admin",
+							"createTime": "2024-01-27 15:53:19",
+							"updateBy": null,
+							"updateTime": null,
+							"remark": null,
+							"id": 5,
+							"parameterName": "juniorCollege",
+							"parameterDesc": "大专",
+							"isFrontpageVisible": "Y",
+							"parameterType": "object",
+							"parameterFormat": null,
+							"parentId": 4,
+							"interfaceCode": null,
+							"children": [{
+								"createBy": "admin",
+								"createTime": "2024-01-27 15:53:59",
+								"updateBy": null,
+								"updateTime": null,
+								"remark": null,
+								"id": 6,
+								"parameterName": "graduationSchool",
+								"parameterDesc": "毕业学校",
+								"isFrontpageVisible": "Y",
+								"parameterType": "string",
+								"parameterFormat": null,
+								"parentId": 5,
+								"interfaceCode": null,
+								"children": [],
+								"parameterValue": "${school2}"
+							}, {
+								"createBy": "admin",
+								"createTime": "2024-01-27 15:54:47",
+								"updateBy": null,
+								"updateTime": null,
+								"remark": null,
+								"id": 7,
+								"parameterName": "graduationDate",
+								"parameterDesc": "毕业时间",
+								"isFrontpageVisible": "Y",
+								"parameterType": "date",
+								"parameterFormat": "YYYY-MM",
+								"parentId": 5,
+								"interfaceCode": null,
+								"children": [],
+								"parameterValue": "${date2}"
+							}]
+						}]
+					}]
+				}]
+			}
+		},
+		"children": [],
+		"key": 1
+	}],
+	"labelWidth": "120px",
+	"labelPosition": "auto"
+}
