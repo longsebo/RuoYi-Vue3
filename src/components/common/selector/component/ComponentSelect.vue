@@ -10,7 +10,7 @@
     >
 
     <el-table-column prop="label" label="字段名称(组件名称)"  />
-    <el-table-column prop="component" label="组件类型"  />
+    <el-table-column prop="component" label="组件类型"  :formatter="formatComponentType" />
   </el-table>
     <el-button type="primary" @click="handleConfirm">确定</el-button>
     <el-button type="success" @click="handleCancel">取消</el-button>
@@ -20,6 +20,7 @@
 <script lang="ts" setup>
 import {watch, ref, inject} from "vue";
 import { vFormSchemeKey } from '@/components/form/state.key';
+import {InputComponents} from "../../../form/designer/data";
 
 const formScheme = inject(vFormSchemeKey)!
 
@@ -82,6 +83,23 @@ function handleConfirm() {
  */
 function handleCancel() {
   emits('cancel')
+}
+/**
+ * 翻译组件类型
+ * @param row
+ * @param column
+ * @returns {*|string}
+ */
+function formatComponentType(row, column){
+  let i=0;
+  console.log('row.component:'+row.component)
+  console.log('InputComponents:'+JSON.stringify(InputComponents))
+  for(i=0;i<InputComponents.length;i++){
+    if(row.component===InputComponents[i].component){
+      return InputComponents[i].title;
+    }
+  }
+  return '';
 }
 </script>
 
