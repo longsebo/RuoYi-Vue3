@@ -66,12 +66,14 @@ function buildTree(schema:Object, parentName:string):any[] {
  */
 function handleRowClick(row:any){
   selectedId.value = row.id;
+  console.log('handleRowClick:'+selectedId.value)
 }
 
 /**
  *  单击确认按钮
  */
 function handleConfirm() {
+  console.log('handleConfirm:'+ selectedId.value)
   emits('change', selectedId.value)
 }
 

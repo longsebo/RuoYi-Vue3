@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import {getCurrentInstance, reactive, ref, toRefs} from "vue";
+import {getCurrentInstance, reactive, ref, toRefs, watch} from "vue";
 import { tree } from "@/api/business/interface";
 import { parameterTreeSelect } from "@/api/business/parameter";
 import InterfaceParameter from "./InterfaceParameter.vue";
@@ -39,7 +39,7 @@ const { proxy } = getCurrentInstance();
 
 const props = defineProps<Props>()
 const loading = ref(false)
-const parameterList = props.parameterList;
+const parameterList = ref([]);
 const interfaceCode = ref(props.interfaceCode);
 const data = reactive({
   form: {},
@@ -51,6 +51,19 @@ const data = reactive({
 });
 const treeInterface=ref([])
 const { form,queryParams } = toRefs(data);
+watch(() => [props.parameterList], () => {
+  //console.log('InterfaceSelect.vue watch props parameterList:'+ JSON.stringify(props.parameterList))
+  if(props.parameterList.value) {
+    parameterList.value = props.parameterList.value;
+  }else{
+    parameterList.value = props.parameterList;
+  }
+  console.log('InterfaceSelect.vue watch parameterList.value:'+ JSON.stringify(parameterList.value))
+}, { immediate: true })
+
+// watch(() => [props.interfaceCode], () =>{
+//     handleSelectChange(props.interfaceCode.value)
+// })
 async function handleSelectChange(value) {
   // 查询接口参数树列表
   try {
@@ -60,6 +73,7 @@ async function handleSelectChange(value) {
     let response = await parameterTreeSelect(queryParams.value)
     parameterList.value = response.rows;
     console.log('InterfaceSelect.vue parameterList.value:'+ JSON.stringify(parameterList.value))
+    emits("change",value,parameterList.value);
     //total.value = response.total;
     loading.value = false;
   } catch (err) {

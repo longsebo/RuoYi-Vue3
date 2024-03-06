@@ -116,7 +116,7 @@ import { vFormActiveElementKey } from "@/components/form/state.key";
 import InterfaceSelect from    "@/components/common/selector/interface/InterfaceSelect.vue";
 import PageSelect from    "@/components/common/selector/page/PageSelect.vue";
 const vFormSelectElem = inject(vFormActiveElementKey)
-const operationtype = ref('api');
+console.log('inject vFormSelectElem', JSON.stringify(vFormSelectElem.value.attrs.operationdata.parameterList));
 const mode = computed({
   get: () => vFormSelectElem.value.attrs.mode ? [vFormSelectElem.value.attrs.mode] : [],
   set: v => {
@@ -137,7 +137,7 @@ function updateInterfacceConfig(interfaceCode,parameterList){
 
   vFormSelectElem.value.attrs.operationdata.interfaceCode = interfaceCode;
   vFormSelectElem.value.attrs.operationdata.parameterList = parameterList;
-  console.log("vFormSelectElem.value.attrs.operationdata:"+JSON.stringify(vFormSelectElem.value.attrs.operationdata));
+  console.log("vFormSelectElem:"+JSON.stringify(vFormSelectElem.value));
 
 }
 /**

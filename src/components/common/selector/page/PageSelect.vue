@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import {getCurrentInstance, reactive, ref, toRefs} from "vue";
+import {getCurrentInstance, reactive, ref, toRefs, watch} from "vue";
 import { tree } from "@/api/business/page";
 import { parameterTreeSelect } from "@/api/business/parameter";
 import PageParameter from "./PageParameter.vue";
@@ -51,6 +51,16 @@ const data = reactive({
 });
 const treePage=ref([])
 const { form,queryParams } = toRefs(data);
+watch(() => [props.parameterList], () => {
+  //console.log('InterfaceSelect.vue watch props parameterList:'+ JSON.stringify(props.parameterList))
+  if(props.parameterList.value) {
+    parameterList.value = props.parameterList.value;
+  }else{
+    parameterList.value = props.parameterList;
+  }
+  //console.log('InterfaceSelect.vue watch parameterList.value:'+ JSON.stringify(parameterList.value))
+}, { immediate: true })
+
 async function handleSelectChange(value) {
   // 查询接口参数树列表
   try {
@@ -60,7 +70,7 @@ async function handleSelectChange(value) {
     queryParams.value.pageCode = props.pageCode;
     let response = await parameterTreeSelect(queryParams.value)
     parameterList.value = response.rows;
-    //total.value = response.total;
+    emits("change",value,parameterList.value);
     loading.value = false;
   } catch (err) {
     console.log(err)

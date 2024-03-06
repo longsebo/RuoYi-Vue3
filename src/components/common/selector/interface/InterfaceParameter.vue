@@ -37,7 +37,11 @@ interface Emits {
 }
 const emits = defineEmits<Emits>()
 watch(() => [props.parameterList], () => {
-  parameterList.value = props.parameterList.value;
+  if(props.parameterList.value) {
+    parameterList.value = props.parameterList.value;
+  }else{
+    parameterList.value = props.parameterList;
+  }
   console.log('parameterList in InterfaceParameter.vue', JSON.stringify(parameterList.value))
 }, { immediate: true })
 

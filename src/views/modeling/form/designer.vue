@@ -93,7 +93,17 @@
 
 <script lang="ts" setup>
 import { computed, inject, ref, provide, onBeforeMount } from "vue";
-import { ElForm, ElScrollbar, ElTabs, ElTabPane, ElButton, ElRadioGroup, ElRadioButton, ElInput } from "element-plus"
+import {
+  ElForm,
+  ElScrollbar,
+  ElTabs,
+  ElTabPane,
+  ElButton,
+  ElRadioGroup,
+  ElRadioButton,
+  ElInput,
+  ElMessage
+} from "element-plus"
 import NestedDragItem from "@/components/form/designer/NestedDragItem.vue";
 import FormPropertyPanel from "@/components/form/designer/FormPropertyPanel.vue"
 import CandidateComponentPage from "@/components/form/designer/candidate/CandidateComponentPage.vue";
@@ -207,7 +217,12 @@ async function handleClickSave() {
     id: props.pageId,
     pageScheme: JSON.stringify(formScheme.value),
   }
-  updateDesign(param)
+  let res = await updateDesign(param);
+  if(res.code==200){
+    ElMessage.success('保存成功!')
+  }else{
+    ElMessage.error(res.msg || '保存失败！')
+  }
 }
 
 const formRenderRef = ref<InstanceType<typeof VFormRender>>()

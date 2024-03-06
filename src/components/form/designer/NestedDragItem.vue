@@ -243,7 +243,7 @@ export default defineComponent({
     const formData = ref({})
 
     function handleClickElement(elem) {
-      // console.log(elem)
+      console.log('handleClickElement:'+JSON.stringify(elem))
       vFormActiveElement.value = elem
     }
 
