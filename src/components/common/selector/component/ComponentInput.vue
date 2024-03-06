@@ -6,9 +6,7 @@
         　　　  content="请双击选择组件"
         　　　　:disabled="isShowTooltip"
         　　　　>
-    <el-scrollbar always>
-      <pre @dblclick="onClick"> {{ selectVariable }} </pre>
-    </el-scrollbar>
+      <el-input v-model="selectVariable" style="width:240px;" @dblclick="onClick" />
     </el-tooltip>
   </div>
   <el-dialog title="选择组件" v-model="open" width="70%" height="95vh" append-to-body>
