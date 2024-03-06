@@ -16,7 +16,6 @@
 
 <script lang="ts" setup>
 import { ref, watch} from 'vue'
-import { Link } from "@element-plus/icons-vue";
 import ComponentSelect from './ComponentSelect.vue'
   interface Props {
     selectVariable: string,
