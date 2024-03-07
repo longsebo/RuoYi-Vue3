@@ -3,7 +3,7 @@
     <el-button  disabled v-bind="props" >{{$attrs.label}}</el-button>
   </template>
   <template v-else-if="cMode === 'edit'">
-    <el-button  v-bind="props" >{{$attrs.label}}</el-button>
+    <el-button  v-bind="props" @click="handleClick">{{$attrs.label}}</el-button>
   </template>
   <template v-else-if="cMode === 'read'">
     <el-button  v-bind="props" >{{$attrs.label}}</el-button>
@@ -14,9 +14,14 @@
 </template>
 
 <script lang="ts" setup>
-import { ElButton } from 'element-plus'
+import {ElButton, ElMessage} from 'element-plus'
 import {computed, inject, nextTick, useAttrs} from "vue";
 import { formModeKey } from "@/components/form/state.key";
+import { vFormSchemeKey } from '@/components/form/state.key';
+import {replaceDynamicVar} from '@/api/tool/replaceDynamicVar'
+import {listInterfaceAll} from '@/api/business/interface'
+import request from '@/utils/request'
+const formScheme = inject(vFormSchemeKey)!
 
 interface Props {
   size?:string
@@ -30,6 +35,9 @@ interface Props {
   loading?:boolean
   disabled?:boolean
   autofocus?:boolean
+  formData:object
+  operationtype?:string
+  operationdata:object
 }
 
 interface Emits {
@@ -52,8 +60,50 @@ const cMode = computed<FormFieldMode>(() => {
   }
   return "edit"
 })
-console.log('$attrs:'+JSON.stringify(props));
-
+//console.log('$attrs:'+JSON.stringify(props));
+async function handleClick() {
+  //替换变量值
+  let opertionParameter = JSON.stringify(props.operationdata.parameterList);
+  let contextMap = {}
+  let replaceParameters = replaceDynamicVar(props.formData, contextMap, opertionParameter)
+  console.log('replaceParameters:' + replaceParameters)
+  //将replaceParameters转换为json对象
+  let jsonParameters = JSON.parse(replaceParameters);
+  //调用API
+  //根据事件类型，判断是调用API还是打开网页
+  if (props.operationtype === 'api') {
+    //根据接口编码查询接口信息
+    let interfaceParam = {"interfaceCode": props.operationdata.interfaceCode};
+    let interfaceInfo = await listInterfaceAll(interfaceParam);
+    if (interfaceInfo.code === 200) {
+      //调用接口
+      let res = await doRequest(interfaceInfo.data, jsonParameters);
+      if (res.code === 200) {
+        ElMessage.success(res.msg)
+      }else{
+        ElMessage.error(res.msg || '操作失败！')
+      }
+    }
+  } else {
+    //TODO
+    //打开网页
+  }
+}
+function doRequest(interfaceInfo,parameters) {
+  if(interfaceInfo.interfaceMethod.toLowerCase === 'get') {
+    return request({
+      url: interfaceInfo.interfaceUrl,
+      method: 'get',
+      params: parameters
+    })
+  }else{
+    return request({
+      url: interfaceInfo.interfaceUrl,
+      method: interfaceInfo.interfaceMethod,
+      data: parameters
+    })
+  }
+}
 </script>
 
 <style scoped>
