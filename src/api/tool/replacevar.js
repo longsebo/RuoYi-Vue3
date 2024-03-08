@@ -8,7 +8,7 @@ const INSTRUCT_DYNAMICVAR_END="\\}";
 export function replaceDynamicVar(jsonObj,contextMap, line){
     let Text =line;
     // Find resource links
-    reg = new RegExp(INSTRUCT_DYNAMICVAR_START+"(.+?)"+INSTRUCT_DYNAMICVAR_END, "gi");
+    let reg = new RegExp(INSTRUCT_DYNAMICVAR_START+"(.+?)"+INSTRUCT_DYNAMICVAR_END, "gi");
     let result='';
     let retText = Text;
     while ((result = reg.exec(Text)) !== null) {

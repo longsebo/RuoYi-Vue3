@@ -18,7 +18,7 @@ import {ElButton, ElMessage} from 'element-plus'
 import {computed, inject, nextTick, useAttrs} from "vue";
 import { formModeKey } from "@/components/form/state.key";
 import { vFormSchemeKey } from '@/components/form/state.key';
-import {replaceDynamicVar} from '@/api/tool/replaceDynamicVar'
+import {replaceDynamicVar} from '@/api/tool/replacevar'
 import {listInterfaceAll} from '@/api/business/interface'
 import request from '@/utils/request'
 const formScheme = inject(vFormSchemeKey)!
@@ -64,9 +64,10 @@ const cMode = computed<FormFieldMode>(() => {
 async function handleClick() {
   //替换变量值
   let opertionParameter = JSON.stringify(props.operationdata.parameterList);
-  let contextMap = {}
+  let contextMap = new Map();
+  console.log('props.formData:' + JSON.stringify(props.formData))
   let replaceParameters = replaceDynamicVar(props.formData, contextMap, opertionParameter)
-  console.log('replaceParameters:' + replaceParameters)
+
   //将replaceParameters转换为json对象
   let jsonParameters = JSON.parse(replaceParameters);
   //调用API
@@ -77,7 +78,9 @@ async function handleClick() {
     let interfaceInfo = await listInterfaceAll(interfaceParam);
     if (interfaceInfo.code === 200) {
       //调用接口
-      let res = await doRequest(interfaceInfo.data, jsonParameters);
+      let apiParameter =convert2ApiJson(jsonParameters)
+      apiParameter["interfaceCode"]=props.operationdata.interfaceCode
+      let res = await doRequest(interfaceInfo.data[0], apiParameter);
       if (res.code === 200) {
         ElMessage.success(res.msg)
       }else{
@@ -88,6 +91,32 @@ async function handleClick() {
     //TODO
     //打开网页
   }
+}
+
+/**
+ * 将后台传过来的参数转换为API需要的参数
+ * @param jsonParameters
+ * @param parentName 父级名称
+ */
+function convert2ApiJson(jsonParameters) {
+  let apiJsonObj ={};
+  console.log('convert2ApiJson jsonParameters:'+JSON.stringify(jsonParameters));
+  for(let i=0;i<jsonParameters.length;i++){
+    if(!hasSubLevels(jsonParameters[i].children)) {
+      apiJsonObj[jsonParameters[i].parameterName] = jsonParameters[i].parameterValue || '';
+    }else{
+      apiJsonObj[jsonParameters[i].parameterName] = convert2ApiJson(jsonParameters[i].children)
+    }
+  }
+  return apiJsonObj;
+}
+
+/**
+ * 判断json是否还有下级
+ * @param node
+ */
+function hasSubLevels(node) {
+  return typeof node === 'object' && node !== null && Object.keys(node).length > 0;
 }
 function doRequest(interfaceInfo,parameters) {
   if(interfaceInfo.interfaceMethod.toLowerCase === 'get') {
