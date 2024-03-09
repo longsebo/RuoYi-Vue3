@@ -6,7 +6,7 @@
         　　　  content="请双击选择组件"
         　　　　:disabled="isShowTooltip"
         　　　　>
-      <el-input v-model="selectVariable" style="width:240px;" @dblclick="onClick" />
+      <el-input v-model="selectVariable" style="width:240px;" @dblclick="onClick" @change="changeInputVariable" />
     </el-tooltip>
   </div>
   <el-dialog title="选择组件" v-model="open" width="70%" height="95vh" append-to-body>
@@ -38,6 +38,10 @@ import ComponentSelect from './ComponentSelect.vue'
   function changeVariable(variable: string) {
     open.value = false;
     emits('change', "${"+variable+"}")
+  }
+  function changeInputVariable(variable: string) {
+    emits('change', variable)
+    //selectVariable.value = variable
   }
 </script>
 
