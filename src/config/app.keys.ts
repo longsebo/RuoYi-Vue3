@@ -20,4 +20,5 @@ export const processNodePageListKey = Symbol("processNodePageListKey") as Inject
 
 export const actReModelKey = Symbol("actReModel") as InjectionKey<Ref<ActReModel | undefined>>
 
+export const queryParamKey = "queryParamKey"
 
