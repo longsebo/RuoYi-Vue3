@@ -44,26 +44,7 @@
       <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="applicationList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="应用编码" align="center" prop="applicationCode" />
-      <el-table-column label="应用名称" align="center" prop="applicationName" />
-      <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template #default="scope">
-          <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['business:application:edit']">修改</el-button>
-          <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['business:application:remove']">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <pagination
-      v-show="total>0"
-      :total="total"
-      v-model:page="queryParams.pageNum"
-      v-model:limit="queryParams.pageSize"
-      @pagination="getList"
-    />
+    <ElPlusTable/>
 
     <!-- 添加或修改应用定义对话框 -->
     <el-dialog :title="title" v-model="open" width="500px" append-to-body>
@@ -91,7 +72,7 @@
 <script setup name="Application">
 import { listApplication, getApplication, delApplication, addApplication, updateApplication } from "@/api/business/application";
 import SearchForm from '@/components/common/form/searchform/SearchForm.vue';
-import {read as readStorage} from "@/utils/storage/index";
+import ElPlusTable from '@/components/common/table/ElPlusTable.vue';
 const { proxy } = getCurrentInstance();
 
 const applicationList = ref([]);
@@ -106,7 +87,7 @@ const title = ref("");
 import {
   queryParamKey
 } from "@/config/app.keys";
-import {onMounted} from "vue";
+import {onMounted, ref} from "vue";
 import bus from '@/event/bus'
 const data = reactive({
   form: {},
@@ -157,24 +138,7 @@ function reset() {
   proxy.resetForm("applicationRef");
 }
 
-/** 搜索按钮操作 */
-function handleQuery() {
-  queryParams.value.pageNum = 1;
-  getList();
-}
 
-/** 重置按钮操作 */
-function resetQuery() {
-  proxy.resetForm("queryRef");
-  handleQuery();
-}
-
-// 多选框选中数据
-function handleSelectionChange(selection) {
-  ids.value = selection.map(item => item.id);
-  single.value = selection.length != 1;
-  multiple.value = !selection.length;
-}
 
 /** 新增按钮操作 */
 function handleAdd() {

@@ -5,7 +5,6 @@
           v-model="queryParams.applicationCode"
           placeholder="请输入应用编码"
           clearable
-          @keyup.enter="handleQuery"
       />
     </el-form-item>
     <el-form-item label="应用名称" prop="applicationName">
@@ -13,29 +12,31 @@
           v-model="queryParams.applicationName"
           placeholder="请输入应用名称"
           clearable
-          @keyup.enter="handleQuery"
       />
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
-      <el-button icon="Refresh" @click="resetQuery">重置</el-button>
+      <SearchButton title="搜索"/>
+      <ResetButton title="重置"/>
     </el-form-item>
   </el-form>
 </template>
 
 <script lang="ts" setup>
 import {
-  queryParamKey
+  queryParamKey,resetQueryFormKey
 } from "@/config/app.keys";
 import bus from '@/event/bus'
-import {ref, watch} from "vue";
-
+import {onMounted, ref, watch} from "vue";
+import SearchButton from '@/components/common/button/SearchButton.vue'
+import ResetButton from '@/components/common/button/ResetButton.vue'
+const { proxy } = getCurrentInstance();
 const queryParams = ref({
       pageNum: 1,
       pageSize: 10,
       applicationCode: null,
       applicationName: null,
 })
+
 
 watch(() => queryParams, () => {
   console.log('bus.emit：'+JSON.stringify(queryParams))
@@ -45,16 +46,11 @@ watch(() => queryParams, () => {
 
 const showSearch = ref(true)
 
-const handleQuery = () => {
-  bus.emit(queryParamKey, queryParams)
-}
-
-const resetQuery = () => {
-  queryParams.applicationCode = null
-  queryParams.applicationName = null
-  handleQuery()
-}
-
+onMounted(() => {
+  bus.on(resetQueryFormKey,() => {
+    proxy.resetForm("queryRef");
+  })
+})
 </script>
 
 <style scoped>
