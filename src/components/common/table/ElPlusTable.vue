@@ -6,8 +6,8 @@
     <el-table-column label="备注" align="center" prop="remark" />
     <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
       <template #default="scope">
-        <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['business:application:edit']">修改</el-button>
-        <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['business:application:remove']">删除</el-button>
+        <ElPlusTableUpdateButton title="修改" :id="scope.row.id.toString()"/>
+        <ElPlusTableDeleteButton title="删除" :id="scope.row.id.toString()" />
       </template>
     </el-table-column>
   </el-table>
@@ -26,9 +26,10 @@
 import bus from '@/event/bus'
 import {onMounted, ref} from "vue";
 import {
-  queryListResultKey,executeQueryKey,totalKey,queryParamKey,loadingKey
+  queryListResultKey,executeQueryKey,totalKey,queryParamKey,loadingKey,tableRowSelectChangeKey
 } from "@/config/app.keys";
-
+import ElPlusTableDeleteButton from "@/components/common/button/ElPlusTableDeleteButton.vue";
+import ElPlusTableUpdateButton  from "@/components/common/button/ElPlusTableUpdateButton.vue";
 const applicationList = ref([]);
 const total = ref(0);
 const loading = ref(false)
@@ -68,6 +69,7 @@ function handleSelectionChange(selection) {
   ids.value = selection.map(item => item.id);
   single.value = selection.length != 1;
   multiple.value = !selection.length;
+  bus.emit(tableRowSelectChangeKey,{ids:ids.value,single:single.value,multiple:multiple.value})
 }
 
 </script>

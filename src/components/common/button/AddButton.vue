@@ -24,8 +24,7 @@ const props = withDefaults(defineProps<Props>(), {
 /** 新增按钮操作 */
 function handleAdd() {
   bus.emit(resetFormKey);
-  bus.emit(showDialogKey, {show:true,title:"添加应用定义"});
-
+  bus.emit(showDialogKey, {show:true,title:"添加应用定义",form:{}});
 }
 </script>
 

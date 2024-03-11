@@ -28,4 +28,8 @@ export const loadingKey="loadingKey"
 export const resetFormKey="resetFormKey"
 export const resetQueryFormKey="resetQueryFormKey"
 export const showDialogKey="showDialogKey"
+export const showSearchKey="showSearchKey"
+export const validateFormKey="validateFormKey"
+export const tableRowSelectChangeKey="tablerowSelectChangeKey"
+
 

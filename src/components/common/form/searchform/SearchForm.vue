@@ -23,7 +23,7 @@
 
 <script lang="ts" setup>
 import {
-  queryParamKey,resetQueryFormKey
+  queryParamKey,resetQueryFormKey,showSearchKey
 } from "@/config/app.keys";
 import bus from '@/event/bus'
 import {onMounted, ref, watch} from "vue";
@@ -49,6 +49,9 @@ const showSearch = ref(true)
 onMounted(() => {
   bus.on(resetQueryFormKey,() => {
     proxy.resetForm("queryRef");
+  })
+  bus.on(showSearchKey,(data: boolean) => {
+    showSearch.value = data
   })
 })
 </script>
