@@ -258,6 +258,27 @@ export const InputComponents: CandidateComponentConfig[] = [
       style: `width: 100%`
     }
   },
+  {
+    id: genId(),
+    icon: 'ali_dropdownselection',
+    component: 'el-select',
+    category: 'form-item',
+    title: "下拉选择框",
+    formItemAttrs: {
+      label: "下拉选择框",
+    },
+    attrs: {
+      placeholder: '请选择',
+      clearable: false,
+      size: 'default',//有效选项 ：large' | 'default' | 'small
+      multiple: false,//是否多选
+      optionsSource:'input', //有效选择来源：input,dict
+      options: [ // 每项内容是label,value
+      ],
+      style:"width:100%",
+      dictType:'',//字段类型
+    }
+  },
 ]
 export const LayoutComponents: CandidateComponentConfig[] = [
   {
