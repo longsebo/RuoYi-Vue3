@@ -54,7 +54,7 @@ interface Props {
   options:any
 }
 
-const props = withDefaults(defineProps<Props>())
+const props = defineProps<Props>()
 watch(()=>props.options,(newVal)=>{
   list.value = props.options;
   list.value.forEach((item,index)=>{

@@ -71,7 +71,7 @@ import FormConfig from "@/components/form/designer/config/FormConfig.vue";
 import LabelField from "@/components/form/components/display/LabelField.vue";
 import LabelFieldConfig from "@/components/form/designer/config/LabelFieldConfig.vue";
 import NormalButtonConfig from "@/components/form/designer/config/NormalButtonConfig.vue";
-
+import DropdownSelectConfig from "@/components/form/designer/config/DropdownSelectionConfig.vue";
 
 const vFormSelectElem = inject(vFormActiveElementKey)
 
@@ -91,6 +91,7 @@ const configMap = {
   'el-col': markRaw(ColConfig),
   'label-field': markRaw(LabelFieldConfig),
   'normal-button':markRaw(NormalButtonConfig),
+  'el-select':markRaw(DropdownSelectConfig)
 }
 
 </script>
