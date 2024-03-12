@@ -6,8 +6,8 @@
     <el-table-column label="备注" align="center" prop="remark" />
     <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
       <template #default="scope">
-        <ElPlusTableUpdateButton title="修改" :id="scope.row.id.toString()"/>
-        <ElPlusTableDeleteButton title="删除" :id="scope.row.id.toString()" />
+        <ElPlusTableUpdateButton title="修改" :row="scope.row"/>
+        <ElPlusTableDeleteButton title="删除" :row="scope.row" />
       </template>
     </el-table-column>
   </el-table>

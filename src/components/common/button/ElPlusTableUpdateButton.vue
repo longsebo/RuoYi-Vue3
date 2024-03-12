@@ -18,14 +18,14 @@ function handleUpdate() {
 }
 interface Props {
   title?: string,
-  id?:string
+  row?:object
 }
 const props = withDefaults(defineProps<Props>(), {
-  title: '删除',
-  id:''
+  title: '删除'
 })
-watch(props.id, (newValue, oldValue) => {
-  id.value = props.id
+watch(props.row, (newValue, oldValue) => {
+  // console.log('row',JSON.stringify(props.row))
+  id.value = props.row.id
   console.log('id',id.value)
 },{immediate: true})
 
