@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts" setup>
-import {onMounted, ref} from "vue";
+import {onMounted, ref,onUnmounted} from "vue";
 import { getCurrentInstance } from 'vue';
 import { showDialogKey,validateFormKey } from "@/config/app.keys";
 import bus  from "@/event/bus";
@@ -48,6 +48,10 @@ onMounted(() => {
       callBackFun(valid, form)
     })
   })
+})
+onUnmounted(() => {
+  bus.off(showDialogKey)
+  bus.off(validateFormKey)
 })
  // 表单重置
  function reset() {

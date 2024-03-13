@@ -26,7 +26,7 @@ import {
   queryParamKey,resetQueryFormKey,showSearchKey
 } from "@/config/app.keys";
 import bus from '@/event/bus'
-import {onMounted, ref, watch} from "vue";
+import {onMounted, ref, watch,onUnmounted} from "vue";
 import SearchButton from '@/components/common/button/SearchButton.vue'
 import ResetButton from '@/components/common/button/ResetButton.vue'
 const { proxy } = getCurrentInstance();
@@ -54,6 +54,11 @@ onMounted(() => {
     showSearch.value = data
   })
 })
+onUnmounted(() =>{
+  bus.off(resetQueryFormKey)
+  bus.off(showSearchKey)
+})
+
 </script>
 
 <style scoped>

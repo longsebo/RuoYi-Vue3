@@ -15,7 +15,7 @@ import { delApplication } from "@/api/business/application";
 import {
   tableRowSelectChangeKey,resetFormKey,executeQueryKey
 } from "@/config/app.keys";
-import {onMounted, ref, watch} from "vue";
+import {onMounted, ref, onUnmounted} from "vue";
 import {getCurrentInstance} from 'vue';
 const {proxy} = getCurrentInstance();
 interface Props {
@@ -37,6 +37,9 @@ onMounted(() => {
   })
 
 })
+onUnmounted(() => {
+  bus.off(tableRowSelectChangeKey)
+}))
 /** 更新按钮操作 */
 function handleDelete() {
   proxy.$modal.confirm('是否确认删除应用定义编号为"' + ids.value + '"的数据项？').then(function() {

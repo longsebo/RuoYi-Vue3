@@ -24,7 +24,7 @@
 
 <script lang="ts" setup>
 import bus from '@/event/bus'
-import {onMounted, ref} from "vue";
+import {onMounted, ref,onUnmounted} from "vue";
 import {
   queryListResultKey,executeQueryKey,totalKey,queryParamKey,loadingKey,tableRowSelectChangeKey
 } from "@/config/app.keys";
@@ -54,6 +54,12 @@ onMounted(() => {
   bus.on(loadingKey,(data) =>{
       loading.value = data;
   })
+})
+onUnmounted(() =>{
+  bus.off(queryListResultKey);
+  bus.off(totalKey);
+  bus.off(queryParamKey);
+  bus.off(loadingKey);
 })
 function getList() {
   bus.emit(executeQueryKey);

@@ -4,7 +4,7 @@
 
 <script lang="ts" setup>
 import bus from '@/event/bus'
-import {onMounted, ref} from "vue";
+import {onMounted, ref,onUnmounted} from "vue";
 import { listApplication  } from "@/api/business/application";
 import {
   queryParamKey,queryListResultKey,executeQueryKey,totalKey,loadingKey
@@ -25,6 +25,11 @@ onMounted(() => {
     getList();
   })
 })
+onUnmounted(() =>{
+  bus.off(queryParamKey);
+  bus.off(executeQueryKey);
+})
+
 /** 查询应用定义列表 */
 function getList() {
   //loading.value = true;
