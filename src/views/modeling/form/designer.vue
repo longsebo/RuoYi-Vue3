@@ -92,7 +92,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, inject, ref, provide, onBeforeMount } from "vue";
+import {computed, inject, ref, provide,  watch} from "vue";
 import {
   ElForm,
   ElScrollbar,
@@ -123,7 +123,7 @@ import {getPage,updateDesign} from "@/api/business/page";
 const saveIcon = useIcon('Save')
 
 interface Props {
-  pageId: number
+  pageInfo:object
 }
 
 const props = defineProps<Props>()
@@ -169,15 +169,26 @@ const labelPosition = computed(() => {
 })
 
 
-onBeforeMount(async () => {
-  pageInfo.value = await getPage(props.pageId)
+watch(() => props.pageInfo, async () => {
+  //console.log('enter watch')
+  pageInfo.value = await getPage(props.pageInfo.pageId)
   if (pageInfo.value.data?.pageName) {
     pageName.value = pageInfo.value.data.pageName
   }
   if (pageInfo.value.data?.pageScheme) {
     formScheme.value = JSON.parse(pageInfo.value.data.pageScheme)
+  }else{
+    formScheme.value={
+      "mode": "design",
+      "size": "default",
+      "style": "",
+      "children": [],
+      "labelWidth": "120px",
+      "labelPosition": "auto"
+    }
   }
-})
+},{immediate: true ,deep: true})
+
 
 
 interface JSONEditorInfo {
@@ -214,7 +225,7 @@ function handleClickViewJSON() {
 
 async function handleClickSave() {
   const param = {
-    id: props.pageId,
+    id: props.pageInfo.pageId,
     pageScheme: JSON.stringify(formScheme.value),
   }
   let res = await updateDesign(param);

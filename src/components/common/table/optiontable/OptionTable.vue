@@ -1,29 +1,34 @@
 <template>
   <el-row :gutter="10" class="mb8">
     <el-col :span="1.5">
+      <el-tooltip content="新增" effect="customized">
       <el-button
           type="primary"
-          plain
+          circle
           icon="Plus"
-          @click="handleAdd"
-      >新增</el-button>
+          @click="handleAdd"/>
+      </el-tooltip>
     </el-col>
     <el-col :span="1.5">
+      <el-tooltip content="删除" effect="customized">
       <el-button
           type="danger"
-          plain
+          circle
           icon="Delete"
           :disabled="multiple"
           @click="handleDelete"
-      >删除</el-button>
+      />
+      </el-tooltip>
     </el-col>
     <el-col :span="1.5">
+      <el-tooltip content="确认" effect="customized">
       <el-button
           type="primary"
-          plain
+          circle
           icon="SuccessFilled"
           @click="handleConfirm"
-      >确定</el-button>
+      />
+      </el-tooltip>
     </el-col>
   </el-row>
   <el-table    :data="list"  @selection-change="handleSelectionChange">
@@ -138,6 +143,15 @@ function handleConfirm() {
 }
 </script>
 
-<style scoped>
+<style >
+.el-popper.is-customized {
+  /* Set padding to ensure the height is 32px */
+  padding: 6px 12px;
+  background: linear-gradient(90deg, rgb(159, 229, 151), rgb(204, 229, 129));
+}
 
+.el-popper.is-customized .el-popper__arrow::before {
+  background: linear-gradient(45deg, #b2e68d, #bce689);
+  right: 0;
+}
 </style>

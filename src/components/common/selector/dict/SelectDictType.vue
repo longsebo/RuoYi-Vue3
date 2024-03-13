@@ -13,15 +13,10 @@
     </el-select>
   </el-form-item>
   <el-form-item label="字典选项" required>
-    <el-select
-        style="width: 100%;"
-    >
-      <el-option
-          v-for="item in modelingOptionItems"
-          :key="item.dictCode" :label="item.dictLabel"
-          :value="item.dictCode"
-      />
-    </el-select>
+    <el-table    :data="modelingOptionItems"  >
+      <el-table-column label="标签" align="center" prop="dictLabel" />
+      <el-table-column label="值" align="center" prop="dictCode" />
+    </el-table>
   </el-form-item>
 </template>
 

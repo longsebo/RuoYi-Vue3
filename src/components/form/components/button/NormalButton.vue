@@ -35,7 +35,7 @@ interface Props {
   loading?:boolean
   disabled?:boolean
   autofocus?:boolean
-  formData:object
+  formData?:object
   operationtype?:string
   operationdata:object
 }
@@ -65,31 +65,33 @@ async function handleClick() {
   //替换变量值
   let opertionParameter = JSON.stringify(props.operationdata.parameterList);
   let contextMap = new Map();
-  console.log('props.formData:' + JSON.stringify(props.formData))
-  let replaceParameters = replaceDynamicVar(props.formData, contextMap, opertionParameter)
+  if(props.formData) {
+    console.log('props.formData:' + JSON.stringify(props.formData))
+    let replaceParameters = replaceDynamicVar(props.formData, contextMap, opertionParameter)
 
-  //将replaceParameters转换为json对象
-  let jsonParameters = JSON.parse(replaceParameters);
-  //调用API
-  //根据事件类型，判断是调用API还是打开网页
-  if (props.operationtype === 'api') {
-    //根据接口编码查询接口信息
-    let interfaceParam = {"interfaceCode": props.operationdata.interfaceCode};
-    let interfaceInfo = await listInterfaceAll(interfaceParam);
-    if (interfaceInfo.code === 200) {
-      //调用接口
-      let apiParameter =convert2ApiJson(jsonParameters)
-      apiParameter["interfaceCode"]=props.operationdata.interfaceCode
-      let res = await doRequest(interfaceInfo.data[0], apiParameter);
-      if (res.code === 200) {
-        ElMessage.success(res.msg)
-      }else{
-        ElMessage.error(res.msg || '操作失败！')
+    //将replaceParameters转换为json对象
+    let jsonParameters = JSON.parse(replaceParameters);
+    //调用API
+    //根据事件类型，判断是调用API还是打开网页
+    if (props.operationtype === 'api') {
+      //根据接口编码查询接口信息
+      let interfaceParam = {"interfaceCode": props.operationdata.interfaceCode};
+      let interfaceInfo = await listInterfaceAll(interfaceParam);
+      if (interfaceInfo.code === 200) {
+        //调用接口
+        let apiParameter = convert2ApiJson(jsonParameters)
+        apiParameter["interfaceCode"] = props.operationdata.interfaceCode
+        let res = await doRequest(interfaceInfo.data[0], apiParameter);
+        if (res.code === 200) {
+          ElMessage.success(res.msg)
+        } else {
+          ElMessage.error(res.msg || '操作失败！')
+        }
       }
+    } else {
+      //TODO
+      //打开网页
     }
-  } else {
-    //TODO
-    //打开网页
   }
 }
 

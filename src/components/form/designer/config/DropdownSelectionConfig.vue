@@ -19,6 +19,21 @@
         <el-radio-button :label="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
+    <el-form-item prop="collapseTags" v-show="vFormSelectElem.attrs.multiple" label="是否折叠标签">
+      <el-radio-group v-model="vFormSelectElem.attrs.collapseTags">
+        <el-radio-button :label="true">是</el-radio-button>
+        <el-radio-button :label="false">否</el-radio-button>
+      </el-radio-group>
+    </el-form-item>
+    <el-form-item prop="collapseTagsTooltip" v-show="vFormSelectElem.attrs.multiple" label="是否折叠标签提示">
+      <el-radio-group v-model="vFormSelectElem.attrs.collapseTagsTooltip">
+        <el-radio-button :label="true">是</el-radio-button>
+        <el-radio-button :label="false">否</el-radio-button>
+      </el-radio-group>
+    </el-form-item>
+    <el-form-item prop="maxCollapseTags" v-show="vFormSelectElem.attrs.multiple" label="最大折叠标签数量">
+      <el-input-number v-model="vFormSelectElem.attrs.maxCollapseTags" :min="1"  />
+    </el-form-item>
     <el-form-item prop="optionsSource" label="选项来源">
       <el-radio-group v-model="vFormSelectElem.attrs.optionsSource">
         <el-radio-button label="input">手工录入</el-radio-button>
@@ -27,11 +42,11 @@
     </el-form-item>
 
 
-    <el-form-item  label="手工录入选项" v-show="vFormSelectElem.attrs.optionsSource==='input'">
+    <el-form-item  label="" v-show="vFormSelectElem.attrs.optionsSource==='input'">
       <OptionTable  :options="vFormSelectElem.attrs.options"
                         @changeOptions="changeOptions"/>
     </el-form-item>
-    <el-form-item  label="选择系统字典" v-show="vFormSelectElem.attrs.optionsSource==='dict'">
+    <el-form-item  label="" v-show="vFormSelectElem.attrs.optionsSource==='dict'">
         <SelectDictType  :optionTypeId="vFormSelectElem.attrs.dictType"
                       @changeDictType="changeDictType"/>
     </el-form-item>
@@ -47,7 +62,7 @@
 
 <script lang="ts" setup>
 
-import {computed, inject, ref} from "vue";
+import {computed, inject, ref,onMounted} from "vue";
 import { vFormActiveElementKey } from "@/components/form/state.key";
 import OptionTable from    "@/components/common/table/optiontable/OptionTable.vue";
 import SelectDictType from    "@/components/common/selector/dict/SelectDictType.vue";
@@ -63,7 +78,9 @@ const mode = computed({
     }
   }
 })
-
+onMounted(()=>{
+  console.log('vFormSelectElem:'+JSON.stringify(vFormSelectElem.value.attrs))
+})
 /**
  * 更新选项列表
  * @param interfaceCode

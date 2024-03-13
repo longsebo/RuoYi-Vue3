@@ -162,7 +162,7 @@
 
      <!-- 页面设计维护--->
      <el-dialog title="页面设计维护" v-model="pageDesignOpen" :fullscreen="true"  @close="pageDesignOpen=false" append-to-body>
-       <FormDesigner name="UPDATE" :pageId="pageId" />
+       <FormDesigner name="UPDATE" :pageInfo="pageInfo" />
      </el-dialog>
      <!-- 引用接口维护-->
      <el-dialog title="引用接口维护" v-model="pageInterfaceOpen" width="80%" height="95vh" @close="pageInterfaceOpen=false" append-to-body>
@@ -204,10 +204,10 @@ const pageCode =ref("")
 const interfaceIcon = useIcon("ali_connect")
 const pageDesignIcon = useIcon("ali_pagedesign")
 const parameterIcon = useIcon('ali_parameter')
-const pageId= ref("");
+
 const businessFunctionName = ref("");
 const businessFunctionOptions = ref(undefined);
-
+const pageInfo=ref({})
 
 
 const pageDesignOpen = ref(false)
@@ -337,7 +337,8 @@ function handleSelectionChange(selection) {
 function handlePageDesign(row) {
   if(row.id){
     pageCode.value = row.pageCode
-    pageId.value = row.id;
+    pageInfo.value = {pageId:row.id}
+    console.log('pageInfo:'+JSON.stringify(pageInfo.value))
     pageDesignOpen.value = true
   }
 }

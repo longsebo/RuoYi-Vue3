@@ -271,12 +271,16 @@ export const InputComponents: CandidateComponentConfig[] = [
       placeholder: '请选择',
       clearable: false,
       size: 'default',//有效选项 ：large' | 'default' | 'small
-      multiple: false,//是否多选
+      multiple:false,
       optionsSource:'input', //有效选择来源：input,dict
       options: [ // 每项内容是label,value
       ],
-      style:"width:100%",
+      style:'width:100%',
       dictType:'',//字段类型
+      disabled:false,
+      collapseTags:false,//多选是否折叠标签
+      collapseTagsTooltip:false,//折叠标签提示
+      maxCollapseTags:1//需要显示的 Tag 的最大数量 只有当 collapse-tags 设置为 true 时才会生效。
     }
   },
 ]
