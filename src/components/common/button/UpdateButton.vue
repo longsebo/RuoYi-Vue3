@@ -3,7 +3,7 @@
       type="success"
       plain
       icon="Edit"
-      :disabled="single"
+      :disabled="!single"
       @click="handleUpdate"
       v-hasPermi="['business:application:edit']"
   >{{ props.title}}</el-button>

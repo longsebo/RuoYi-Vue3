@@ -3,7 +3,8 @@
     <SearchForm/>
     <NormalListToolbar/>
 
-    <ElPlusTable/>
+<!--    <ElPlusTable/>-->
+    <AgGridTable :columnDefs="columnDefs" />
     <NormalListDialog/>
 
   </div>
@@ -14,10 +15,17 @@ import SearchForm from '@/components/common/form/searchform/SearchForm.vue';
 import ElPlusTable from '@/components/common/table/elplustable/ElPlusTable.vue';
 import NormalListToolbar from '@/components/common/toolbar/NormalListToolbar.vue';
 import NormalListDialog from   '@/components/common/dialog/NormalListDialog.vue';
-
+import AgGridTable from '@/components/common/table/aggrid/AgGridTable.vue'
 import bus  from "@/event/bus";
 import {onMounted} from "vue";
 import {executeQueryKey} from "../../../config/app.keys";
+const columnDefs = [
+  {headerName: 'id', field: 'id'}
+    , {headerName: '应用编码', field: 'applicationCode'}
+    , {headerName: '应用名称', field: 'applicationName'}
+    , {headerName: '备注', field: 'remark'}
+]
+
 onMounted(() => {
   bus.emit(executeQueryKey)
 })
