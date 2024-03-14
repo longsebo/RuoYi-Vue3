@@ -128,7 +128,6 @@
             <component
               :is="element.component"
               v-bind="element.attrs"
-              v-model:value="formData[element.id]"
             >
 
             </component>
@@ -211,13 +210,13 @@ import { vFormActiveElementKey } from "@/components/form/state.key";
 import { genId } from "@/components/form/designer/util/common";
 import { Plus, Delete, CopyDocument } from "@element-plus/icons-vue";
 import { findTreeItemParentById } from "@/utils/common";
-
+import RuoyiElSelect from "../components/select/RuoyiElSelect.vue";
 export default defineComponent({
   name: "NestedDragItem",
   components: {
     Draggable, ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElRow, ElCol,ElButton, SVGIcon, ElCheckboxGroup, ElCheckbox,
     UserSelectorInput, DeptSelectorInput, NumberInput, TextInput, SingleSelect, MultiSelect, UserSelect, DeptSelect,
-    Plus, Delete, CopyDocument, DatePicker, DateRangePicker, LabelField,NormalButton
+    Plus, Delete, CopyDocument, DatePicker, DateRangePicker, LabelField,NormalButton,RuoyiElSelect
   },
   props: {
     children: Array as PropType<ComponentConfig[]>

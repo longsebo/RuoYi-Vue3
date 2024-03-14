@@ -261,7 +261,7 @@ export const InputComponents: CandidateComponentConfig[] = [
   {
     id: genId(),
     icon: 'ali_dropdownselection',
-    component: 'el-select',
+    component: 'ruoyi-el-select',
     category: 'form-item',
     title: "下拉选择框",
     formItemAttrs: {
@@ -280,7 +280,8 @@ export const InputComponents: CandidateComponentConfig[] = [
       disabled:false,
       collapseTags:false,//多选是否折叠标签
       collapseTagsTooltip:false,//折叠标签提示
-      maxCollapseTags:1//需要显示的 Tag 的最大数量 只有当 collapse-tags 设置为 true 时才会生效。
+      maxCollapseTags:1,//需要显示的 Tag 的最大数量 只有当 collapse-tags 设置为 true 时才会生效。
+      value:''
     }
   },
 ]

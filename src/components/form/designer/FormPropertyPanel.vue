@@ -91,7 +91,7 @@ const configMap = {
   'el-col': markRaw(ColConfig),
   'label-field': markRaw(LabelFieldConfig),
   'normal-button':markRaw(NormalButtonConfig),
-  'el-select':markRaw(DropdownSelectConfig)
+  'ruoyi-el-select':markRaw(DropdownSelectConfig)
 }
 
 </script>

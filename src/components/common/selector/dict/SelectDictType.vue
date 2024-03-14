@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts" setup>
-import {onMounted, ref} from "vue";
+import { ref, watch} from "vue";
 import {getCurrentInstance} from 'vue';
 import {optionselect} from "@/api/system/dict/type"
 import {getDicts} from "@/api/system/dict/data"
@@ -39,13 +39,16 @@ interface Emits {
 }
 const emits = defineEmits<Emits>()
 
-onMounted(() => {
+watch(() => props.optionTypeId, (val) =>{
   optionTypeId.value = props.optionTypeId;
   //查询字典类型
   optionselect().then(res => {
     modelingOptionTypes.value = res.data;
+    changeDictType(optionTypeId.value)
   })
-})
+},{immediate: true})
+
+
 const changeDictType = (dictType: string) => {
   getDicts(dictType).then(res => {
     modelingOptionItems.value = res.data;

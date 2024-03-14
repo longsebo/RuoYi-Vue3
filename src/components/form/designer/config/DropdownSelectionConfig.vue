@@ -13,8 +13,8 @@
       </el-select>
     </el-form-item>
 
-    <el-form-item prop="multiple" label="是否多选">
-      <el-radio-group v-model="vFormSelectElem.attrs.multiple">
+    <el-form-item prop="multiple1" label="是否多选">
+      <el-radio-group v-model="multiple1" @change="changeMultiple">
         <el-radio-button :label="true">是</el-radio-button>
         <el-radio-button :label="false">否</el-radio-button>
       </el-radio-group>
@@ -67,7 +67,7 @@ import { vFormActiveElementKey } from "@/components/form/state.key";
 import OptionTable from    "@/components/common/table/optiontable/OptionTable.vue";
 import SelectDictType from    "@/components/common/selector/dict/SelectDictType.vue";
 const vFormSelectElem = inject(vFormActiveElementKey)
-
+const multiple1 =ref(false)
 const mode = computed({
   get: () => vFormSelectElem.value.attrs.mode ? [vFormSelectElem.value.attrs.mode] : [],
   set: v => {
@@ -79,7 +79,9 @@ const mode = computed({
   }
 })
 onMounted(()=>{
-  console.log('vFormSelectElem:'+JSON.stringify(vFormSelectElem.value.attrs))
+  //console.log('vFormSelectElem:'+JSON.stringify(vFormSelectElem.value))
+  multiple1.value = vFormSelectElem.value.attrs.multiple;
+  console.log('multiple1.value:'+multiple1.value)
 })
 /**
  * 更新选项列表
@@ -95,7 +97,9 @@ function changeOptions(options){
 function changeDictType(dictType){
   vFormSelectElem.value.attrs.dictType = dictType;
 }
-
+function changeMultiple(value) {
+ vFormSelectElem.value.attrs.multiple = value;
+}
 </script>
 
 <style scoped>

@@ -1,16 +1,16 @@
 <template>
   <el-row :gutter="10" class="mb8">
     <el-col :span="1.5">
-      <el-tooltip content="新增" effect="customized">
+       <el-tooltip content="新增" effect="customized">
       <el-button
           type="primary"
           circle
           icon="Plus"
           @click="handleAdd"/>
-      </el-tooltip>
+       </el-tooltip>
     </el-col>
     <el-col :span="1.5">
-      <el-tooltip content="删除" effect="customized">
+       <el-tooltip content="删除" effect="customized">
       <el-button
           type="danger"
           circle
@@ -18,17 +18,17 @@
           :disabled="multiple"
           @click="handleDelete"
       />
-      </el-tooltip>
+       </el-tooltip>
     </el-col>
     <el-col :span="1.5">
-      <el-tooltip content="确认" effect="customized">
+       <el-tooltip content="确认" effect="customized">
       <el-button
           type="primary"
           circle
           icon="SuccessFilled"
           @click="handleConfirm"
       />
-      </el-tooltip>
+       </el-tooltip>
     </el-col>
   </el-row>
   <el-table    :data="list"  @selection-change="handleSelectionChange">

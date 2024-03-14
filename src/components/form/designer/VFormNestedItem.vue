@@ -73,13 +73,13 @@ import DatePicker from "../components/date/DatePicker.vue"
 import DateRangePicker from "../components/date/DateRangePicker.vue"
 import LabelField from "@/components/form/components/display/LabelField.vue";
 import NormalButton from "../components/button/NormalButton.vue"
-
+import RuoyiElSelect from "../components/select/RuoyiElSelect.vue";
 export default defineComponent({
   name: 'VFormNestedItem',
   components: {
     ElFormItem, ElSelect, ElOption, ElInput, ElRow, ElCol,ElButton, NumberInput, UserSelectorInput, DeptSelectorInput, TextInput,
     SingleSelect, MultiSelect, UserSelect, DeptSelect, DatePicker, DateRangePicker, LabelField,
-    NormalButton
+    NormalButton,RuoyiElSelect
   },
   props: {
     item: {
