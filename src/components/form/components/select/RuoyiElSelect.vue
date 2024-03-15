@@ -1,19 +1,30 @@
 <template>
   <template v-if="cMode === 'design'">
-    <el-select v-model="val" disabled="true" v-bind="$attrs" >
+    <div>
+    <el-select v-if="props.multiple===false" v-model="singleValue" disabled="true" v-bind="props">
       <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
     </el-select>
+    <el-select v-if="props.multiple===true" v-model="multipleValue" disabled="true" v-bind="props">
+      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+    </el-select>
+    </div>
   </template>
   <template v-else-if="cMode === 'edit'">
-    <el-select v-model="val" v-bind="$attrs" @change="handleChange" >
+    <div>
+    <el-select v-if="props.multiple===false" v-model="singleValue" v-bind="props" @change="handleChange" >
       <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
     </el-select>
+    <el-select v-if="props.multiple===true" v-model="multipleValue" v-bind="props" @change="handleChange" >
+      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
+    </el-select>
+    </div>
   </template>
   <template v-else-if="cMode === 'read' ">
-    <span v-text="val"></span>
+    <span v-if="props.multiple===false" v-text="singleValue"></span>
+    <span v-if="props.multiple===true" v-text="multipleValue"></span>
   </template>
   <template v-else-if="cMode === 'hidden' ">
-    <span v-show="false" v-text="val"></span>
+    <span v-show="false" ></span>
   </template>
 </template>
 
@@ -30,6 +41,9 @@ interface Props {
   optionsSource?:string //有效选择来源：input,dict
   options?:[]
   dictType?:string
+  collapseTags?:boolean
+  collapseTagsTooltip?:boolean
+  maxCollapseTags?:number
 }
 
 interface Emits {
@@ -39,23 +53,12 @@ interface Emits {
 const props = defineProps<Props>()
 
 const emits = defineEmits<Emits>()
+const multipleValue = ref([])
+const singleValue = ref('')
+//console.log('$attrs:'+JSON.stringify(attrs))
 
 
-
-// const val = computed<string>({
-//   get: () => {
-//     if (props.value) {
-//       return props.value
-//     }
-//     if (props.defaultValue) {
-//       nextTick(() => emits('update:value', props.defaultValue))
-//       return props.defaultValue
-//     }
-//     return ''
-//   },
-//   set: v => emits('update:value', v)
-// })
-const val = ref('')
+// const val = ref(object)
 const formMode = inject(formModeKey)
 const cMode = computed<FormFieldMode>(() => {
   if (props.mode) {
@@ -67,6 +70,32 @@ const cMode = computed<FormFieldMode>(() => {
   console.log("cMode:edit")
   return "edit"
 })
+
+function setInitValue(){
+  if(props.multiple) {
+    if (Array.isArray(props.value)) {
+      multipleValue.value = props.value
+    }else {
+      //console.log('props.value:'+props.value+",is not array!"+props.value?.split(',') )
+      let temp =[]
+      if(props.value) {
+        let temp1 = props.value?.split(',') ;
+        for(let i=0;i<temp1.length;i++){
+          temp.push(temp1[i])
+        }
+      }
+      if (Array.isArray(temp)){
+        console.log('temp is array')
+      }else{
+        console.log('temp is not array:'+temp.toString())
+      }
+      multipleValue.value = temp
+    }
+  }else{
+    singleValue.value = props.value
+  }
+}
+
 const options=ref([])
 watch(props,async () => {
   //获取选项列表
@@ -86,12 +115,15 @@ watch(props,async () => {
     }
   }
   //获取模型值
-  if (props.value) {
-     val.value = props.value
-    }
+  setInitValue()
 },{deep:true,immediate:true})
 function handleChange(newValue){
-  emits('update:value', newValue)
+  console.log('newValue',newValue)
+  if(props.multiple) {
+    emits('update:value', newValue.toString())
+  }else{
+    emits('update:value', newValue)
+  }
 }
 </script>
 

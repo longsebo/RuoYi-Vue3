@@ -68,7 +68,7 @@ watch(()=>props.columnDefs,(val)=>{
     headerName: '操作',
     field: 'operation',
     width: 150,
-    cellRendererFramework: ButtonRenderer,
+    cellRenderer: ButtonRenderer,
   })
 },{immediate:true})
 

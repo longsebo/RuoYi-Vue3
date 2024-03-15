@@ -14,7 +14,7 @@
     </el-form-item>
 
     <el-form-item prop="multiple1" label="是否多选">
-      <el-radio-group v-model="multiple1" @change="changeMultiple">
+      <el-radio-group v-model="vFormSelectElem.attrs.multiple" >
         <el-radio-button :label="true">是</el-radio-button>
         <el-radio-button :label="false">否</el-radio-button>
       </el-radio-group>
@@ -97,9 +97,7 @@ function changeOptions(options){
 function changeDictType(dictType){
   vFormSelectElem.value.attrs.dictType = dictType;
 }
-function changeMultiple(value) {
- vFormSelectElem.value.attrs.multiple = value;
-}
+
 </script>
 
 <style scoped>
