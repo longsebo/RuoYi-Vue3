@@ -180,6 +180,21 @@
             >
 
             </component>
+          <div v-if="vFormActiveElement === element" class="drag-handle">
+            <s-v-g-icon class="drag-icon" name="Drag"/>
+          </div>
+          <div v-if="vFormActiveElement === element" class="field-id">
+            <span v-text="element.id"></span>
+          </div>
+          <div v-if="vFormActiveElement === element" class="widget-action">
+            <div title="复制" @click.stop="handleCopyElem">
+              <CopyDocument class="widget-action-icon"/>
+            </div>
+            <div @click.stop="handleDeleteElem" title="删除">
+              <Delete class="widget-action-icon" />
+            </div>
+
+          </div>
         </template>
       </div>
 
