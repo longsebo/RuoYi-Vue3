@@ -23,8 +23,9 @@ import {onMounted, ref, onUnmounted, watch} from "vue";
 import {
   queryListResultKey,executeQueryKey,totalKey,queryParamKey,loadingKey,tableRowSelectChangeKey
 } from "@/config/app.keys";
-import ElPlusTableDeleteButton from "@/components/common/button/ElPlusTableDeleteButton.vue";
-import ElPlusTableUpdateButton  from "@/components/common/button/ElPlusTableUpdateButton.vue";
+// import ElPlusTableDeleteButton from "@/components/common/button/ElPlusTableDeleteButton.vue";
+// import ElPlusTableUpdateButton  from "@/components/common/button/ElPlusTableUpdateButton.vue";
+import OperationButtonContainer from "./OperationButtonContainer.vue"
 import { AgGridVue } from "ag-grid-vue3";
 
 interface Props {
@@ -42,16 +43,7 @@ const queryParams = ref({
   pageSize: 10,
 })
 const columnDefs =ref([])
-const ButtonRenderer = {
-  template: `<div class="button-container">
-  <ElPlusTableUpdateButton title="修改" :row="scope.row"/>
-  <ElPlusTableDeleteButton title="删除" :row="scope.row" />
-  </div>`,
-  props: ['scope'],
-  setup(props, { attrs }) {
-    const { data, node } = attrs;
-  }
-}
+
 watch(()=>props.columnDefs,(val)=>{
   //columnDefs.value = props.columnDefs;
   console.log('props.columnDefs:'+JSON.stringify(props.columnDefs))
@@ -68,7 +60,9 @@ watch(()=>props.columnDefs,(val)=>{
     headerName: '操作',
     field: 'operation',
     width: 150,
-    cellRenderer: ButtonRenderer,
+    cellRenderer: OperationButtonContainer,
+    cellRendererParams: {
+    }
   })
 },{immediate:true})
 

@@ -1,5 +1,5 @@
 <template>
-  <el-button link type="primary" icon="Delete" @click="handleDelete()"
+  <el-button link type="primary" :icon="Delete" @click="handleDelete()"
              v-hasPermi="['business:application:remove']">{{props.title}}</el-button>
 </template>
 
@@ -8,6 +8,7 @@ import {defineProps, ref, watch} from 'vue';
 import {getCurrentInstance} from 'vue';
 import { delApplication } from "@/api/business/application";
 import {executeQueryKey} from "../../../config/app.keys";
+import { Delete } from '@element-plus/icons-vue'
 import bus from "@/event/bus";
 interface Props {
   title?: string,

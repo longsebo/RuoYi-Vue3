@@ -1,5 +1,5 @@
 <template>
-  <el-button link type="primary" icon="Edit" @click="handleUpdate()"
+  <el-button link type="primary" :icon="Edit" @click="handleUpdate()"
              v-hasPermi="['business:application:edit']">{{ props.title }}</el-button>
 </template>
 
@@ -9,6 +9,7 @@ import bus from '@/event/bus'
 import {resetFormKey, showDialogKey} from "../../../config/app.keys";
 import { getApplication } from "@/api/business/application";
 const {proxy} = getCurrentInstance();
+import { Edit } from '@element-plus/icons-vue'
 const id =ref(0)
 function handleUpdate() {
   bus.emit(resetFormKey);
@@ -21,13 +22,13 @@ interface Props {
   row?:object
 }
 const props = withDefaults(defineProps<Props>(), {
-  title: '删除'
+  title: '更新'
 })
-watch(props.row, (newValue, oldValue) => {
-  // console.log('row',JSON.stringify(props.row))
-  id.value = props.row.id
-  console.log('id',id.value)
-},{immediate: true})
+watch(props, (newValue, oldValue) => {
+  console.log('row',JSON.stringify(props))
+   id.value = props.row.id
+   console.log('id',id.value)
+},{immediate: true,deep: true})
 
 </script>
 
