@@ -16,7 +16,7 @@
 
 <script lang="ts" setup>
 import { ref, watch} from 'vue'
-import ComponentSelect from './ComponentSelect.vue'
+import ComponentSelect from './BindComponentSelect.vue'
   interface Props {
     selectVariable: string,
   }
