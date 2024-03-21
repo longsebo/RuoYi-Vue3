@@ -1,5 +1,5 @@
 <template>
-  <el-button type="primary" icon="Search" @click="handleQuery">{{props.title}}</el-button>
+  <el-button type="primary" :icon="Search" @click="handleQuery">{{props.title}}</el-button>
 </template>
 
 <script lang="ts" setup>

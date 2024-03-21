@@ -2,7 +2,7 @@
   <el-button
       type="danger"
       plain
-      icon="Delete"
+      :icon="Delete"
       :disabled="!multiple"
       @click="handleDelete"
       v-hasPermi="['business:application:remove']"

@@ -1,5 +1,5 @@
 <template>
-  <el-button icon="Refresh" @click="resetQuery">{{props.title }}</el-button>
+  <el-button :icon="Refresh" @click="resetQuery">{{props.title }}</el-button>
 </template>
 
 <script setup lang="ts">

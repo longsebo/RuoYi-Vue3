@@ -2,7 +2,7 @@
   <el-button
       type="primary"
       plain
-      icon="Plus"
+      :icon="Plus"
       @click="handleAdd"
       v-hasPermi="['business:application:add']"
   >新增</el-button>

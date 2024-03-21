@@ -2,7 +2,7 @@
   <el-button
       type="success"
       plain
-      icon="Edit"
+      :icon="Edit"
       :disabled="!single"
       @click="handleUpdate"
       v-hasPermi="['business:application:edit']"
