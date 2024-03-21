@@ -4,32 +4,32 @@
     :model="vFormSelectElem?.attrs"
     style="padding: 2px;"
   >
-    <el-form-item prop="gridOptions.checkboxSelection" label="是否有复选框">
-      <el-radio-group v-model="vFormSelectElem.attrs.gridOptions.checkboxSelection">
+    <el-form-item prop="checkboxSelection" label="是否有复选框">
+      <el-radio-group v-model="vFormSelectElem.attrs.checkboxSelection">
         <el-radio-button :label="true">是</el-radio-button>
         <el-radio-button :label="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
     <el-form-item prop="size" label="表头是否有复选框">
-      <el-radio-group v-model="vFormSelectElem.attrs.gridOptions.headerCheckboxSelection">
+      <el-radio-group v-model="vFormSelectElem.attrs.headerCheckboxSelection">
         <el-radio-button label="multiple">是</el-radio-button>
         <el-radio-button label="single">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
-    <el-form-item prop="gridOptions.rowSelection" label="是否多行选中">
-      <el-radio-group v-model="vFormSelectElem.attrs.gridOptions.rowSelection">
+    <el-form-item prop="rowSelection" label="是否多行选中">
+      <el-radio-group v-model="vFormSelectElem.attrs.rowSelection">
         <el-radio-button :label="true">是</el-radio-button>
         <el-radio-button :label="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
-    <el-form-item prop="gridOptions.rowHeight" label="行高">
-      <el-input v-model="vFormSelectElem.attrs.gridOptions.rowHeight"></el-input>
+    <el-form-item prop="rowHeight" label="行高">
+      <el-input v-model="vFormSelectElem.attrs.rowHeight"></el-input>
     </el-form-item>
 
-    <el-form-item prop="gridOptions.width" label="列宽">
-      <el-input v-model="vFormSelectElem.attrs.gridOptions.width"></el-input>
+    <el-form-item prop="width" label="列宽">
+      <el-input v-model="vFormSelectElem.attrs.width"></el-input>
     </el-form-item>
     <el-form-item prop="dataSourceType" label="列定义">
       <el-button :icon="columnDefineIcon" circle @click="showColumnDefineDlg" />
@@ -44,11 +44,14 @@
       <AgGridInputData
           v-model:rowData="vFormSelectElem.attrs.rowData" :columnDefs="vFormSelectElem.attrs.columnDefs" />
     </el-form-item>
-    <el-form-item  label="绑定组件" v-show="vFormSelectElem.attrs.operationtype==='page'">
+    <el-form-item  label="绑定数据来源组件" v-show="vFormSelectElem.attrs.dataSourceType==='bindcomponent'">
       <BindComponentInput
-          v-model:bindComponent="vFormSelectElem.attrs.bindComponent"  />
+          v-model:bindComponent="vFormSelectElem.attrs.bindComponent"  :multiple="false" />
     </el-form-item>
-
+    <el-form-item  label="选择行变化通知组件列表" >
+      <BindComponentInput
+          v-model:bindComponent="vFormSelectElem.attrs.rowSelectTriggerComponents" :multiple="true" />
+    </el-form-item>
 
     <el-form-item prop="mode" label="模式">
       <el-checkbox-group v-model="mode" :min="0" :max="1">
@@ -60,7 +63,7 @@
   </el-form>
    <el-dialog title="列定义" v-model="columnDefineVisible" width="800px" append-to-body>
      <AgGridColumnDefine
-        :columnDefs="vFormSelectElem.attrs.gridOptions.columnDefs" />
+        :columnDefs="vFormSelectElem.attrs.columnDefs" />
   </el-dialog>
 </template>
 

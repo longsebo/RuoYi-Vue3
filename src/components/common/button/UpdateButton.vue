@@ -19,7 +19,9 @@ import {onMounted, ref, watch} from "vue";
 
 interface Props {
   title?: string,
+  btId?:string//按钮本身id
   id?:number
+  bindDialog?:string//绑定弹窗的id，通常修改时弹出框显示
 }
 const props = withDefaults(defineProps<Props>(), {
   title: '新增',
@@ -34,7 +36,7 @@ watch(() => props.id, (newVal) =>{
 })
 onMounted(() => {
   id.value =props.id
-  bus.on(tableRowSelectChangeKey, (data) => {
+  bus.on(props.btId+"_"+tableRowSelectChangeKey, (data) => {
     if(data.ids.length>0) {
       id.value = data.ids[0]
       single.value = data.single
@@ -44,11 +46,11 @@ onMounted(() => {
 })
 /** 更新按钮操作 */
 function handleUpdate() {
-  bus.emit(resetFormKey);
+  bus.emit(props.bindDialog+"_"+resetFormKey);
 
   getApplication(id.value).then(response => {
     form.value = response.data;
-    bus.emit(showDialogKey, {show:true,title:"修改应用定义",form:form.value});
+    bus.emit(props.bindDialog+"_"+showDialogKey, {show:true,title:"修改应用定义",form:form.value});
   });
 
 }

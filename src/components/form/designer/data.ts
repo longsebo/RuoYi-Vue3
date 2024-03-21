@@ -294,13 +294,12 @@ export const InputComponents: CandidateComponentConfig[] = [
       label: "",
     },
     attrs: {
-      gridOptions: { //表格全局配置
+      //表格全局配置
         checkboxSelection: true, //设置数据复选框
         headerCheckboxSelection: true,  //表头是否也显示复选框，用于全选反选用
         rowSelection: 'multiple', //设置多行选中 ，若是single
         rowHeight:100,//行高
         width:100,//列宽
-      },
       columnDefs: [ //表格列配置
         {
           headerName: "列1",//显示的列名称
@@ -336,6 +335,7 @@ export const InputComponents: CandidateComponentConfig[] = [
       dataSourceType:'',//数据源类型：input(手工录入),bindcomponent(绑定组件)
       rowData:[],//行数据
       bindComponent:'',//绑定组件,通常为查询按钮，用于按钮查询数据后，通知表格更新数据
+      rowSelectTriggerComponents:[],//行选择触发组件，通知组件进行处理
     }
   },
 ]

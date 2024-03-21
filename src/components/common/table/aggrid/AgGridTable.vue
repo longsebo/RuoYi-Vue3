@@ -1,9 +1,8 @@
 <template>
-  <ag-grid-vue style="height: 300px; width: 100%"
-               class="ag-theme-balham"
-               :columnDefs="columnDefs" :rowData="applicationList"
+  <ag-grid-vue class="ag-theme-balham"
+               v-bind="props"
+               :rowData="rowData"
                @rowSelected="handleSelectionChange"
-               rowSelection="multiple"
   >
   </ag-grid-vue>
 
@@ -23,16 +22,25 @@ import {onMounted, ref, onUnmounted, watch} from "vue";
 import {
   queryListResultKey,executeQueryKey,totalKey,queryParamKey,loadingKey,tableRowSelectChangeKey
 } from "@/config/app.keys";
-// import ElPlusTableDeleteButton from "@/components/common/button/ElPlusTableDeleteButton.vue";
-// import ElPlusTableUpdateButton  from "@/components/common/button/ElPlusTableUpdateButton.vue";
-import OperationButtonContainer from "./OperationButtonContainer.vue"
 import { AgGridVue } from "ag-grid-vue3";
 
 interface Props {
+  checkboxSelection?:boolean //设置数据复选框
+  headerCheckboxSelection?:boolean  //表头是否也显示复选框，用于全选反选用
+  rowSelection?: string //设置多行选中 ，若是single
+  rowHeight?:number//行高
+  width?:number//列宽
   columnDefs:object
+  style?:string
+  dataSourceType?:string//数据源类型：input(手工录入),bindcomponent(绑定组件)
+  rowData?:object//行数据
+  bindComponent?:string
+  rowSelectTriggerComponents?:array//行选择触发组件，通知组件进行处理
 }
+
 const props = defineProps<Props>()
-const applicationList = ref([]);
+
+const rowData = ref([]);
 const total = ref(0);
 const loading = ref(false)
 const ids=ref([])
@@ -44,58 +52,54 @@ const queryParams = ref({
 })
 const columnDefs =ref([])
 
-watch(()=>props.columnDefs,(val)=>{
-  //columnDefs.value = props.columnDefs;
-  console.log('props.columnDefs:'+JSON.stringify(props.columnDefs))
-  //循环列，如果是id,则前面添加checkbox
-  for(let i=0;i<props.columnDefs.length;i++){
-    let item = props.columnDefs[i]
-    if(props.columnDefs[i].field.toLowerCase() === 'id'){
-      item.checkboxSelection = true;
-    }
-    columnDefs.value.push(item)
+watch(()=>props.dataSourceType,(val)=>{
+  //手工录入数据
+  if(val==='input'){
+      rowData.value = props.rowData
+  }else {
+    //监控数据变化
+    let prefix=getBusKeyPrefix();
+    bus.on(prefix+queryListResultKey,(data) =>{
+      rowData.value = data;
+    })
+    bus.on(prefix+totalKey,(data) =>{
+      total.value = data;
+    })
+    bus.on(prefix+queryParamKey,(data) =>{
+      console.log('queryParamKey:'+JSON.stringify(data.value));
+      queryParams.value = data.value;
+    })
+    bus.on(prefix+loadingKey,(data) =>{
+      loading.value = data;
+    })
   }
-  //后面添加两个按钮
-  columnDefs.value.push({
-    headerName: '操作',
-    field: 'operation',
-    width: 150,
-    cellRenderer: OperationButtonContainer,
-    cellRendererParams: {
-    }
-  })
 },{immediate:true})
 
-onMounted(() => {
-  bus.on(queryListResultKey,(data) =>{
-    applicationList.value = data;
-  })
-  bus.on(totalKey,(data) =>{
-    total.value = data;
-  })
-  bus.on(queryParamKey,(data) =>{
-    console.log('queryParamKey:'+JSON.stringify(data.value));
-    queryParams.value = data.value;
-  })
-  bus.on(loadingKey,(data) =>{
-      loading.value = data;
-  })
+/**
+ * 获取bus监控key前缀
+ */
+function getBusKeyPrefix(){
+  return props.bindComponent+"_"
+}
+
+onMounted(() =>{
+  bus.emit(getBusKeyPrefix()+executeQueryKey,queryParams.value);
 })
 onUnmounted(() =>{
-  bus.off(queryListResultKey);
-  bus.off(totalKey);
-  bus.off(queryParamKey);
-  bus.off(loadingKey);
+  //如果绑定了组件，则撤销监控
+  if(props.dataSourceType==='bindcomponent') {
+    let prefix = getBusKeyPrefix();
+    bus.off(prefix + queryListResultKey);
+    bus.off(prefix + totalKey);
+    bus.off(prefix + queryParamKey);
+    bus.off(prefix + loadingKey);
+  }
 })
 function getList() {
-  bus.emit(executeQueryKey);
+  let prefix = getBusKeyPrefix();
+  bus.emit(prefix+executeQueryKey);
 }
-function handleUpdate(row: any) {
-  console.log(row);
-}
-function handleDelete(row: any) {
-  console.log(row);
-}
+
 // 多选框选中数据
 function handleSelectionChange(event) {
   // ids.value = selection.map(item => item.id);
@@ -121,8 +125,10 @@ function handleSelectionChange(event) {
   }
   single.value  = (ids.value.length==1)
   multiple.value = (ids.value.length>1)
-
-  bus.emit(tableRowSelectChangeKey,{ids:ids.value,single:single.value,multiple:multiple.value})
+  for(let item in props.rowSelectTriggerComponents) {
+    let prefix = item+"_"
+    bus.emit(prefix+tableRowSelectChangeKey, {ids: ids.value, single: single.value, multiple: multiple.value})
+  }
 }
 
 </script>

@@ -24,34 +24,43 @@
 <script lang="ts" setup>
 import {onMounted, ref,onUnmounted} from "vue";
 import { getCurrentInstance } from 'vue';
-import { showDialogKey,validateFormKey } from "@/config/app.keys";
+import { showDialogKey,validateFormKey,resetFormKey } from "@/config/app.keys";
 import bus  from "@/event/bus";
 import ConfirmButton  from "@/components/common/button/ConfirmButton.vue";
- const { proxy } = getCurrentInstance();
- const open = ref(false)
- const form= ref({})
- const title = ref('')
- const rules= ref ({})
+const { proxy } = getCurrentInstance();
+const open = ref(false)
+const form= ref({})
+const title = ref('')
+const rules= ref ({})
+interface Props {
+  id?:number//对话框本身id
+}
+const props = withDefaults(defineProps<Props>(), {
+  id:0
+})
  // 取消按钮
  function cancel() {
    open.value = false;
    reset();
  }
 onMounted(() => {
-  bus.on(showDialogKey, (data) => {
+  bus.on(props.id+"_"+showDialogKey, (data) => {
     title.value = data.title;
     form.value = data.form;
     open.value = data.show;
   })
-  bus.on(validateFormKey,(callBackFun)=>{
+  bus.on(props.id+"_"+validateFormKey,(callBackFun)=>{
     proxy.$refs["applicationRef"].validate(valid => {
       callBackFun(valid, form)
     })
   })
+  bus.on(props.id+"_"+resetFormKey, () => {
+    reset();
+  })
 })
 onUnmounted(() => {
-  bus.off(showDialogKey)
-  bus.off(validateFormKey)
+  bus.off(props.id+"_"+showDialogKey)
+  bus.off(props.id+"_"+validateFormKey)
 })
  // 表单重置
  function reset() {
