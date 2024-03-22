@@ -1,17 +1,29 @@
 <template>
   <div>
-  <el-table
-      :data="componentTreeData"
-      style="width: 100%; margin-bottom: 20px"
-      row-key="id"
-      border
-      default-expand-all
-      @row-click  ="handleRowClick"
+    <el-table v-if="!props.multiple"
+        :data="componentTreeData"
+        style="width: 100%; margin-bottom: 20px"
+        row-key="id"
+        border
+        highlight-current-row
+        default-expand-all
+        @current-change  ="handleRowClick"
+      >
+      <el-table-column prop="label" label="字段名称(组件名称)"  />
+      <el-table-column prop="component" label="组件类型"  :formatter="formatComponentType" />
+    </el-table>
+    <el-table v-if="props.multiple"
+              :data="componentTreeData"
+              style="width: 100%; margin-bottom: 20px"
+              row-key="id"
+              border
+              default-expand-all
+              @selection-change  ="handleRowClick"
     >
-
-    <el-table-column prop="label" label="字段名称(组件名称)"  />
-    <el-table-column prop="component" label="组件类型"  :formatter="formatComponentType" />
-  </el-table>
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column prop="label" label="字段名称(组件名称)"  />
+      <el-table-column prop="component" label="组件类型"  :formatter="formatComponentType" />
+    </el-table>
     <el-button type="primary" @click="handleConfirm">确定</el-button>
     <el-button type="success" @click="handleCancel">取消</el-button>
   </div>
@@ -29,9 +41,14 @@ interface Emits {
   (e: 'cancel'): void
 }
 
+interface Props {
+  multiple?:boolean
+}
+
+const props = defineProps<Props>()
 
 const emits = defineEmits<Emits>()
-
+const ids=ref([])
 const componentTreeData=ref([]);
 const selectedId=ref('');
 watch(() => formScheme, (val) => {
@@ -69,13 +86,20 @@ function handleRowClick(row:any){
   selectedId.value = row.id;
   console.log('handleRowClick:'+selectedId.value)
 }
-
+// 多选框选中数据
+function handleSelectionChange(selection) {
+  ids.value = selection.map(item => item.id);
+}
 /**
  *  单击确认按钮
  */
 function handleConfirm() {
   console.log('handleConfirm:'+ selectedId.value)
-  emits('change', selectedId.value)
+  if(!props.multiple) {
+    emits('change', selectedId.value)
+  }else{
+    emits('change', ids.value.toString())
+  }
 }
 
 /**

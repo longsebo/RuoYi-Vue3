@@ -22,7 +22,7 @@
 
 <script lang="ts" setup>
 import {getCurrentInstance, ref, watch} from "vue";
-import ComponentInput from "@/components/common/selector/component/BindComponentInput.vue";
+import ComponentInput from "@/components/common/selector/component/ComponentInput.vue";
 const { proxy } = getCurrentInstance();
 const { parameter_type } = proxy.useDict("parameter_type");
 const currentRow = ref({})

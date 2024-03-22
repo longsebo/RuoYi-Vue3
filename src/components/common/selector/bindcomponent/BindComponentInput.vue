@@ -1,4 +1,5 @@
 <template>
+  <div>
   <div class="user-selector-input">
     <el-tooltip
         　　　　placement="top"
@@ -6,42 +7,44 @@
         　　　  content="请双击选择组件"
         　　　　:disabled="isShowTooltip"
         　　　　>
-      <el-input v-model="selectVariable" style="width:240px;" @dblclick="onClick" @change="changeInputVariable" />
+      <el-input v-model="bindComponent" readonly style="width:240px;" @dblclick="onClick"  />
     </el-tooltip>
   </div>
   <el-dialog title="选择组件" v-model="open" width="70%" height="95vh" append-to-body>
-    <ComponentSelect  @change="changeVariable" @cancel="open = false"/>
+    <ComponentSelect  @change="changeComponent" @cancel="open = false" :multiple="props.multiple"/>
   </el-dialog>
+  </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, watch} from 'vue'
 import ComponentSelect from './BindComponentSelect.vue'
   interface Props {
-    selectVariable: string,
+    bindComponent: string,
+    multiple?:boolean
   }
   interface Emits {
-    (e: 'change',selectVariable:string): void
+    (e: 'update:change',bindComponent:string): void
   }
   const props = defineProps<Props>()
   const open = ref(false)
   const emits = defineEmits<Emits>()
-  const selectVariable = ref('')
+  const bindComponent = ref('')
   const isShowTooltip =ref(false)
-  watch(() => props.selectVariable,() => {
-    selectVariable.value = props.selectVariable
-    console.log('BindComponentInput.vue watch selectVariable:'+props.selectVariable)
+  watch(() => props.bindComponent,() => {
+      bindComponent.value = props.bindComponent.toString()
+    console.log('BindComponentInput.vue watch bindComponent:'+props.bindComponent)
   }, { immediate: true })
   function onClick() {
     open.value = true;
   }
-  function changeVariable(variable: string) {
+  function changeComponent(variable) {
     open.value = false;
-    emits('change', "${"+variable+"}")
-  }
-  function changeInputVariable(variable: string) {
-    emits('change', variable)
-    //selectVariable.value = variable
+    if(props.multiple) {
+      emits('update:change', variable.toString())
+    }else{
+      emits('update:change', variable)
+    }
   }
 </script>
 

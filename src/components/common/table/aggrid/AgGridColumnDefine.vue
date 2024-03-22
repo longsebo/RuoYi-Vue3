@@ -1,4 +1,5 @@
 <template>
+  <div>
   <el-row :gutter="10" class="mb8">
     <el-col :span="1.5">
       <el-button
@@ -32,6 +33,7 @@
                :rowData="rowData"
                @rowSelected="handleSelectionChange"
   ></ag-grid-vue>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -39,9 +41,11 @@ import {ref, watch} from "vue";
 import {getCurrentInstance} from 'vue';
 import {Plus,Delete,Save} from "@element-plus/icons-vue";
 import { useIcon } from "@/components/common/util";
-import { PropType } from 'vue';
 const {proxy} = getCurrentInstance();
 const SaveIcon = useIcon('ali_save')
+import { AgGridVue } from "ag-grid-vue3";
+import AgGridSelect from "./AgGridSelect.vue";
+const multiple =ref(false)
 interface Emits {
   (e: 'update:columnDefs', v: any): void
 }
@@ -76,12 +80,45 @@ interface Props {
   columnDefs?:Column[]
 }
 const props = defineProps<Props>()
-
+const columnDefs =ref([])
 const rowData = ref([])
 watch(() => props.columnDefs, (newVal) =>{
   //将props的columnDefs转换为rowData
   rowData.value = props.columnDefs
+  //循环将props的columnDefs转换为columnDefs
+  columnDefs.value = makeColumnDefs()
+
 })
+function makeColumnDefs() {
+  let returnVal = [];
+  let columnDef ={
+    field: 'headerName',
+    headerName: '显示名称',
+    editable:true,
+    cellEditor:'text'
+  }
+  returnVal.push(columnDef)
+  columnDef ={
+    field: 'field',
+    headerName: '字段名称',
+    editable:true,
+    cellEditor:'text'
+  }
+  returnVal.push(columnDef)
+  columnDef = {
+    field: 'editable',
+    headerName:'是否可编辑',
+    cellRenderer:AgGridSelect,
+    cellRendererParams: {
+      options:{
+
+      }
+    }
+  }
+  returnVal.push(columnDef)
+  return returnVal;
+
+}
 function handleAdd(){
   rowData.value.push({})
 }
@@ -93,7 +130,7 @@ function handleDelete(){
 }
 function  handleSave(){
   //保存操作
-  emits('update:columnDefs', newVal)
+  emits('update:columnDefs', rowData.value)
 }
 
 const ids = ref([])

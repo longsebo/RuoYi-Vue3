@@ -46,11 +46,11 @@
     </el-form-item>
     <el-form-item  label="绑定数据来源组件" v-show="vFormSelectElem.attrs.dataSourceType==='bindcomponent'">
       <BindComponentInput
-          v-model:bindComponent="vFormSelectElem.attrs.bindComponent"  :multiple="false" />
+          :bindComponent="vFormSelectElem.attrs.bindComponent"  :multiple="false" @change="changeBindComponent" />
     </el-form-item>
     <el-form-item  label="选择行变化通知组件列表" >
       <BindComponentInput
-          v-model:bindComponent="vFormSelectElem.attrs.rowSelectTriggerComponents" :multiple="true" />
+          :bindComponent="rowSelectTriggerComponents" :multiple="true" @change="changeRowsSelectTriggerComponents" />
     </el-form-item>
 
     <el-form-item prop="mode" label="模式">
@@ -76,11 +76,14 @@ import { vFormActiveElementKey } from "@/components/form/state.key";
 import AgGridColumnDefine from    "@/components/common/table/aggrid/AgGridColumnDefine.vue";
 import BindComponentInput from    "@/components/common/selector/bindcomponent/BindComponentInput.vue";
 import AgGridInputData from    "@/components/common/table/aggrid/AgGridInputData.vue";
-import {useIcon} from "../../../components/common/util";
+import {useIcon} from "@/components/common/util";
 const vFormSelectElem = inject(vFormActiveElementKey)
 const columnDefineIcon  = useIcon('ali_columndef')
 const columnDefineVisible = ref(false)
+const rowSelectTriggerComponents = ref('')
 //console.log('inject vFormSelectElem', JSON.stringify(vFormSelectElem.value.attrs.operationdata.parameterList));
+
+rowSelectTriggerComponents.value = vFormSelectElem.value.attrs.rowSelectTriggerComponents.toString()
 const mode = computed({
   get: () => vFormSelectElem.value.attrs.mode ? [vFormSelectElem.value.attrs.mode] : [],
   set: v => {
@@ -99,6 +102,23 @@ const mode = computed({
 function showColumnDefineDlg() {
   columnDefineVisible.value = true;
 
+}
+
+/**
+ * 回调绑定选择触发组件
+ * @param val
+ */
+function changeRowsSelectTriggerComponents(val:string ){
+  //将字符串
+  vFormSelectElem.value.attrs.rowSelectTriggerComponents = val.split(',')
+}
+
+/**
+ * 回调绑定组件
+ * @param val
+ */
+function changeBindComponent(val:string ){
+  vFormSelectElem.value.attrs.bindComponent = val
 }
 </script>
 

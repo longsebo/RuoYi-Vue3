@@ -72,6 +72,7 @@ import LabelField from "@/components/form/components/display/LabelField.vue";
 import LabelFieldConfig from "@/components/form/designer/config/LabelFieldConfig.vue";
 import NormalButtonConfig from "@/components/form/designer/config/NormalButtonConfig.vue";
 import DropdownSelectConfig from "@/components/form/designer/config/DropdownSelectionConfig.vue";
+import AgGridConfig from  "@/components/form/designer/config/AgGridConfig.vue";
 
 const vFormSelectElem = inject(vFormActiveElementKey)
 
@@ -91,7 +92,8 @@ const configMap = {
   'el-col': markRaw(ColConfig),
   'label-field': markRaw(LabelFieldConfig),
   'normal-button':markRaw(NormalButtonConfig),
-  'ruoyi-el-select':markRaw(DropdownSelectConfig)
+  'ruoyi-el-select':markRaw(DropdownSelectConfig),
+  'ruoyi-ag-grid':markRaw(AgGridConfig),
 }
 
 </script>
