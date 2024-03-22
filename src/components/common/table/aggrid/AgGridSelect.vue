@@ -16,20 +16,19 @@ import {ref, watch} from "vue";
 
 
 interface Props {
-  params?:object
-  value?:  string
-  multiple?:boolean
-  options?:[]
-  collapseTags?:boolean
-  collapseTagsTooltip?:boolean
-  maxCollapseTags?:number
+  params?:object;
+  value?:string;
+  multiple?:boolean;
+  options?:[];
+  collapseTags?:boolean;
+  collapseTagsTooltip?:boolean;
+  maxCollapseTags?:number;
 }
 
 interface Emits {
   (e: 'update:value', v: string): void
 }
 
-const props = defineProps<Props>()
 
 const emits = defineEmits<Emits>()
 const multipleValue = ref([])

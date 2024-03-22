@@ -105,17 +105,259 @@ function makeColumnDefs() {
     cellEditor:'text'
   }
   returnVal.push(columnDef)
-  columnDef = {
+  let columnDef1 = {
     field: 'editable',
-    headerName:'是否可编辑',
+    headerName:'是否编辑',
     cellRenderer:AgGridSelect,
     cellRendererParams: {
-      options:{
-
-      }
+      field:'editable',
+      options:[{
+          label:'是',
+          value:true
+      },{ label:'否',
+          value:false}]
     }
   }
+  returnVal.push(columnDef1)
+  columnDef1 = {
+    field: 'sortable',
+    headerName:'是否排序',
+    cellRenderer:AgGridSelect,
+    cellRendererParams: {
+      field:'sortable',
+      options:[{
+        label:'是',
+        value:true
+      },{ label:'否',
+        value:false}]
+    }
+  }
+  returnVal.push(columnDef1)
+  //----
+  columnDef1 = {
+    field: 'filter',
+    headerName:'是否过滤',
+    cellRenderer:AgGridSelect,
+    cellRendererParams: {
+      field:'filter',
+      options:[{
+        label:'是',
+        value:true
+      },{ label:'否',
+        value:false}]
+    }
+  }
+  returnVal.push(columnDef1)
+  columnDef1 = {
+    field: 'resizable',
+    headerName:'是否调整大小',
+    cellRenderer:AgGridSelect,
+    cellRendererParams: {
+      field:'resizable',
+      options:[{
+        label:'是',
+        value:true
+      },{ label:'否',
+        value:false}]
+    }
+  }
+  returnVal.push(columnDef1)
+  columnDef1 = {
+    field: 'checkboxSelection',
+    headerName:'是否设置数据复选框',
+    cellRenderer:AgGridSelect,
+    cellRendererParams: {
+      field:'checkboxSelection',
+      options:[{
+        label:'是',
+        value:true
+      },{ label:'否',
+        value:false}]
+    }
+  }
+  returnVal.push(columnDef1)
+  columnDef1 = {
+    field: 'headerCheckboxSelection',
+    headerName:'表头是否显示复选框',
+    cellRenderer:AgGridSelect,
+    cellRendererParams: {
+      field:'headerCheckboxSelection',
+      options:[{
+        label:'是',
+        value:true
+      },{ label:'否',
+        value:false}]
+    }
+  }
+  returnVal.push(columnDef1)
+  columnDef1 = {
+    field: 'headerCheckboxSelectionFilteredOnly',
+    headerName:'是否过滤后可见行可选',
+    cellRenderer:AgGridSelect,
+    cellRendererParams: {
+      field:'headerCheckboxSelectionFilteredOnly',
+      options:[{
+        label:'是',
+        value:true
+      },{ label:'否',
+        value:false}]
+    }
+  }
+  returnVal.push(columnDef1)
+  columnDef1 = {
+    field: 'lockPinned',
+    headerName:'是否冻结列',
+    cellRenderer:AgGridSelect,
+    cellRendererParams: {
+      field:'lockPinned',
+      options:[{
+        label:'是',
+        value:true
+      },{ label:'否',
+        value:false}]
+    }
+  }
+  returnVal.push(columnDef1)
+  let columnDef2 = {
+
+    field: 'pinned',
+    headerName:'是否固定列',
+    cellRenderer:AgGridSelect,
+    cellRendererParams: {
+      multiple:false,
+      field:'pinned',
+      options:[{
+        label:'固定左边',
+        value:'left'
+      },{ label:'固定右边',
+        value:'right'}]
+    }
+  }
+  returnVal.push(columnDef2)
+  columnDef1 = {
+    field: 'lockPosition',
+    headerName:'是否禁止拖动列',
+    cellRenderer:AgGridSelect,
+    cellRendererParams: {
+      field:'lockPosition',
+      options:[{
+        label:'是',
+        value:true
+      },{ label:'否',
+        value:false}]
+    }
+  }
+  returnVal.push(columnDef1)
+  columnDef1 = {
+    field: 'lockVisible',
+    headerName:'是否禁用通过菜单更改可见性',
+    cellRenderer:AgGridSelect,
+    cellRendererParams: {
+      field:'lockVisible',
+      options:[{
+        label:'是',
+        value:true
+      },{ label:'否',
+        value:false}]
+    }
+  }
+  returnVal.push(columnDef1)
+  columnDef ={
+    field: 'width',
+    headerName: '列宽',
+    editable:true,
+    cellEditor:'number'
+  }
   returnVal.push(columnDef)
+  columnDef ={
+    field: 'maxWidth',
+    headerName: '最大宽度',
+    editable:true,
+    cellEditor:'number'
+  }
+  returnVal.push(columnDef)
+  columnDef ={
+    field: 'minWidth',
+    headerName: '最小宽度',
+    editable:true,
+    cellEditor:'number'
+  }
+  returnVal.push(columnDef)
+  columnDef2 = {
+    field: 'cellEditor',
+    headerName:'单元格编辑器',
+    cellRenderer:AgGridSelect,
+    cellRendererParams: {
+      multiple:false,
+      field:'cellEditor',
+      options:[{
+        label:'文本编辑器',
+        value:'text'
+      },{ label:'选择框',
+        value:'select'},
+        {
+          label:'日期选择器',
+          value:'date'
+        },
+        {
+          label:'数字编辑器',
+          value:'number'
+        },
+        {
+          label:'组合框编辑器',
+          value:'richSelect'
+        },
+        {
+          label:'大组合框编辑器',
+          value:'largeSelect'
+        },{
+          label:'打开文本编辑器',
+          value:'bigSelect'
+        }]
+    }
+  }
+  returnVal.push(columnDef2)
+  columnDef ={
+    field: 'cellEditorParams',
+    headerName: '编辑框参数',
+    editable:true,
+    cellEditor:'text'
+  }
+  returnVal.push(columnDef)
+  columnDef ={
+    field: 'cellStyle',
+    headerName: '单元格css风格',
+    editable:true,
+    cellEditor:'text'
+  }
+  returnVal.push(columnDef)
+  columnDef1 = {
+    field: 'isCustomRenderer',
+    headerName:'是否自定义单元格渲染器',
+    cellRenderer:AgGridSelect,
+    cellRendererParams: {
+      field:'isCustomRenderer',
+      options:[{
+        label:'是',
+        value:true
+      },{ label:'否',
+        value:false}]
+    }
+  }
+  returnVal.push(columnDef1)
+  columnDef ={
+    field: 'cellRendererParams',
+    headerName: '自定义渲染器参数',
+    editable:true,
+    cellEditor:'text'
+  }
+  returnVal.push(columnDef)
+  let columnDef3 ={
+    field: 'cellRenderer',
+    headerName: '自定义渲染器组件名称',
+    hide:true
+  }
+  returnVal.push(columnDef3)
   return returnVal;
 
 }
