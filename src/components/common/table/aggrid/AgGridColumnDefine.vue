@@ -1,401 +1,441 @@
 <template>
-  <div>
-  <el-row :gutter="10" class="mb8">
-    <el-col :span="1.5">
-      <el-button
-          type="primary"
-          plain
-          :icon="Plus"
-          @click="handleAdd"
-      >新增</el-button>
-    </el-col>
-    <el-col :span="1.5">
-      <el-button
-          type="danger"
-          plain
-          :icon="Delete"
-          :disabled="!multiple"
-          @click="handleDelete"
-      >删除</el-button>
-    </el-col>
-    <el-col :span="1.5">
-      <el-button
-          type="danger"
-          plain
-          :icon="SaveIcon"
-          @click="handleSave"
-      >保存</el-button>
-    </el-col>
-  </el-row>
-  <ag-grid-vue style="height: 300px; width: 400px;"
-               class="ag-theme-balham"
-               :columnDefs="columnDefs"
-               :rowData="rowData"
-               @rowSelected="handleSelectionChange"
-  ></ag-grid-vue>
+  <div class="app-container">
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5">
+        <el-button
+            :icon="Plus"
+            plain
+            type="primary"
+            @click="handleAdd"
+        >新增
+        </el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+            :disabled="!multiple"
+            :icon="Delete"
+            plain
+            type="danger"
+            @click="handleDelete"
+        >删除
+        </el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+            plain
+            :icon="SaveIcon"
+            type="danger"
+            @click="handleSave"
+        >保存
+        </el-button>
+      </el-col>
+    </el-row>
+    <ag-grid-vue :columnDefs="columnDefs"
+                 :rowData="rowData"
+                 class="ag-theme-balham"
+                 style="height: 300px; width: 100%;"
+                 @rowSelected="handleSelectionChange"
+    ></ag-grid-vue>
   </div>
 </template>
 
-<script lang="ts" setup>
-import {ref, watch} from "vue";
+<script>
+import {defineComponent, ref, watch} from "vue";
 import {getCurrentInstance} from 'vue';
-import {Plus,Delete,Save} from "@element-plus/icons-vue";
-import { useIcon } from "@/components/common/util";
-const {proxy} = getCurrentInstance();
-const SaveIcon = useIcon('ali_save')
-import { AgGridVue } from "ag-grid-vue3";
+import {Plus, Delete} from "@element-plus/icons-vue";
+import {useIcon} from "@/components/common/util";
+
+import {AgGridVue} from "ag-grid-vue3";
+import {ElRow, ElCol, ElButton} from 'element-plus';
 import AgGridSelect from "./AgGridSelect.vue";
-const multiple =ref(false)
-interface Emits {
-  (e: 'update:columnDefs', v: any): void
-}
+import NestedDragItem from '@/components/form/designer/NestedDragItem.vue';
 
-const emits = defineEmits<Emits>()
-interface Column {
-  headerName: string
-  field: string
-  editable: boolean
-  sortable: boolean
-  filter: boolean
-  resizable: boolean//是否可调整列大小
-  checkboxSelection: boolean//设置数据复选框
-  headerCheckboxSelection: boolean//表头是否也显示复选框，用于全选反选用
-  headerCheckboxSelectionFilteredOnly: boolean//标题复选框选择将只选择筛选的项目
-  lockPinned: boolean//是否冻结列
-  pinned: boolean//是否固定列 'left' | 'right',true相当于left
-  lockPosition: boolean//禁止拖动列的位置
-  lockVisible: boolean//禁用通过菜单更改可见性
-  width: number//列宽
-  minWidth: number//最小列宽
-  maxWidth: number//
-  cellEditor: string//内置编辑器：文本编辑器（text）,选择框编辑器（select）,日期选择器（date）,数字编辑器（number）
-  //组合框编辑器（richSelect）,大组合框编辑器（largeSelect）,打开文本编辑器（bigSelect）
-  cellEditorParams: object
-  cellStyle: object
-  isCustomRenderer:boolean//是否自定义单元格渲染器
-  cellRenderer: string//当自定义渲染组件时，固定为NestedDragItem可以拖拽嵌套组件，可以往拖拽其他组件
-  cellRendererParams:object
-}
-interface Props {
-  columnDefs?:Column[]
-}
-const props = defineProps<Props>()
-const columnDefs =ref([])
-const rowData = ref([])
-watch(() => props.columnDefs, (newVal) =>{
-  //将props的columnDefs转换为rowData
-  rowData.value = props.columnDefs
-  //循环将props的columnDefs转换为columnDefs
-  columnDefs.value = makeColumnDefs()
+export default defineComponent({
+  components: {
+    AgGridVue,
+    NestedDragItem,
+    AgGridSelect,
+    ElRow,
+    ElCol,
+    ElButton,
+    Plus,
+    Delete
+  },
 
-})
-function makeColumnDefs() {
-  let returnVal = [];
-  let columnDef ={
-    field: 'headerName',
-    headerName: '显示名称',
-    editable:true,
-    cellEditor:'text'
-  }
-  returnVal.push(columnDef)
-  columnDef ={
-    field: 'field',
-    headerName: '字段名称',
-    editable:true,
-    cellEditor:'text'
-  }
-  returnVal.push(columnDef)
-  let columnDef1 = {
-    field: 'editable',
-    headerName:'是否编辑',
-    cellRenderer:AgGridSelect,
-    cellRendererParams: {
-      field:'editable',
-      options:[{
-          label:'是',
-          value:true
-      },{ label:'否',
-          value:false}]
+  props: {
+    columnDefs: {
+      type: Array,
+      default: () => [{
+        headerName: String,
+        field: String,
+        editable: Boolean,
+        sortable: Boolean,
+        filter: Boolean,
+        resizable: Boolean,//是否可调整列大小
+        checkboxSelection: Boolean,//设置数据复选框
+        headerCheckboxSelection: Boolean,//表头是否也显示复选框，用于全选反选用
+        headerCheckboxSelectionFilteredOnly: Boolean,//标题复选框选择将只选择筛选的项目
+        lockPinned: Boolean,//是否冻结列
+        pinned: Boolean,//是否固定列 'left' | 'right',true相当于left
+        lockPosition: Boolean,//禁止拖动列的位置
+        lockVisible: Boolean,//禁用通过菜单更改可见性
+        width: Number,//列宽
+        minWidth: Number,//最小列宽
+        maxWidth: Number,//
+        cellEditor: String,//内置编辑器：文本编辑器（text）,选择框编辑器（select）,日期选择器（date）,数字编辑器（Number）
+        //组合框编辑器（richSelect）,大组合框编辑器（largeSelect）,打开文本编辑器（bigSelect）
+        cellEditorParams: Object,
+        cellStyle: Object,
+        //isCustomRenderer:Boolean//是否自定义单元格渲染器
+        cellRenderer: String,//当自定义渲染组件时，固定为NestedDragItem可以拖拽嵌套组件，可以往拖拽其他组件
+        cellRendererParams: Object,
+      }]
     }
-  }
-  returnVal.push(columnDef1)
-  columnDef1 = {
-    field: 'sortable',
-    headerName:'是否排序',
-    cellRenderer:AgGridSelect,
-    cellRendererParams: {
-      field:'sortable',
-      options:[{
-        label:'是',
-        value:true
-      },{ label:'否',
-        value:false}]
-    }
-  }
-  returnVal.push(columnDef1)
-  //----
-  columnDef1 = {
-    field: 'filter',
-    headerName:'是否过滤',
-    cellRenderer:AgGridSelect,
-    cellRendererParams: {
-      field:'filter',
-      options:[{
-        label:'是',
-        value:true
-      },{ label:'否',
-        value:false}]
-    }
-  }
-  returnVal.push(columnDef1)
-  columnDef1 = {
-    field: 'resizable',
-    headerName:'是否调整大小',
-    cellRenderer:AgGridSelect,
-    cellRendererParams: {
-      field:'resizable',
-      options:[{
-        label:'是',
-        value:true
-      },{ label:'否',
-        value:false}]
-    }
-  }
-  returnVal.push(columnDef1)
-  columnDef1 = {
-    field: 'checkboxSelection',
-    headerName:'是否设置数据复选框',
-    cellRenderer:AgGridSelect,
-    cellRendererParams: {
-      field:'checkboxSelection',
-      options:[{
-        label:'是',
-        value:true
-      },{ label:'否',
-        value:false}]
-    }
-  }
-  returnVal.push(columnDef1)
-  columnDef1 = {
-    field: 'headerCheckboxSelection',
-    headerName:'表头是否显示复选框',
-    cellRenderer:AgGridSelect,
-    cellRendererParams: {
-      field:'headerCheckboxSelection',
-      options:[{
-        label:'是',
-        value:true
-      },{ label:'否',
-        value:false}]
-    }
-  }
-  returnVal.push(columnDef1)
-  columnDef1 = {
-    field: 'headerCheckboxSelectionFilteredOnly',
-    headerName:'是否过滤后可见行可选',
-    cellRenderer:AgGridSelect,
-    cellRendererParams: {
-      field:'headerCheckboxSelectionFilteredOnly',
-      options:[{
-        label:'是',
-        value:true
-      },{ label:'否',
-        value:false}]
-    }
-  }
-  returnVal.push(columnDef1)
-  columnDef1 = {
-    field: 'lockPinned',
-    headerName:'是否冻结列',
-    cellRenderer:AgGridSelect,
-    cellRendererParams: {
-      field:'lockPinned',
-      options:[{
-        label:'是',
-        value:true
-      },{ label:'否',
-        value:false}]
-    }
-  }
-  returnVal.push(columnDef1)
-  let columnDef2 = {
+  },
+  setup(props) {
+    const {proxy} = getCurrentInstance();
+    const SaveIcon = useIcon('ali_save')
+    const multiple = ref(false)
 
-    field: 'pinned',
-    headerName:'是否固定列',
-    cellRenderer:AgGridSelect,
-    cellRendererParams: {
-      multiple:false,
-      field:'pinned',
-      options:[{
-        label:'固定左边',
-        value:'left'
-      },{ label:'固定右边',
-        value:'right'}]
-    }
-  }
-  returnVal.push(columnDef2)
-  columnDef1 = {
-    field: 'lockPosition',
-    headerName:'是否禁止拖动列',
-    cellRenderer:AgGridSelect,
-    cellRendererParams: {
-      field:'lockPosition',
-      options:[{
-        label:'是',
-        value:true
-      },{ label:'否',
-        value:false}]
-    }
-  }
-  returnVal.push(columnDef1)
-  columnDef1 = {
-    field: 'lockVisible',
-    headerName:'是否禁用通过菜单更改可见性',
-    cellRenderer:AgGridSelect,
-    cellRendererParams: {
-      field:'lockVisible',
-      options:[{
-        label:'是',
-        value:true
-      },{ label:'否',
-        value:false}]
-    }
-  }
-  returnVal.push(columnDef1)
-  columnDef ={
-    field: 'width',
-    headerName: '列宽',
-    editable:true,
-    cellEditor:'number'
-  }
-  returnVal.push(columnDef)
-  columnDef ={
-    field: 'maxWidth',
-    headerName: '最大宽度',
-    editable:true,
-    cellEditor:'number'
-  }
-  returnVal.push(columnDef)
-  columnDef ={
-    field: 'minWidth',
-    headerName: '最小宽度',
-    editable:true,
-    cellEditor:'number'
-  }
-  returnVal.push(columnDef)
-  columnDef2 = {
-    field: 'cellEditor',
-    headerName:'单元格编辑器',
-    cellRenderer:AgGridSelect,
-    cellRendererParams: {
-      multiple:false,
-      field:'cellEditor',
-      options:[{
-        label:'文本编辑器',
-        value:'text'
-      },{ label:'选择框',
-        value:'select'},
-        {
-          label:'日期选择器',
-          value:'date'
-        },
-        {
-          label:'数字编辑器',
-          value:'number'
-        },
-        {
-          label:'组合框编辑器',
-          value:'richSelect'
-        },
-        {
-          label:'大组合框编辑器',
-          value:'largeSelect'
-        },{
-          label:'打开文本编辑器',
-          value:'bigSelect'
-        }]
-    }
-  }
-  returnVal.push(columnDef2)
-  columnDef ={
-    field: 'cellEditorParams',
-    headerName: '编辑框参数',
-    editable:true,
-    cellEditor:'text'
-  }
-  returnVal.push(columnDef)
-  columnDef ={
-    field: 'cellStyle',
-    headerName: '单元格css风格',
-    editable:true,
-    cellEditor:'text'
-  }
-  returnVal.push(columnDef)
-  columnDef1 = {
-    field: 'isCustomRenderer',
-    headerName:'是否自定义单元格渲染器',
-    cellRenderer:AgGridSelect,
-    cellRendererParams: {
-      field:'isCustomRenderer',
-      options:[{
-        label:'是',
-        value:true
-      },{ label:'否',
-        value:false}]
-    }
-  }
-  returnVal.push(columnDef1)
-  columnDef ={
-    field: 'cellRendererParams',
-    headerName: '自定义渲染器参数',
-    editable:true,
-    cellEditor:'text'
-  }
-  returnVal.push(columnDef)
-  let columnDef3 ={
-    field: 'cellRenderer',
-    headerName: '自定义渲染器组件名称',
-    hide:true
-  }
-  returnVal.push(columnDef3)
-  return returnVal;
+    const columnDefs = ref([])
+    const rowData = ref([])
+    watch(() => props.columnDefs, (newVal) => {
+      //将props的columnDefs转换为rowData
+      rowData.value = props.columnDefs
+      //循环将props的columnDefs转换为columnDefs
+      columnDefs.value = makeColumnDefs()
+      console.log('columnDefs.value:' + JSON.stringify(columnDefs.value))
+    }, {deep: true, immediate: true})
 
-}
-function handleAdd(){
-  rowData.value.push({})
-}
-function handleDelete(){
-  rowData.value = rowData.value.filter((item,index)=>{
-    return !ids.value.includes(item.id)
-  })
-  ids.value = []
-}
-function  handleSave(){
-  //保存操作
-  emits('update:columnDefs', rowData.value)
-}
-
-const ids = ref([])
-// 多选框选中数据
-function handleSelectionChange(event) {
-  if(event.node.selected){
-    // 处理选中该行的操作
-    //判断ids是否存在event.node.data.id,不存在加入
-    if(!ids.value.includes(event.node.data.id)) {
-      ids.value.push(event.node.data.id);
-    }
-  } else {
-    // 处理撤销选中该行的操作
-    //判断ids是否存在event.node.data.id,存在则删除
-    if(ids.value.includes(event.node.data.id)) {
-      const index = ids.value.indexOf(event.node.data.id);
-      if (index > -1) {
-        ids.value.splice(index, 1);
+    function makeColumnDefs() {
+      let returnVal = [];
+      let columnDef ={
+        field: 'headerName',
+        headerName: '显示名称',
+        editable:true,
+        cellEditor:'text'
       }
+      returnVal.push(columnDef)
+      columnDef ={
+        field: 'field',
+        headerName: '字段名称',
+        editable:true,
+        cellEditor:'text'
+      }
+      returnVal.push(columnDef)
+      let columnDef1 = {
+        field: 'editable',
+        headerName: '是否编辑',
+        cellRenderer: AgGridSelect,
+        cellRendererParams: {
+          field: 'editable',
+          options: [{
+            label: '是',
+            value: true
+          }, {
+            label: '否',
+            value: false
+          }]
+        }
+
+      }
+      returnVal.push(columnDef1)
+      columnDef1 = {
+        field: 'sortable',
+        headerName:'是否排序',
+        cellRenderer:AgGridSelect,
+        cellRendererParams: {
+          field:'sortable',
+          options:[{
+            label:'是',
+            value:true
+          },{ label:'否',
+            value:false}]
+        }
+      }
+      returnVal.push(columnDef1)
+      //----
+      columnDef1 = {
+        field: 'filter',
+        headerName:'是否过滤',
+        cellRenderer:AgGridSelect,
+        cellRendererParams: {
+          field:'filter',
+          options:[{
+            label:'是',
+            value:true
+          },{ label:'否',
+            value:false}]
+        }
+      }
+      returnVal.push(columnDef1)
+      columnDef1 = {
+        field: 'resizable',
+        headerName:'是否调整大小',
+        cellRenderer:AgGridSelect,
+        cellRendererParams: {
+          field:'resizable',
+          options:[{
+            label:'是',
+            value:true
+          },{ label:'否',
+            value:false}]
+        }
+      }
+      returnVal.push(columnDef1)
+      columnDef1 = {
+        field: 'checkboxSelection',
+        headerName:'是否设置数据复选框',
+        cellRenderer:AgGridSelect,
+        cellRendererParams: {
+          field:'checkboxSelection',
+          options:[{
+            label:'是',
+            value:true
+          },{ label:'否',
+            value:false}]
+        }
+      }
+      returnVal.push(columnDef1)
+      columnDef1 = {
+        field: 'headerCheckboxSelection',
+        headerName:'表头是否显示复选框',
+        cellRenderer:AgGridSelect,
+        cellRendererParams: {
+          field:'headerCheckboxSelection',
+          options:[{
+            label:'是',
+            value:true
+          },{ label:'否',
+            value:false}]
+        }
+      }
+      returnVal.push(columnDef1)
+      columnDef1 = {
+        field: 'headerCheckboxSelectionFilteredOnly',
+        headerName:'是否过滤后可见行可选',
+        cellRenderer:AgGridSelect,
+        cellRendererParams: {
+          field:'headerCheckboxSelectionFilteredOnly',
+          options:[{
+            label:'是',
+            value:true
+          },{ label:'否',
+            value:false}]
+        }
+      }
+      returnVal.push(columnDef1)
+      columnDef1 = {
+        field: 'lockPinned',
+        headerName:'是否冻结列',
+        cellRenderer:AgGridSelect,
+        cellRendererParams: {
+          field:'lockPinned',
+          options:[{
+            label:'是',
+            value:true
+          },{ label:'否',
+            value:false}]
+        }
+      }
+      returnVal.push(columnDef1)
+      let columnDef2 = {
+
+        field: 'pinned',
+        headerName:'是否固定列',
+        cellRenderer:AgGridSelect,
+        cellRendererParams: {
+          field:'pinned',
+          options:[{
+            label:'固定左边',
+            value:'left'
+          },{ label:'固定右边',
+            value:'right'}]
+        }
+      }
+      returnVal.push(columnDef2)
+      columnDef1 = {
+        field: 'lockPosition',
+        headerName:'是否禁止拖动列',
+        cellRenderer:AgGridSelect,
+        cellRendererParams: {
+          field:'lockPosition',
+          options:[{
+            label:'是',
+            value:true
+          },{ label:'否',
+            value:false}]
+        }
+      }
+      returnVal.push(columnDef1)
+      columnDef1 = {
+        field: 'lockVisible',
+        headerName:'是否禁用通过菜单更改可见性',
+        cellRenderer:AgGridSelect,
+        cellRendererParams: {
+          field:'lockVisible',
+          options:[{
+            label:'是',
+            value:true
+          },{ label:'否',
+            value:false}]
+        }
+      }
+      returnVal.push(columnDef1)
+      columnDef ={
+        field: 'width',
+        headerName: '列宽',
+        editable:true,
+        cellEditor:'number'
+      }
+      returnVal.push(columnDef)
+      columnDef ={
+        field: 'maxWidth',
+        headerName: '最大宽度',
+        editable:true,
+        cellEditor:'number'
+      }
+      returnVal.push(columnDef)
+      columnDef ={
+        field: 'minWidth',
+        headerName: '最小宽度',
+        editable:true,
+        cellEditor:'number'
+      }
+      returnVal.push(columnDef)
+      columnDef2 = {
+        field: 'cellEditor',
+        headerName:'单元格编辑器',
+        cellRenderer:AgGridSelect,
+        cellRendererParams: {
+          field:'cellEditor',
+          options:[{
+            label:'文本编辑器',
+            value:'text'
+          },{ label:'选择框',
+            value:'select'},
+            {
+              label:'日期选择器',
+              value:'date'
+            },
+            {
+              label:'数字编辑器',
+              value:'number'
+            },
+            {
+              label:'组合框编辑器',
+              value:'richSelect'
+            },
+            {
+              label:'大组合框编辑器',
+              value:'largeSelect'
+            },{
+              label:'打开文本编辑器',
+              value:'bigSelect'
+            }]
+        }
+      }
+      returnVal.push(columnDef2)
+      columnDef ={
+        field: 'cellEditorParams',
+        headerName: '编辑框参数',
+        editable:true,
+        cellEditor:'text'
+      }
+      returnVal.push(columnDef)
+      columnDef ={
+        field: 'cellStyle',
+        headerName: '单元格css风格',
+        editable:true,
+        cellEditor:'text'
+      }
+      returnVal.push(columnDef)
+      columnDef1 = {
+        field: 'isCustomRenderer',
+        headerName:'是否自定义单元格渲染器',
+        cellRenderer:AgGridSelect,
+        cellRendererParams: {
+          field:'isCustomRenderer',
+          options:[{
+            label:'是',
+            value:true
+          },{ label:'否',
+            value:false}]
+        }
+      }
+      returnVal.push(columnDef1)
+      columnDef ={
+        field: 'cellRendererParams',
+        headerName: '自定义渲染器参数',
+        editable:true,
+        cellEditor:'text'
+      }
+      returnVal.push(columnDef)
+      let columnDef3 ={
+        field: 'cellRenderer',
+        headerName: '自定义渲染器组件名称',
+        hide:true
+      }
+      returnVal.push(columnDef3)
+      return returnVal;
+
+    }
+
+    function handleAdd() {
+      rowData.value.push({})
+    }
+
+    function handleDelete() {
+      rowData.value = rowData.value.filter((item, index) => {
+        return !ids.value.includes(item.id)
+      })
+      ids.value = []
+    }
+
+    function handleSave() {
+      //保存操作
+      emits('update:columnDefs', rowData.value)
+    }
+
+    const ids = ref([])
+
+// 多选框选中数据
+    function handleSelectionChange(event) {
+      if (event.node.selected) {
+        // 处理选中该行的操作
+        //判断ids是否存在event.node.data.id,不存在加入
+        if (!ids.value.includes(event.node.data.id)) {
+          ids.value.push(event.node.data.id);
+        }
+      } else {
+        // 处理撤销选中该行的操作
+        //判断ids是否存在event.node.data.id,存在则删除
+        if (ids.value.includes(event.node.data.id)) {
+          const index = ids.value.indexOf(event.node.data.id);
+          if (index > -1) {
+            ids.value.splice(index, 1);
+          }
+        }
+      }
+      multiple.value = (ids.value.length > 1)
+    }
+
+    return {
+      ...props,
+      SaveIcon,
+      handleAdd,
+      handleSave,
+      handleDelete,
+      columnDefs,
+      rowData,
+      handleSelectionChange,
+      Plus,
+      Delete,
+      multiple
     }
   }
-  multiple.value = (ids.value.length>1)
-}
+
+});
 </script>
 
 <style scoped>

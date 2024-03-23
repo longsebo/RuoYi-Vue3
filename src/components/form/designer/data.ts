@@ -325,8 +325,8 @@ export const InputComponents: CandidateComponentConfig[] = [
             cellStyle: {
               'text-align': 'center',
             },
-            isCustomRenderer:false,//是否自定义单元格渲染器
-            cellRenderer: 'NestedDragItem',//当自定义渲染组件时，固定为NestedDragItem可以拖拽嵌套组件，可以往拖拽其他组件
+            // isCustomRenderer:false,//是否自定义单元格渲染器
+            cellRenderer: null,//当自定义渲染组件时，固定为NestedDragItem可以拖拽嵌套组件，可以往拖拽其他组件
             cellRendererParams: {
             },//渲染器参数
           }
