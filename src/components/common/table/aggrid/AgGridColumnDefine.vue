@@ -30,11 +30,12 @@
         </el-button>
       </el-col>
     </el-row>
-    <ag-grid-vue :columnDefs="columnDefs"
-                 :rowData="rowData"
+    <ag-grid-vue ref="agGrid" :columnDefs="columnDefs1"
+                 :rowData="rowDatas"
                  class="ag-theme-balham"
                  style="height: 300px; width: 100%;"
                  @rowSelected="handleSelectionChange"
+                 @grid-ready="onGridReady"
     ></ag-grid-vue>
   </div>
 </template>
@@ -97,16 +98,21 @@ export default defineComponent({
     const SaveIcon = useIcon('ali_save')
     const multiple = ref(false)
 
-    const columnDefs = ref([])
-    const rowData = ref([])
+    const columnDefs1 = ref([])
+    const rowDatas = ref([])
+    const gridApi=ref(null)
+    const  gridColumnApi=ref(null)
     watch(() => props.columnDefs, (newVal) => {
-      //将props的columnDefs转换为rowData
-      rowData.value = props.columnDefs
+      //将props的columnDefs转换为rowDatas
+      rowDatas.value = props.columnDefs
       //循环将props的columnDefs转换为columnDefs
-      columnDefs.value = makeColumnDefs()
-      console.log('columnDefs.value:' + JSON.stringify(columnDefs.value))
+      columnDefs1.value = makeColumnDefs()
+      console.log('columnDefs.value:' + JSON.stringify(columnDefs1.value))
     }, {deep: true, immediate: true})
-
+    function onGridReady(params) {
+      gridApi.value = params.api;
+      gridColumnApi.value = params.columnApi;
+    }
     function makeColumnDefs() {
       let returnVal = [];
       let columnDef ={
@@ -380,13 +386,26 @@ export default defineComponent({
       return returnVal;
 
     }
-
+    window.makeNewRow = function makeNewRow() {
+      let row = {
+        headerName: '自定义列',
+        field: '自定义列'
+      }
+      return row;
+    }
     function handleAdd() {
-      rowData.value.push({})
+      // console.log('rowDatas:'+JSON.stringify(rowDatas.value))
+
+      const newItems = [
+        makeNewRow()
+      ];
+      gridApi.value.applyTransaction({ add:newItems,addIndex:1 });
+      //rowDatas.value.push(row)
+      // console.log('rowDatas:'+JSON.stringify(rowDatas.value))
     }
 
     function handleDelete() {
-      rowData.value = rowData.value.filter((item, index) => {
+      rowDatas.value = rowDatas.value.filter((item, index) => {
         return !ids.value.includes(item.id)
       })
       ids.value = []
@@ -394,7 +413,7 @@ export default defineComponent({
 
     function handleSave() {
       //保存操作
-      emits('update:columnDefs', rowData.value)
+      emits('update:columnDefs', rowDatas.value)
     }
 
     const ids = ref([])
@@ -426,12 +445,13 @@ export default defineComponent({
       handleAdd,
       handleSave,
       handleDelete,
-      columnDefs,
-      rowData,
+      columnDefs1,
+      rowDatas,
       handleSelectionChange,
       Plus,
       Delete,
-      multiple
+      multiple,
+      onGridReady
     }
   }
 
