@@ -26,67 +26,67 @@
 
     <el-form-item prop="plain" label="是否朴素按钮">
       <el-radio-group v-model="vFormSelectElem.attrs.plain">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
     <el-form-item prop="text" label="是否文字按钮">
       <el-radio-group v-model="vFormSelectElem.attrs.text">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
 
     <el-form-item prop="bg" label="是否显示文字按钮背景颜色">
       <el-radio-group v-model="vFormSelectElem.attrs.bg"  >
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
    <el-form-item prop="autofocus" label="自动获取焦点">
       <el-radio-group v-model="vFormSelectElem.attrs.autofocus">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
     <el-form-item prop="round" label="是否为圆角按钮">
       <el-radio-group v-model="vFormSelectElem.attrs.round">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
     <el-form-item prop="link" label="是否为链接按钮">
       <el-radio-group v-model="vFormSelectElem.attrs.link">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
     <el-form-item prop="circle" label="是否为圆形按钮">
       <el-radio-group v-model="vFormSelectElem.attrs.circle">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
     <el-form-item prop="loading" label="是否为加载中状态">
       <el-radio-group v-model="vFormSelectElem.attrs.loading">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
     <el-form-item prop="disabled" label="是否为禁用状态">
       <el-radio-group v-model="vFormSelectElem.attrs.disabled">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
     <el-form-item prop="operationtype" label="按钮操作类型">
       <el-radio-group v-model="vFormSelectElem.attrs.operationtype" @change="changeOperationType" >
-        <el-radio-button label="api" >调用接口</el-radio-button>
-        <el-radio-button label="page" >打开页面</el-radio-button>
+        <el-radio-button value="api" >调用接口</el-radio-button>
+        <el-radio-button value="page" >打开页面</el-radio-button>
       </el-radio-group>
     </el-form-item>
     <el-form-item  label="操作设置" v-show="vFormSelectElem.attrs.operationtype==='api'">

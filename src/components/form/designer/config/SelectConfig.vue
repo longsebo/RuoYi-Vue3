@@ -14,15 +14,15 @@
 
     <el-form-item prop="multiple" label="多选">
       <el-radio-group v-model="formData.multiple" @change="handleChangeMultiple">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
     <el-form-item prop="disabled" label="禁用">
       <el-radio-group v-model="vFormSelectElem.attrs.disabled">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
@@ -32,16 +32,16 @@
 
     <el-form-item prop="size" label="大小">
       <el-radio-group v-model="vFormSelectElem.attrs.size">
-        <el-radio-button label="large">大</el-radio-button>
-        <el-radio-button label="default">默认</el-radio-button>
-        <el-radio-button label="small">小</el-radio-button>
+        <el-radio-button value="large">大</el-radio-button>
+        <el-radio-button value="default">默认</el-radio-button>
+        <el-radio-button value="small">小</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
     <el-form-item v-show="!vFormSelectElem.attrs.multiple" prop="clearable" label="是否可清空">
       <el-radio-group v-model="vFormSelectElem.attrs.clearable">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
@@ -53,8 +53,8 @@
         />
       </template>
       <el-radio-group v-model="vFormSelectElem.attrs.collapseTags">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
@@ -66,8 +66,8 @@
         />
       </template>
       <el-radio-group v-model="vFormSelectElem.attrs.collapseTagsTooltip">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
@@ -95,8 +95,8 @@
         />
       </template>
       <el-radio-group v-model="vFormSelectElem.attrs.effect">
-        <el-radio-button label="dark">亮</el-radio-button>
-        <el-radio-button label="light">暗</el-radio-button>
+        <el-radio-button value="dark">亮</el-radio-button>
+        <el-radio-button value="light">暗</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
@@ -123,8 +123,8 @@
         />
       </template>
       <el-radio-group v-model="vFormSelectElem.attrs.filterable">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
@@ -136,8 +136,8 @@
         />
       </template>
       <el-radio-group v-model="vFormSelectElem.attrs.allowCreate">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
@@ -149,8 +149,8 @@
         />
       </template>
       <el-radio-group v-model="vFormSelectElem.attrs.remote">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
@@ -162,8 +162,8 @@
         />
       </template>
       <el-radio-group v-model="vFormSelectElem.attrs.loading">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
@@ -215,8 +215,8 @@
         />
       </template>
       <el-radio-group v-model="vFormSelectElem.attrs.reserveKeyword">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
@@ -229,8 +229,8 @@
         />
       </template>
       <el-radio-group v-model="vFormSelectElem.attrs.defaultFirstOption">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
@@ -243,8 +243,8 @@
         />
       </template>
       <el-radio-group v-model="vFormSelectElem.attrs.teleported">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
@@ -256,8 +256,8 @@
         />
       </template>
       <el-radio-group v-model="vFormSelectElem.attrs.persistent">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
@@ -269,8 +269,8 @@
         />
       </template>
       <el-radio-group v-model="vFormSelectElem.attrs.automaticDropdown">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
@@ -287,8 +287,8 @@
         />
       </template>
       <el-radio-group v-model="vFormSelectElem.attrs.fitInputWidth">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 

@@ -75,7 +75,7 @@ function handleDateRangeTypeChange(v: DateRangeType) {
   props.formData.scheme.defaultValue = ['', '']
 
   defKey.value ++
-  
+
 }
 
 </script>

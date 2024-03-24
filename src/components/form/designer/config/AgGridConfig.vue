@@ -6,21 +6,21 @@
   >
     <el-form-item prop="checkboxSelection" label="是否有复选框">
       <el-radio-group v-model="vFormSelectElem.attrs.checkboxSelection">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
     <el-form-item prop="size" label="表头是否有复选框">
       <el-radio-group v-model="vFormSelectElem.attrs.headerCheckboxSelection">
-        <el-radio-button label="multiple">是</el-radio-button>
-        <el-radio-button label="single">否</el-radio-button>
+        <el-radio-button value="multiple">是</el-radio-button>
+        <el-radio-button value="single">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
     <el-form-item prop="rowSelection" label="是否多行选中">
       <el-radio-group v-model="vFormSelectElem.attrs.rowSelection">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
@@ -36,8 +36,8 @@
     </el-form-item>
     <el-form-item prop="dataSourceType" label="数据源类型">
       <el-radio-group v-model="vFormSelectElem.attrs.dataSourceType" >
-        <el-radio-button label="input" >手工录入</el-radio-button>
-        <el-radio-button label="bindcomponent" >绑定组件</el-radio-button>
+        <el-radio-button value="input" >手工录入</el-radio-button>
+        <el-radio-button value="bindcomponent" >绑定组件</el-radio-button>
       </el-radio-group>
     </el-form-item>
     <el-form-item  label="表格数据" v-show="vFormSelectElem.attrs.dataSourceType==='input'">

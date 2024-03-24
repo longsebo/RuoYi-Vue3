@@ -15,20 +15,20 @@
 
     <el-form-item prop="multiple1" label="是否多选">
       <el-radio-group v-model="vFormSelectElem.attrs.multiple" >
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
     <el-form-item prop="collapseTags" v-show="vFormSelectElem.attrs.multiple" label="是否折叠标签">
       <el-radio-group v-model="vFormSelectElem.attrs.collapseTags">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
     <el-form-item prop="collapseTagsTooltip" v-show="vFormSelectElem.attrs.multiple" label="是否折叠标签提示">
       <el-radio-group v-model="vFormSelectElem.attrs.collapseTagsTooltip">
-        <el-radio-button :label="true">是</el-radio-button>
-        <el-radio-button :label="false">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
     <el-form-item prop="maxCollapseTags" v-show="vFormSelectElem.attrs.multiple" label="最大折叠标签数量">
@@ -36,8 +36,8 @@
     </el-form-item>
     <el-form-item prop="optionsSource" label="选项来源">
       <el-radio-group v-model="vFormSelectElem.attrs.optionsSource">
-        <el-radio-button label="input">手工录入</el-radio-button>
-        <el-radio-button label="dict">系统字典</el-radio-button>
+        <el-radio-button value="input">手工录入</el-radio-button>
+        <el-radio-button value="dict">系统字典</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
