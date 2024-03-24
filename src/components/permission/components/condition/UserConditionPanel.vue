@@ -15,7 +15,7 @@
         :clearable="false"
       />
       <div style="margin-left: 6px;">
-        <el-checkbox v-model="condition.cascader" label="下级部门"/>
+        <el-checkbox v-model="condition.cascader" value="下级部门"/>
       </div>
 
     </div>

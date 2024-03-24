@@ -99,9 +99,9 @@
     </el-form-item>
     <el-form-item prop="mode" label="模式">
       <el-checkbox-group v-model="mode" :min="0" :max="1">
-        <el-checkbox-button label="design">设计</el-checkbox-button>
-        <el-checkbox-button label="read">只读</el-checkbox-button>
-        <el-checkbox-button label="edit">编辑</el-checkbox-button>
+        <el-checkbox-button value="design">设计</el-checkbox-button>
+        <el-checkbox-button value="read">只读</el-checkbox-button>
+        <el-checkbox-button value="edit">编辑</el-checkbox-button>
       </el-checkbox-group>
     </el-form-item>
   </el-form>
