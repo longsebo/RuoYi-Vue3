@@ -61,9 +61,9 @@
       </el-checkbox-group>
     </el-form-item>
   </el-form>
-   <el-dialog title="列定义" v-model="columnDefineVisible" width="800px" append-to-body>
+   <el-dialog title="列定义" v-model="columnDefineVisible" width="100%" height="95vh" append-to-body>
      <AgGridColumnDefine
-        v-model:columnDefs="vFormSelectElem.attrs.columnDefs" />
+        v-model:columnDefs="vFormSelectElem.attrs.columnDefs" @change="updateColumnDefs" />
   </el-dialog>
 </template>
 
@@ -102,6 +102,15 @@ const mode = computed({
 function showColumnDefineDlg() {
   columnDefineVisible.value = true;
 
+}
+
+/**
+ * 更新列定义
+ * @param newColDefs
+ */
+function updateColumnDefs(newColDefs){
+  console.log('updateColumnDefs',JSON.stringify(newColDefs))
+  vFormSelectElem.value.attrs.columnDefs = newColDefs;
 }
 
 /**

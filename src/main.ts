@@ -57,6 +57,9 @@ import FieldConditionInput from "@/components/ag-grid/cell/components/FieldCondi
 import FieldCheckboxInput from "@/components/ag-grid/cell/components/FieldCheckboxInput.vue";
 import FieldNumberInput from "@/components/ag-grid/cell/components/FieldNumberInput.vue";
 import AgGridNumberInput from "@/components/common/table/aggrid/cell/AgGridNumberInput.vue";
+import AgGridDateSelect from "@/components/common/table/aggrid/cell/AgGridDateSelect.vue";
+import AgGridSelect from "@/components/common/table/aggrid/cell/AgGridSelect.vue";
+import InputEditor from "@/components/ag-grid/editor/InputEditor.vue";
 async function startup() {
   try {
 const app = createApp(App)
@@ -70,6 +73,9 @@ const app = createApp(App)
     app.component('FieldCheckboxInput', FieldCheckboxInput)
     app.component('FieldNumberInput', FieldNumberInput)
     app.component('AgGridNumberInput', AgGridNumberInput)
+    app.component('InputEditor',InputEditor)
+    app.component('AgGridDateSelect',AgGridDateSelect)
+    app.component('AgGridSelect',AgGridSelect)
     // 全局方法挂载
     app.config.globalProperties.useDict = useDict
     app.config.globalProperties.download = download

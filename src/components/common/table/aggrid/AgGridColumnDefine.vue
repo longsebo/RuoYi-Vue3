@@ -94,7 +94,10 @@ export default defineComponent({
       }]
     }
   },
-  setup(props) {
+  emits: {
+    change: (newColumnsDef) => true,
+  },
+  setup(props,{emit}) {
     const {proxy} = getCurrentInstance();
     const SaveIcon = useIcon('ali_save')
     const multiple = ref(false)
@@ -120,14 +123,14 @@ export default defineComponent({
         field: 'headerName',
         headerName: '显示名称',
         editable:true,
-        cellEditor:'text'
+        cellEditor:'InputEditor'
       }
       returnVal.push(columnDef)
       columnDef ={
         field: 'field',
         headerName: '字段名称',
         editable:true,
-        cellEditor:'text'
+        cellEditor:'InputEditor'
       }
       returnVal.push(columnDef)
       let columnDef1 = {
@@ -336,28 +339,18 @@ export default defineComponent({
           field:'cellEditor',
           options:[{
             label:'文本编辑器',
-            value:'text'
+            value:'InputEditor'
           },{ label:'选择框',
-            value:'select'},
+            value:'AgGridSelect'},
             {
               label:'日期选择器',
-              value:'date'
+              value:'AgGridDateSelect'
             },
             {
               label:'数字编辑器',
-              value:'number'
-            },
-            {
-              label:'组合框编辑器',
-              value:'richSelect'
-            },
-            {
-              label:'大组合框编辑器',
-              value:'largeSelect'
-            },{
-              label:'打开文本编辑器',
-              value:'bigSelect'
-            }]
+              value:'AgGridNumberInput'
+            }
+            ]
         }
       }
       returnVal.push(columnDef2)
@@ -365,14 +358,14 @@ export default defineComponent({
         field: 'cellEditorParams',
         headerName: '编辑框参数',
         editable:true,
-        cellEditor:'text'
+        cellEditor:'InputEditor'
       }
       returnVal.push(columnDef)
       columnDef ={
         field: 'cellStyle',
         headerName: '单元格css风格',
         editable:true,
-        cellEditor:'text'
+        cellEditor:'InputEditor'
       }
       returnVal.push(columnDef)
       columnDef1 = {
@@ -393,7 +386,7 @@ export default defineComponent({
         field: 'cellRendererParams',
         headerName: '自定义渲染器参数',
         editable:true,
-        cellEditor:'text'
+        cellEditor:'InputEditor'
       }
       returnVal.push(columnDef)
       let columnDef3 ={
@@ -431,10 +424,13 @@ export default defineComponent({
 
     function handleSave() {
       //保存操作
-      emits('update:columnDefs', rowDatas.value)
+      let allRowData=[];
+      gridApi.value.forEachNode((rowNode) => {
+        allRowData.push(rowNode.data);
+      });
+      emit('change', allRowData)
     }
 
-    const ids = ref([])
 
 // 多选框选中数据
     function handleSelectionChange(event) {
