@@ -301,35 +301,35 @@ export const InputComponents: CandidateComponentConfig[] = [
         rowHeight:100,//行高
         width:100,//列宽
         columnDefs: [ //表格列配置
-          {
-            headerName: "列1",//显示的列名称
-            field: "column1",//数据字段
-            editable: true,//是否可编辑
-            sortable: true,//是否可排序
-            filter: true,//是否可筛选
-            resizable: true,//是否可调整列大小
-            checkboxSelection: true,//设置数据复选框
-            headerCheckboxSelection: true,//表头是否也显示复选框，用于全选反选用
-            headerCheckboxSelectionFilteredOnly: true,//标题复选框选择将只选择筛选的项目
-            lockPinned: true,//是否冻结列
-            pinned: true,//是否固定列 'left' | 'right',true相当于left
-            lockPosition: true,//禁止拖动列的位置
-            lockVisible: true,//禁用通过菜单更改可见性
-            width: 100,//列宽
-            minWidth: 100,//最小列宽
-            maxWidth: 100,//
-            cellEditor: '',//内置编辑器：文本编辑器（text）,选择框编辑器（select）,日期选择器（date）,数字编辑器（number）
-                            //组合框编辑器（richSelect）,大组合框编辑器（largeSelect）,打开文本编辑器（bigSelect）
-            cellEditorParams: {
-            },//编辑器参数 select ,richSelect,largeSelect,bigSelect  格式为：values: ['Ireland', 'Spain', 'Germany']
-            cellStyle: {
-              'text-align': 'center',
-            },
-            // isCustomRenderer:false,//是否自定义单元格渲染器
-            cellRenderer: null,//当自定义渲染组件时，固定为NestedDragItem可以拖拽嵌套组件，可以往拖拽其他组件
-            cellRendererParams: {
-            },//渲染器参数
-          }
+          // {
+          //   headerName: "列1",//显示的列名称
+          //   field: "column1",//数据字段
+          //   editable: true,//是否可编辑
+          //   sortable: true,//是否可排序
+          //   filter: true,//是否可筛选
+          //   resizable: true,//是否可调整列大小
+          //   checkboxSelection: true,//设置数据复选框
+          //   headerCheckboxSelection: true,//表头是否也显示复选框，用于全选反选用
+          //   headerCheckboxSelectionFilteredOnly: true,//标题复选框选择将只选择筛选的项目
+          //   lockPinned: true,//是否冻结列
+          //   pinned: true,//是否固定列 'left' | 'right',true相当于left
+          //   lockPosition: true,//禁止拖动列的位置
+          //   lockVisible: true,//禁用通过菜单更改可见性
+          //   width: 100,//列宽
+          //   minWidth: 100,//最小列宽
+          //   maxWidth: 100,//
+          //   cellEditor: '',//内置编辑器：文本编辑器（text）,选择框编辑器（select）,日期选择器（date）,数字编辑器（number）
+          //                   //组合框编辑器（richSelect）,大组合框编辑器（largeSelect）,打开文本编辑器（bigSelect）
+          //   cellEditorParams: {
+          //   },//编辑器参数 select ,richSelect,largeSelect,bigSelect  格式为：values: ['Ireland', 'Spain', 'Germany']
+          //   cellStyle: {
+          //     'text-align': 'center',
+          //   },
+          //   // isCustomRenderer:false,//是否自定义单元格渲染器
+          //   cellRenderer: null,//当自定义渲染组件时，固定为NestedDragItem可以拖拽嵌套组件，可以往拖拽其他组件
+          //   cellRendererParams: {
+          //   },//渲染器参数
+          // }
         ],
         style:'width:100%',
         dataSourceType:'',//数据源类型：input(手工录入),bindcomponent(绑定组件)

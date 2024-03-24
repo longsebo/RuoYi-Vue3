@@ -36,12 +36,12 @@ const singleValue = ref('')
 function setInitValue(){
   if(config.value.multiple) {
     if (Array.isArray(config.value.val)) {
-      multipleValue.value = config.value.val
+      multipleValue.value = props.params.data[props.params.field]
     }else {
       //console.log('config.value.val:'+config.value.val+",is not array!"+config.value.val?.split(',') )
       let temp =[]
-      if(config.value.val) {
-        let temp1 = config.value.val?.split(',') ;
+      if(props.params.data[props.params.field]) {
+        let temp1 = props.params.data[props.params.field]?.split(',') ;
         for(let i=0;i<temp1.length;i++){
           temp.push(temp1[i])
         }
@@ -54,7 +54,7 @@ function setInitValue(){
       multipleValue.value = temp
     }
   }else{
-    singleValue.value = config.value.val
+    singleValue.value = props.params.data[props.params.field]
   }
 }
 
@@ -75,19 +75,22 @@ watch(props,async () => {
   if(props.params.hasOwnProperty('maxCollapseTags')){
     config.value.maxCollapseTags = props.params.maxCollapseTags
   }
-  console.log('config',JSON.stringify(config.value))
+  //console.log('config',JSON.stringify(config.value))
   //获取模型值
   setInitValue()
 },{deep:true,immediate:true})
 function handleChange(newValue){
-  console.log('newValue',newValue)
+
   if(props.params.multiple) {
     //emits('update:value', newValue.toString())
+    console.log('update field:'+props.params.field+',value:'+newValue.toString())
     props.params.data[props.params.field]= newValue.toString()
   }else{
     //emits('update:value', newValue)
+    console.log('update field:'+props.params.field+',value:'+newValue)
     props.params.data[props.params.field] = newValue
   }
+  console.log('data:'+JSON.stringify(props.params.data))
 }
 </script>
 

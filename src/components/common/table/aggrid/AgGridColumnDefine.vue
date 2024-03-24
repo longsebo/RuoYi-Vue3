@@ -12,8 +12,8 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-            :disabled="!multiple"
             :icon="Delete"
+            :disabled="!multiple"
             plain
             type="danger"
             @click="handleDelete"
@@ -34,8 +34,9 @@
                  :rowData="rowDatas"
                  class="ag-theme-balham"
                  style="height: 300px; width: 100%;"
-                 @rowSelected="handleSelectionChange"
+                 @selection-changed="handleSelectionChange"
                  @grid-ready="onGridReady"
+                 :rowSelection="rowSelection"
     ></ag-grid-vue>
   </div>
 </template>
@@ -48,7 +49,7 @@ import {useIcon} from "@/components/common/util";
 
 import {AgGridVue} from "ag-grid-vue3";
 import {ElRow, ElCol, ElButton} from 'element-plus';
-import AgGridSelect from "./AgGridSelect.vue";
+import AgGridSelect from "./cell/AgGridSelect.vue";
 import NestedDragItem from '@/components/form/designer/NestedDragItem.vue';
 
 export default defineComponent({
@@ -97,7 +98,7 @@ export default defineComponent({
     const {proxy} = getCurrentInstance();
     const SaveIcon = useIcon('ali_save')
     const multiple = ref(false)
-
+    const rowSelection = ref('multiple');
     const columnDefs1 = ref([])
     const rowDatas = ref([])
     const gridApi=ref(null)
@@ -291,22 +292,40 @@ export default defineComponent({
       columnDef ={
         field: 'width',
         headerName: '列宽',
-        editable:true,
-        cellEditor:'number'
+        cellRenderer: 'AgGridNumberInput',
+        cellRendererParams: {
+          field: 'width'
+        },
+        cellStyle: {
+          display: 'flex',
+          alignItems: 'center'
+        }
       }
       returnVal.push(columnDef)
       columnDef ={
         field: 'maxWidth',
         headerName: '最大宽度',
-        editable:true,
-        cellEditor:'number'
+        cellRenderer: 'AgGridNumberInput',
+        cellRendererParams: {
+          field: 'width'
+        },
+        cellStyle: {
+          display: 'flex',
+          alignItems: 'center'
+        }
       }
       returnVal.push(columnDef)
       columnDef ={
         field: 'minWidth',
         headerName: '最小宽度',
-        editable:true,
-        cellEditor:'number'
+        cellRenderer: 'AgGridNumberInput',
+        cellRendererParams: {
+          field: 'width'
+        },
+        cellStyle: {
+          display: 'flex',
+          alignItems: 'center'
+        }
       }
       returnVal.push(columnDef)
       columnDef2 = {
@@ -399,16 +418,15 @@ export default defineComponent({
       const newItems = [
         makeNewRow()
       ];
-      gridApi.value.applyTransaction({ add:newItems,addIndex:1 });
-      //rowDatas.value.push(row)
-      // console.log('rowDatas:'+JSON.stringify(rowDatas.value))
+      //gridApi.value.applyTransaction({ add:newItems,addIndex:1 });
+      gridApi.value.applyTransaction({ add:newItems});
+
     }
 
     function handleDelete() {
-      rowDatas.value = rowDatas.value.filter((item, index) => {
-        return !ids.value.includes(item.id)
-      })
-      ids.value = []
+      const selectedData = gridApi.value.getSelectedRows();
+      console.log('selectedData:'+JSON.stringify(selectedData));
+      gridApi.value.applyTransaction({ remove:selectedData });
     }
 
     function handleSave() {
@@ -420,23 +438,9 @@ export default defineComponent({
 
 // 多选框选中数据
     function handleSelectionChange(event) {
-      if (event.node.selected) {
-        // 处理选中该行的操作
-        //判断ids是否存在event.node.data.id,不存在加入
-        if (!ids.value.includes(event.node.data.id)) {
-          ids.value.push(event.node.data.id);
-        }
-      } else {
-        // 处理撤销选中该行的操作
-        //判断ids是否存在event.node.data.id,存在则删除
-        if (ids.value.includes(event.node.data.id)) {
-          const index = ids.value.indexOf(event.node.data.id);
-          if (index > -1) {
-            ids.value.splice(index, 1);
-          }
-        }
-      }
-      multiple.value = (ids.value.length > 1)
+      console.log('enter handleSelectionChange')
+      let selectedRows = gridApi.value.getSelectedRows();
+      multiple.value = (selectedRows.length >=1)
     }
 
     return {
@@ -451,7 +455,8 @@ export default defineComponent({
       Plus,
       Delete,
       multiple,
-      onGridReady
+      onGridReady,
+      rowSelection
     }
   }
 
