@@ -53,10 +53,12 @@
         <el-radio-button value="bindcomponent" >绑定组件</el-radio-button>
       </el-radio-group>
     </el-form-item>
-    <el-form-item  label="表格数据" v-show="vFormSelectElem.attrs.dataSourceType==='input'">
-      <AgGridInputData
+<!--    <el-form-item  label="表格数据" v-show="vFormSelectElem.attrs.dataSourceType==='input'">-->
+    <el-scrollbar always>
+      <AgGridInputData v-show="vFormSelectElem.attrs.dataSourceType==='input'"
           v-model:rowData="vFormSelectElem.attrs.rowData" :columnDefs="vFormSelectElem.attrs.columnDefs" />
-    </el-form-item>
+    </el-scrollbar>
+<!--    </el-form-item>-->
     <el-form-item  label="绑定数据来源组件" v-show="vFormSelectElem.attrs.dataSourceType==='bindcomponent'">
       <BindComponentInput
           :bindComponent="vFormSelectElem.attrs.bindComponent"  :multiple="false" @change="changeBindComponent" />
