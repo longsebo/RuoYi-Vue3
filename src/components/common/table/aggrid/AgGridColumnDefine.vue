@@ -400,8 +400,8 @@ export default defineComponent({
     }
     window.makeNewRow = function makeNewRow() {
       let row = {
-        headerName: '自定义列',
-        field: '自定义列'
+        headerName: '',
+        field: ''
       }
       return row;
     }

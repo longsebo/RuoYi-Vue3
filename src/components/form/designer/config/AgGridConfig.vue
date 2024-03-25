@@ -4,6 +4,19 @@
     :model="vFormSelectElem?.attrs"
     style="padding: 2px;"
   >
+
+    <el-form-item prop="tableHeight" label="表格高度">
+      <el-tooltip content="格式:xxxpx或者100%" placement="bottom" effect="customized">
+        <el-input v-model="vFormSelectElem.attrs.tableHeight"></el-input>
+      </el-tooltip>
+    </el-form-item>
+
+
+    <el-form-item prop="tableWidth" label="表格宽度">
+      <el-tooltip content="格式:xxxpx或者100%" placement="bottom" effect="customized">
+      <el-input v-model="vFormSelectElem.attrs.tableWidth"></el-input>
+      </el-tooltip>
+    </el-form-item>
     <el-form-item prop="checkboxSelection" label="是否有复选框">
       <el-radio-group v-model="vFormSelectElem.attrs.checkboxSelection">
         <el-radio-button :value="true">是</el-radio-button>
@@ -12,15 +25,15 @@
     </el-form-item>
     <el-form-item prop="size" label="表头是否有复选框">
       <el-radio-group v-model="vFormSelectElem.attrs.headerCheckboxSelection">
-        <el-radio-button value="multiple">是</el-radio-button>
-        <el-radio-button value="single">否</el-radio-button>
+        <el-radio-button :value="true">是</el-radio-button>
+        <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
     <el-form-item prop="rowSelection" label="是否多行选中">
       <el-radio-group v-model="vFormSelectElem.attrs.rowSelection">
-        <el-radio-button :value="true">是</el-radio-button>
-        <el-radio-button :value="false">否</el-radio-button>
+        <el-radio-button value="multiple">是</el-radio-button>
+        <el-radio-button value="single">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
 
@@ -131,6 +144,15 @@ function changeBindComponent(val:string ){
 }
 </script>
 
-<style scoped>
+<style >
+.el-popper.is-customized {
+  /* Set padding to ensure the height is 32px */
+  padding: 6px 12px;
+  background: linear-gradient(90deg, rgb(159, 229, 151), rgb(204, 229, 129));
+}
 
+.el-popper.is-customized .el-popper__arrow::before {
+  background: linear-gradient(45deg, #b2e68d, #bce689);
+  right: 0;
+}
 </style>

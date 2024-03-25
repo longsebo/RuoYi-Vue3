@@ -8,6 +8,7 @@
             :input-components="InputComponents"
             :layout-components="LayoutComponents"
             :button-components="ButtonComponents"
+            :table-components="TableComponents"
           >
           </candidate-component-page>
         </el-tab-pane>
@@ -110,7 +111,7 @@ import CandidateComponentPage from "@/components/form/designer/candidate/Candida
 import ModelingFieldPage from "@/components/form/designer/candidate/ModelingFieldPage.vue";
 import { useIcon } from "@/components/common/util";
 import JsonEditor from "@/components/common/JsonEditor.vue";
-import { InputComponents, LayoutComponents, DisplayComponents,ButtonComponents } from "@/components/form/designer/data"
+import { InputComponents, LayoutComponents, DisplayComponents,ButtonComponents,TableComponents } from "@/components/form/designer/data"
 import VFormRender from "@/components/form/designer/VFormRender.vue";
 import { formModeKey, vFormActiveElementKey, vFormSchemeKey } from "@/components/form/state.key";
 import { useModelingPageApi } from "@/service/modeling/page";

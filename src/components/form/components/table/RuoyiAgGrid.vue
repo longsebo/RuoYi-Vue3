@@ -1,6 +1,6 @@
 <template>
   <template v-if="cMode === 'design'">
-    <ag-grid-table  disabled v-bind="props"  />
+    <ag-grid-table  v-bind="props"  />
   </template>
   <template v-else-if="cMode === 'edit'">
     <ag-grid-table  v-bind="props" />
@@ -18,7 +18,7 @@ import {ElButton, ElMessage} from 'element-plus'
 import {computed, inject, nextTick, useAttrs} from "vue";
 import { formModeKey } from "@/components/form/state.key";
 import { vFormSchemeKey } from '@/components/form/state.key';
-import AgGridTable from '@/components/common/table/aggrid/agGridTable.vue'
+import AgGridTable from '@/components/common/table/aggrid/AgGridTable.vue'
 
 
 
@@ -28,14 +28,16 @@ interface Props {
   checkboxSelection?:boolean //设置数据复选框
   headerCheckboxSelection?:boolean  //表头是否也显示复选框，用于全选反选用
   rowSelection?: string //设置多行选中 ，若是single
-  rowHeight?:number//行高
-  width?:number//列宽
+  rowHeight?:string//行高
+  width?:string//列宽
   columnDefs:object
-  style?:string
+  style?:any
   dataSourceType?:string//数据源类型：input(手工录入),bindcomponent(绑定组件)
   rowData?:object//行数据
   bindComponent?:string//数据源绑定组件
   rowSelectTriggerComponents?:object//行选择触发组件，通知组件进行处理
+  tableHeight?:string
+  tableWidth?:string
 }
 
 interface Emits {

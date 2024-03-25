@@ -93,6 +93,29 @@
           </template>
         </draggable>
       </el-collapse-item>
+      <el-collapse-item name="table" title="表格">
+        <draggable
+            style="width: 100%; height: 100%;"
+            class="component-list"
+            :list="props.tableComponents"
+            :group="{ name: 'component', pull: 'clone', put: false}"
+            handle="div.component-item"
+            item-key="id"
+            :sort="false"
+            :clone="transCloneComponent"
+        >
+          <template #item="{ element }">
+            <div class="component-item">
+              <div style="display: flex; justify-content: flex-start; padding: 3px">
+                <div  style="display: flex; align-items: center; " v-if="element.icon">
+                  <s-v-g-icon :name="element.icon" style="width: 16px; height: 16px"></s-v-g-icon>
+                </div>
+                <div style="font-size: 16px" v-text="element.title"></div>
+              </div>
+            </div>
+          </template>
+        </draggable>
+      </el-collapse-item>
     </el-collapse>
   </el-scrollbar>
 </template>
@@ -109,6 +132,7 @@ interface Props {
   inputComponents: CandidateComponentConfig[]
   layoutComponents: CandidateComponentConfig[]
   buttonComponents: CandidateComponentConfig[]
+  tableComponents: CandidateComponentConfig[]
 }
 
 const props = defineProps<Props>()

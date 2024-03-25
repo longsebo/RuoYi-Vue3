@@ -196,6 +196,29 @@
 
           </div>
         </template>
+        <template v-else-if="'table' === element.category">
+          <component
+              :is="element.component"
+              v-bind="element.attrs"
+          >
+
+          </component>
+          <div v-if="vFormActiveElement === element" class="drag-handle">
+            <s-v-g-icon class="drag-icon" name="Drag"/>
+          </div>
+          <div v-if="vFormActiveElement === element" class="field-id">
+            <span v-text="element.id"></span>
+          </div>
+          <div v-if="vFormActiveElement === element" class="widget-action">
+            <div title="复制" @click.stop="handleCopyElem">
+              <CopyDocument class="widget-action-icon"/>
+            </div>
+            <div @click.stop="handleDeleteElem" title="删除">
+              <Delete class="widget-action-icon" />
+            </div>
+
+          </div>
+        </template>
       </div>
 
     </template>
@@ -221,6 +244,7 @@ import UserSelect from "../components/select/UserSelect.vue"
 import DeptSelect from "../components/select/DeptSelect.vue"
 import LabelField from "../components/display/LabelField.vue"
 import NormalButton from "../components/button/NormalButton.vue"
+import RuoyiAgGrid from "../components/table/RuoyiAgGrid.vue"
 import { vFormActiveElementKey } from "@/components/form/state.key";
 import { genId } from "@/components/form/designer/util/common";
 import { Plus, Delete, CopyDocument } from "@element-plus/icons-vue";
@@ -231,7 +255,7 @@ export default defineComponent({
   components: {
     Draggable, ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElRow, ElCol,ElButton, SVGIcon, ElCheckboxGroup, ElCheckbox,
     UserSelectorInput, DeptSelectorInput, NumberInput, TextInput, SingleSelect, MultiSelect, UserSelect, DeptSelect,
-    Plus, Delete, CopyDocument, DatePicker, DateRangePicker, LabelField,NormalButton,RuoyiElSelect
+    Plus, Delete, CopyDocument, DatePicker, DateRangePicker, LabelField,NormalButton,RuoyiElSelect,RuoyiAgGrid
   },
   props: {
     children: Array as PropType<ComponentConfig[]>

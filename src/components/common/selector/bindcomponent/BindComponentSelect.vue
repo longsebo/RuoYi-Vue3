@@ -61,12 +61,13 @@ watch(() => formScheme, (val) => {
  * @param parentName
  */
 function buildTree(schema:Object, parentName:string):any[] {
-  //搜索所有下级：非布局，展示，按钮组件
+  //搜索所有下级：非布局，展示，按钮,表格组件
   let i=0;
   let returnData=[];
   //遍历所有子节点
   for(i=0;i<schema.children.length;i++){
-    if(schema.children[i].category !=='layout' && schema.children[i].category!=='display' && schema.children[i].category!=='button'){
+    if(schema.children[i].category !=='layout' && schema.children[i].category!=='display'
+        && schema.children[i].category!=='button' && schema.children[i].category!=='table'){
       returnData.push({
         id: schema.children[i].id,
         label: schema.children[i].formItemAttrs.label,

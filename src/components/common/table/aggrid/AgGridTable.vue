@@ -1,7 +1,9 @@
 <template>
+  <div>
   <ag-grid-vue class="ag-theme-balham"
                v-bind="props"
                :rowData="rowData"
+               :style="style"
                @rowSelected="handleSelectionChange"
   >
   </ag-grid-vue>
@@ -13,12 +15,12 @@
       v-model:limit="queryParams.pageSize"
       @pagination="getList"
   />
-
+  </div>
 </template>
 
 <script lang="ts" setup>
 import bus from '@/event/bus'
-import {onMounted, ref, onUnmounted, watch} from "vue";
+import {onMounted, ref, onUnmounted, watch, computed} from "vue";
 import {
   queryListResultKey,executeQueryKey,totalKey,queryParamKey,loadingKey,tableRowSelectChangeKey
 } from "@/config/app.keys";
@@ -28,14 +30,16 @@ interface Props {
   checkboxSelection?:boolean //设置数据复选框
   headerCheckboxSelection?:boolean  //表头是否也显示复选框，用于全选反选用
   rowSelection?: string //设置多行选中 ，若是single
-  rowHeight?:number//行高
-  width?:number//列宽
+  rowHeight?:string//行高
+  width?:string//列宽
   columnDefs:object
-  style?:string
+  style?:any
   dataSourceType?:string//数据源类型：input(手工录入),bindcomponent(绑定组件)
   rowData?:object//行数据
   bindComponent?:string
   rowSelectTriggerComponents?:string[]//行选择触发组件，通知组件进行处理
+  tableHeight?:string
+  tableWidth?:string
 }
 
 const props = defineProps<Props>()
@@ -52,9 +56,9 @@ const queryParams = ref({
 })
 const columnDefs =ref([])
 
-watch(()=>props.dataSourceType,(val)=>{
+watch(()=>props,(val)=>{
   //手工录入数据
-  if(val==='input'){
+  if(props.dataSourceType==='input'){
       rowData.value = props.rowData
   }else {
     //监控数据变化
@@ -73,8 +77,20 @@ watch(()=>props.dataSourceType,(val)=>{
       loading.value = data;
     })
   }
-},{immediate:true})
-
+},{immediate:true,deep:true})
+const style = computed(
+    () => {
+      let tableHeight='300px';
+      if(props.tableHeight){
+        tableHeight = props.tableHeight;
+      }
+      let tableWidth='400px';
+      if(props.tableWidth){
+        tableWidth = props.tableWidth;
+      }
+      return 'height:'+tableHeight+';width:'+tableWidth+';';
+    }
+);
 /**
  * 获取bus监控key前缀
  */

@@ -31,7 +31,9 @@
                class="ag-theme-balham"
                :columnDefs="props.columnDefs"
                :rowData="rowData"
-               @rowSelected="handleSelectionChange"
+               @selection-changed="handleSelectionChange"
+               @grid-ready="onGridReady"
+               :rowSelection="rowSelection"
   ></ag-grid-vue>
   </div>
 </template>
@@ -42,6 +44,8 @@ import {getCurrentInstance} from 'vue';
 import {Plus,Delete} from "@element-plus/icons-vue";
 import { useIcon } from "@/components/common/util";
 import { AgGridVue } from "ag-grid-vue3";
+//使用注入方式，获取行数据
+import { vFormActiveElementKey } from "@/components/form/state.key";
 const {proxy} = getCurrentInstance();
 interface Emits {
   (e: 'update:rowData', v: any): void
@@ -76,48 +80,53 @@ interface Column {
 interface Props {
   columnDefs?:Column[],
 }
+const rowSelection = ref('multiple');
 const props = defineProps<Props>()
-const ids = ref([])
 const multiple =ref(false)
 const rowData = ref([])
 const SaveIcon = useIcon('ali_save')
-//使用注入方式，获取行数据
-import { vFormActiveElementKey } from "@/components/form/state.key";
+
+const gridApi=ref(null)
+const  gridColumnApi=ref(null)
 const vFormSelectElem = inject(vFormActiveElementKey)
 rowData.value = vFormSelectElem.value.attrs.rowData
 
-function handleAdd(){
-  rowData.value.push({})
+function makeNewRow() {
+  let row = {
+   }
+  return row;
+}
+function onGridReady(params) {
+  gridApi.value = params.api;
+  gridColumnApi.value = params.columnApi;
+}
+function handleAdd() {
+
+  const newItems = [
+    makeNewRow()
+  ];
+  gridApi.value.applyTransaction({ add:newItems});
+
 }
 function handleDelete(){
-  rowData.value = rowData.value.filter((item,index)=>{
-    return !ids.value.includes(item.id)
-  })
-  ids.value = []
+  const selectedData = gridApi.value.getSelectedRows();
+  console.log('selectedData:'+JSON.stringify(selectedData));
+  gridApi.value.applyTransaction({ remove:selectedData });
 }
 // 多选框选中数据
 function handleSelectionChange(event) {
-  if(event.node.selected){
-    // 处理选中该行的操作
-    //判断ids是否存在event.node.data.id,不存在加入
-    if(!ids.value.includes(event.node.data.id)) {
-      ids.value.push(event.node.data.id);
-    }
-  } else {
-    // 处理撤销选中该行的操作
-    //判断ids是否存在event.node.data.id,存在则删除
-    if(ids.value.includes(event.node.data.id)) {
-      const index = ids.value.indexOf(event.node.data.id);
-      if (index > -1) {
-        ids.value.splice(index, 1);
-      }
-    }
-  }
-  multiple.value = (ids.value.length>1)
+  console.log('enter handleSelectionChange')
+  let selectedRows = gridApi.value.getSelectedRows();
+  multiple.value = (selectedRows.length >=1)
 }
 function  handleSave(){
   //保存操作
-  emits('update:rowData', rowData.value)
+  let allRowData=[];
+  gridApi.value.forEachNode((rowNode) => {
+    allRowData.push(rowNode.data);
+  });
+  //保存操作
+  emits('update:rowData', allRowData)
 }
 </script>
 

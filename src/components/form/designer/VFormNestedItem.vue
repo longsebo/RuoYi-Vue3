@@ -56,6 +56,9 @@
   <template v-else-if="item.category === 'button'">
     <component :is="item.component" v-bind="item.attrs" v-model:formData="formData"></component>
   </template>
+  <template v-else-if="item.category === 'table'">
+    <component :is="item.component" v-bind="item.attrs" v-model:formData="formData"></component>
+  </template>
 </template>
 
 <script lang="ts">
@@ -74,12 +77,13 @@ import DateRangePicker from "../components/date/DateRangePicker.vue"
 import LabelField from "@/components/form/components/display/LabelField.vue";
 import NormalButton from "../components/button/NormalButton.vue"
 import RuoyiElSelect from "../components/select/RuoyiElSelect.vue";
+import RuoyiAgGrid from "../components/table/RuoyiAgGrid.vue"
 export default defineComponent({
   name: 'VFormNestedItem',
   components: {
     ElFormItem, ElSelect, ElOption, ElInput, ElRow, ElCol,ElButton, NumberInput, UserSelectorInput, DeptSelectorInput, TextInput,
     SingleSelect, MultiSelect, UserSelect, DeptSelect, DatePicker, DateRangePicker, LabelField,
-    NormalButton,RuoyiElSelect
+    NormalButton,RuoyiElSelect,RuoyiAgGrid
   },
   props: {
     item: {
