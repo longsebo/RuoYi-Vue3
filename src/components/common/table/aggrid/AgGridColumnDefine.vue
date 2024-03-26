@@ -108,7 +108,7 @@ export default defineComponent({
     const gridApi=ref(null)
     const  gridColumnApi=ref(null)
     const defaultColDef = ref({
-      suppressEnterToBatchSort: true,
+      // suppressEnterToBatchSort: true,
       singleClickEdit:true
     });
     watch(() => props.columnDefs, (newVal) => {

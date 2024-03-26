@@ -52,7 +52,7 @@ interface Emits {
   (e: 'update:rowData', v: any): void
 }
 const defaultColDef = ref({
-  suppressEnterToBatchSort: true,
+  // suppressEnterToBatchSort: true,
   singleClickEdit:true
 });
 const emits = defineEmits<Emits>()

@@ -46,7 +46,7 @@ interface Props {
 const props = defineProps<Props>()
 
 const defaultColDef = ref({
-  suppressEnterToBatchSort: true,
+  // suppressEnterToBatchSort: true,
   singleClickEdit:true
 });
 const rowData = ref([]);

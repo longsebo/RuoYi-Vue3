@@ -32,7 +32,7 @@
 <script lang="ts" setup>
 import {watch, ref, inject} from "vue";
 import { vFormSchemeKey } from '@/components/form/state.key';
-import {InputComponents} from "../../../form/designer/data";
+import {InputComponents,ButtonComponents} from "../../../form/designer/data";
 
 const formScheme = inject(vFormSchemeKey)!
 
@@ -52,8 +52,9 @@ const ids=ref([])
 const componentTreeData=ref([]);
 const selectedId=ref('');
 watch(() => formScheme, (val) => {
+  console.log('bindcomponetnselect formScheme change');
   componentTreeData.value=buildTree(formScheme.value,'');
-},{immediate: true})
+},{immediate: true,deep:true})
 
 /**
  * 构造表格树结构,暂时只实现一层下级
@@ -67,10 +68,17 @@ function buildTree(schema:Object, parentName:string):any[] {
   //遍历所有子节点
   for(i=0;i<schema.children.length;i++){
     if(schema.children[i].category !=='layout' && schema.children[i].category!=='display'
-        && schema.children[i].category!=='button' && schema.children[i].category!=='table'){
+        &&  schema.children[i].category!=='table' &&schema.children[i].category !=='button'){
       returnData.push({
         id: schema.children[i].id,
         label: schema.children[i].formItemAttrs.label,
+        component: schema.children[i].component,
+        hasChildren: false
+      })
+    }else if(schema.children[i].category ==='button'){
+      returnData.push({
+        id: schema.children[i].id,
+        label: schema.children[i].attrs.label,
         component: schema.children[i].component,
         hasChildren: false
       })
@@ -124,6 +132,12 @@ function formatComponentType(row, column){
       return InputComponents[i].title;
     }
   }
+  for(i=0;i<ButtonComponents.length;i++){
+    if(row.component===ButtonComponents[i].component) {
+      return ButtonComponents[i].title;
+    }
+  }
+
   return '';
 }
 </script>
