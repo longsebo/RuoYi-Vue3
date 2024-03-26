@@ -34,6 +34,7 @@
                @selection-changed="handleSelectionChange"
                @grid-ready="onGridReady"
                :rowSelection="rowSelection"
+               :defaultColDef="defaultColDef"
   ></ag-grid-vue>
   </div>
 </template>
@@ -50,7 +51,10 @@ const {proxy} = getCurrentInstance();
 interface Emits {
   (e: 'update:rowData', v: any): void
 }
-
+const defaultColDef = ref({
+  suppressEnterToBatchSort: true,
+  singleClickEdit:true
+});
 const emits = defineEmits<Emits>()
 interface Column {
   headerName: string

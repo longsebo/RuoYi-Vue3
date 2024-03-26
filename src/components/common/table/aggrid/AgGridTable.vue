@@ -5,6 +5,7 @@
                :rowData="rowData"
                :style="style"
                @rowSelected="handleSelectionChange"
+               :defaultColDef="defaultColDef"
   >
   </ag-grid-vue>
 
@@ -44,6 +45,10 @@ interface Props {
 
 const props = defineProps<Props>()
 
+const defaultColDef = ref({
+  suppressEnterToBatchSort: true,
+  singleClickEdit:true
+});
 const rowData = ref([]);
 const total = ref(0);
 const loading = ref(false)
@@ -61,6 +66,7 @@ watch(()=>props,(val)=>{
   if(props.dataSourceType==='input'){
       rowData.value = props.rowData
   }else {
+    rowData.value=[];
     //监控数据变化
     let prefix=getBusKeyPrefix();
     bus.on(prefix+queryListResultKey,(data) =>{

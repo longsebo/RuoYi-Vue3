@@ -37,6 +37,7 @@
                  @selection-changed="handleSelectionChange"
                  @grid-ready="onGridReady"
                  :rowSelection="rowSelection"
+                 :defaultColDef="defaultColDef"
     ></ag-grid-vue>
   </div>
 </template>
@@ -106,6 +107,10 @@ export default defineComponent({
     const rowDatas = ref([])
     const gridApi=ref(null)
     const  gridColumnApi=ref(null)
+    const defaultColDef = ref({
+      suppressEnterToBatchSort: true,
+      singleClickEdit:true
+    });
     watch(() => props.columnDefs, (newVal) => {
       //将props的columnDefs转换为rowDatas
       rowDatas.value = props.columnDefs
@@ -123,7 +128,8 @@ export default defineComponent({
         field: 'headerName',
         headerName: '显示名称',
         editable:true,
-        cellEditor:'InputEditor'
+        cellEditor:'InputEditor',
+        suppressEnterToBatchSort: true
       }
       returnVal.push(columnDef)
       columnDef ={
@@ -394,7 +400,8 @@ export default defineComponent({
       Delete,
       multiple,
       onGridReady,
-      rowSelection
+      rowSelection,
+      defaultColDef
     }
   }
 
