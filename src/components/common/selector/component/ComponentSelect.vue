@@ -36,7 +36,7 @@ const componentTreeData=ref([]);
 const selectedId=ref('');
 watch(() => formScheme, (val) => {
   componentTreeData.value=buildTree(formScheme.value,'');
-},{immediate: true})
+},{immediate: true,deep:true})
 
 /**
  * 构造表格树结构,暂时只实现一层下级
