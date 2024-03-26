@@ -32,7 +32,9 @@ interface Emits {
 const emits = defineEmits<Emits>()
 const multipleValue = ref([])
 const singleValue = ref('')
-
+function getValue() {
+  return config.value.multiple ? multipleValue.value : singleValue.value
+}
 function setInitValue(){
   if(config.value.multiple) {
     if (Array.isArray(config.value.val)) {
