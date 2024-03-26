@@ -460,7 +460,7 @@ export const TableComponents: CandidateComponentConfig[] = [
       dataSourceType:'input',//数据源类型：input(手工录入),bindcomponent(绑定组件)
       rowData:[],//行数据
       bindComponent:'',//绑定组件,通常为查询按钮，用于按钮查询数据后，通知表格更新数据
-      rowSelectTriggerComponents:[],//行选择触发组件，通知组件进行处理
+      rowSelectTriggerComponents:'',//行选择触发组件，通知组件进行处理
     }
   },
 ]

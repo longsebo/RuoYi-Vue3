@@ -24,7 +24,7 @@ import ComponentSelect from './BindComponentSelect.vue'
     multiple?:boolean
   }
   interface Emits {
-    (e: 'update:change',bindComponent:string): void
+    (e: 'change',bindComponent:string): void
   }
   const props = defineProps<Props>()
   const open = ref(false)
@@ -39,11 +39,12 @@ import ComponentSelect from './BindComponentSelect.vue'
     open.value = true;
   }
   function changeComponent(variable) {
+    console.log('enter BindComponentInput.vue changeComponent')
     open.value = false;
     if(props.multiple) {
-      emits('update:change', variable.toString())
+      emits('change', variable.toString())
     }else{
-      emits('update:change', variable)
+      emits('change', variable)
     }
   }
 </script>

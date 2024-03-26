@@ -60,12 +60,16 @@
     </el-scrollbar>
     </el-form-item>
     <el-form-item  label="绑定数据来源组件" v-show="vFormSelectElem.attrs.dataSourceType==='bindcomponent'">
+      <el-scrollbar always>
       <BindComponentInput
           :bindComponent="vFormSelectElem.attrs.bindComponent"  :multiple="false" @change="changeBindComponent" />
+      </el-scrollbar>
     </el-form-item>
     <el-form-item  label="选择行变化通知组件列表" >
+      <el-scrollbar always>
       <BindComponentInput
-          :bindComponent="rowSelectTriggerComponents" :multiple="true" @change="changeRowsSelectTriggerComponents" />
+          :bindComponent="vFormSelectElem.attrs.rowSelectTriggerComponents" :multiple="true" @change="changeRowsSelectTriggerComponents" />
+      </el-scrollbar>
     </el-form-item>
 
     <el-form-item prop="mode" label="模式">
@@ -133,8 +137,9 @@ function updateColumnDefs(newColDefs){
  * @param val
  */
 function changeRowsSelectTriggerComponents(val:string ){
+   console.log('changeRowsSelectTriggerComponents',val)
   //将字符串
-  vFormSelectElem.value.attrs.rowSelectTriggerComponents = val.split(',')
+  vFormSelectElem.value.attrs.rowSelectTriggerComponents = val
 }
 
 /**
@@ -142,6 +147,7 @@ function changeRowsSelectTriggerComponents(val:string ){
  * @param val
  */
 function changeBindComponent(val:string ){
+  console.log('changeBindComponent',val)
   vFormSelectElem.value.attrs.bindComponent = val
 }
 </script>
