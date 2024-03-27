@@ -32,7 +32,7 @@ import ComponentSelect from './BindComponentSelect.vue'
   const bindComponent = ref('')
   const isShowTooltip =ref(false)
   watch(() => props.bindComponent,() => {
-      bindComponent.value = props.bindComponent.toString()
+      bindComponent.value = props.bindComponent
     console.log('BindComponentInput.vue watch bindComponent:'+props.bindComponent)
   }, { immediate: true })
   function onClick() {

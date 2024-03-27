@@ -99,10 +99,10 @@ import {useIcon} from "@/components/common/util";
 const vFormSelectElem = inject(vFormActiveElementKey)
 const columnDefineIcon  = useIcon('ali_columndef')
 const columnDefineVisible = ref(false)
-const rowSelectTriggerComponents = ref('')
+
 //console.log('inject vFormSelectElem', JSON.stringify(vFormSelectElem.value.attrs.operationdata.parameterList));
 
-rowSelectTriggerComponents.value = vFormSelectElem.value.attrs.rowSelectTriggerComponents.toString()
+
 const mode = computed({
   get: () => vFormSelectElem.value.attrs.mode ? [vFormSelectElem.value.attrs.mode] : [],
   set: v => {

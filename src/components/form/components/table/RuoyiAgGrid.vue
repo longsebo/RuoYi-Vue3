@@ -35,7 +35,7 @@ interface Props {
   dataSourceType?:string//数据源类型：input(手工录入),bindcomponent(绑定组件)
   rowData?:object//行数据
   bindComponent?:string//数据源绑定组件
-  rowSelectTriggerComponents?:object//行选择触发组件，通知组件进行处理
+  rowSelectTriggerComponents?:string//行选择触发组件，通知组件进行处理
   tableHeight?:string
   tableWidth?:string
 }

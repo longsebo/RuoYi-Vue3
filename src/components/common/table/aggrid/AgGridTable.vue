@@ -38,7 +38,7 @@ interface Props {
   dataSourceType?:string//数据源类型：input(手工录入),bindcomponent(绑定组件)
   rowData?:object//行数据
   bindComponent?:string
-  rowSelectTriggerComponents?:string[]//行选择触发组件，通知组件进行处理
+  rowSelectTriggerComponents?:string//行选择触发组件，通知组件进行处理
   tableHeight?:string
   tableWidth?:string
 }
@@ -147,7 +147,9 @@ function handleSelectionChange(event) {
   }
   single.value  = (ids.value.length==1)
   multiple.value = (ids.value.length>1)
-  for(let item in props.rowSelectTriggerComponents) {
+  // 触发行选中事件
+  let items = props.rowSelectTriggerComponents.split(",")
+  for(let item in items) {
     let prefix = item+"_"
     bus.emit(prefix+tableRowSelectChangeKey, {ids: ids.value, single: single.value, multiple: multiple.value})
   }
