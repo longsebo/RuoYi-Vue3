@@ -21,12 +21,12 @@
 
 <script lang="ts" setup>
 import bus from '@/event/bus'
-import {onMounted, ref, onUnmounted, watch, computed} from "vue";
+import {onMounted, ref, onUnmounted, watch, computed, inject} from "vue";
 import {
   queryListResultKey,executeQueryKey,totalKey,queryParamKey,loadingKey,tableRowSelectChangeKey
 } from "@/config/app.keys";
 import { AgGridVue } from "ag-grid-vue3";
-
+import { formModeKey,vFormSchemeKey } from "@/components/form/state.key";
 interface Props {
   checkboxSelection?:boolean //设置数据复选框
   headerCheckboxSelection?:boolean  //表头是否也显示复选框，用于全选反选用
@@ -60,33 +60,46 @@ const queryParams = ref({
   pageSize: 10,
 })
 const columnDefs =ref([])
-
+const formMode = inject(formModeKey)
+const cMode = computed<FormFieldMode>(() => {
+  if (props.mode) {
+    return props.mode
+  }
+  if (formMode?.value) {
+    return formMode.value
+  }
+  return "edit"
+})
 watch(()=>props,(val)=>{
   //手工录入数据
   if(props.dataSourceType==='input'){
       rowData.value = props.rowData
   }else {
-    //如果是有自定义渲染列，则加一空行,以方便拖拽
-    if(!isHaveCustomRenderColumn(props.columnDefs)) {
-      rowData.value = [];
-    }else{
-      rowData.value = [{}];
+    //如果是设计模式且有自定义渲染列，则加一空行,以方便拖拽
+    if(cMode.value==='design') {
+      if (!isHaveCustomRenderColumn(props.columnDefs)) {
+        rowData.value = [];
+      } else {
+
+        rowData.value = [{}];
+      }
+    }else {
+      //监控数据变化
+      let prefix = getBusKeyPrefix();
+      bus.on(prefix + queryListResultKey, (data) => {
+        rowData.value = data;
+      })
+      bus.on(prefix + totalKey, (data) => {
+        total.value = data;
+      })
+      bus.on(prefix + queryParamKey, (data) => {
+        console.log('queryParamKey:' + JSON.stringify(data.value));
+        queryParams.value = data.value;
+      })
+      bus.on(prefix + loadingKey, (data) => {
+        loading.value = data;
+      })
     }
-    //监控数据变化
-    let prefix=getBusKeyPrefix();
-    bus.on(prefix+queryListResultKey,(data) =>{
-      rowData.value = data;
-    })
-    bus.on(prefix+totalKey,(data) =>{
-      total.value = data;
-    })
-    bus.on(prefix+queryParamKey,(data) =>{
-      console.log('queryParamKey:'+JSON.stringify(data.value));
-      queryParams.value = data.value;
-    })
-    bus.on(prefix+loadingKey,(data) =>{
-      loading.value = data;
-    })
   }
 },{immediate:true,deep:true})
 const style = computed(
@@ -114,12 +127,14 @@ onMounted(() =>{
 })
 onUnmounted(() =>{
   //如果绑定了组件，则撤销监控
-  if(props.dataSourceType==='bindcomponent') {
-    let prefix = getBusKeyPrefix();
-    bus.off(prefix + queryListResultKey);
-    bus.off(prefix + totalKey);
-    bus.off(prefix + queryParamKey);
-    bus.off(prefix + loadingKey);
+  if(cMode.value!=='design') {
+    if (props.dataSourceType === 'bindcomponent') {
+      let prefix = getBusKeyPrefix();
+      bus.off(prefix + queryListResultKey);
+      bus.off(prefix + totalKey);
+      bus.off(prefix + queryParamKey);
+      bus.off(prefix + loadingKey);
+    }
   }
 })
 function getList() {

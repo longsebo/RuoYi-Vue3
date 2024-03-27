@@ -3,21 +3,21 @@
     <ag-grid-table  v-bind="props"  />
   </template>
   <template v-else-if="cMode === 'edit'">
-    <ag-grid-table  v-bind="props" />
+    <ag-grid-table  v-bind="props"  />
   </template>
   <template v-else-if="cMode === 'read'">
-    <ag-grid-table  v-bind="props" />
+    <ag-grid-table  v-bind="props"  />
   </template>
   <template v-else-if="cMode === 'hidden' ">
-    <ag-grid-table  v-show="false" v-bind="props" />
+    <ag-grid-table  v-show="false" v-bind="props"  />
   </template>
 </template>
 
 <script lang="ts" setup>
 import {ElButton, ElMessage} from 'element-plus'
 import {computed, inject, nextTick, useAttrs} from "vue";
-import { formModeKey } from "@/components/form/state.key";
-import { vFormSchemeKey } from '@/components/form/state.key';
+import { formModeKey,vFormSchemeKey } from "@/components/form/state.key";
+
 import AgGridTable from '@/components/common/table/aggrid/AgGridTable.vue'
 
 

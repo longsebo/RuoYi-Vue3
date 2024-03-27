@@ -60,10 +60,10 @@ import AgGridNumberInput from "@/components/common/table/aggrid/cell/AgGridNumbe
 import AgGridDateSelect from "@/components/common/table/aggrid/cell/AgGridDateSelect.vue";
 import AgGridSelect from "@/components/common/table/aggrid/cell/AgGridSelect.vue";
 import InputEditor from "@/components/ag-grid/editor/InputEditor.vue";
-import NestedDragItem from  "@/components/form/designer/NestedDragItem.vue";
+import WrapNestedDragItem from  "@/components/common/draggable/WrapNestedDragItem.vue";
 async function startup() {
   try {
-const app = createApp(App)
+    const app = createApp(App)
 
     app.component('TextFilter', TextFilter)
     app.component('OptionFilter', OptionFilter)
@@ -77,7 +77,7 @@ const app = createApp(App)
     app.component('InputEditor',InputEditor)
     app.component('AgGridDateSelect',AgGridDateSelect)
     app.component('AgGridSelect',AgGridSelect)
-    app.component('NestedDragItem',NestedDragItem)
+    app.component('WrapNestedDragItem',WrapNestedDragItem)
     // 全局方法挂载
     app.config.globalProperties.useDict = useDict
     app.config.globalProperties.download = download

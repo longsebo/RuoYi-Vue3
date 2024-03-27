@@ -317,13 +317,16 @@ export default defineComponent({
             // console.log('rowNode:'+JSON.stringify(rowNode))
             // 如果行存在，则可以访问它的数据
             if (rowNode) {
-              rowNode.data['cellRenderer']='NestedDragItem'
+              rowNode.data['cellRenderer']='WrapNestedDragItem'
+              //渲染参数为空数组
+              rowNode.data['cellRendererParams']="{'field':'"+rowNode.data['headerName']+"',children:[]}";
             }else{
               console.log('rowNode不存在')
             }
           }else{
             console.log('清空自定义渲染器')
             rowNode.data['cellRenderer']=null
+            rowNode.data['cellRendererParams']= null
           }
           return params.newValue;
         }
