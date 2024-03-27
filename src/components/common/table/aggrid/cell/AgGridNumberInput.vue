@@ -14,7 +14,7 @@ interface Props {
 const props = defineProps<Props>()
 const val =ref(0)
 watch(()=>props.params.data,(newVal)=>{
-    console.log('props.params data:'+JSON.stringify(props.params.data))
+    // console.log('props.params data:'+JSON.stringify(props.params.data))
     if(props.params.data[props.params.field]){
       val.value= props.params.data[props.params.field];
     }else{
@@ -23,7 +23,7 @@ watch(()=>props.params.data,(newVal)=>{
 },{immediate:true,deep:true})
 function updateValue1(newValue){
     props.params.data[props.params.field] = newValue
-    console.log('newValue:'+newValue+","+JSON.stringify(props.params.data))
+    // console.log('newValue:'+newValue+","+JSON.stringify(props.params.data))
 }
 // const value = computed({
 //   get: () => {

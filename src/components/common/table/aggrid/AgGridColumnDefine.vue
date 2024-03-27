@@ -128,8 +128,7 @@ export default defineComponent({
         field: 'headerName',
         headerName: '显示名称',
         editable:true,
-        cellEditor:'InputEditor',
-        suppressEnterToBatchSort: true
+        cellEditor:'InputEditor'
       }
       returnVal.push(columnDef)
       columnDef ={
@@ -308,6 +307,26 @@ export default defineComponent({
         editable:true,
         cellEditor: "agCheckboxCellEditor",
         cellRenderer: 'agCheckboxCellRenderer',
+        valueSetter: function(params) {
+          debugger;
+          // 设置值时的逻辑
+          console.log('Cell ' + params.colDef.headerName + ' in row ' + (params.node.rowIndex + 1) + ' was changed to ' + params.newValue);
+          //改变自定义渲染
+          if(params.newValue){
+            const rowNode = gridApi.value.getRowNode(params.node.rowIndex);
+            // console.log('rowNode:'+JSON.stringify(rowNode))
+            // 如果行存在，则可以访问它的数据
+            if (rowNode) {
+              rowNode.data['cellRenderer']='NestedDragItem'
+            }else{
+              console.log('rowNode不存在')
+            }
+          }else{
+            console.log('清空自定义渲染器')
+            rowNode.data['cellRenderer']=null
+          }
+          return params.newValue;
+        }
       }
       returnVal.push(columnDef1)
       columnDef ={
@@ -336,7 +355,7 @@ export default defineComponent({
         cellStyle: '',
         isCustomRenderer: false,
         cellRendererParams:'',
-        cellRenderer: '',
+        cellRenderer: null,
         sortable: true,
         resizable: true,
         filter: true,
@@ -376,6 +395,7 @@ export default defineComponent({
       gridApi.value.forEachNode((rowNode) => {
         allRowData.push(rowNode.data);
       });
+      console.log('allRowData:'+JSON.stringify(allRowData));
       emit('change', allRowData)
     }
 

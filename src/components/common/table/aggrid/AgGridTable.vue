@@ -66,7 +66,12 @@ watch(()=>props,(val)=>{
   if(props.dataSourceType==='input'){
       rowData.value = props.rowData
   }else {
-    rowData.value=[];
+    //如果是有自定义渲染列，则加一空行,以方便拖拽
+    if(!isHaveCustomRenderColumn(props.columnDefs)) {
+      rowData.value = [];
+    }else{
+      rowData.value = [{}];
+    }
     //监控数据变化
     let prefix=getBusKeyPrefix();
     bus.on(prefix+queryListResultKey,(data) =>{
@@ -155,6 +160,19 @@ function handleSelectionChange(event) {
   }
 }
 
+/**
+ * 判断是否含有自定义渲染列
+ * @param columnDefs
+ */
+function isHaveCustomRenderColumn(columnDefs1){
+  console.log('isHaveCustomRenderColumn,columnDefs1:'+JSON.stringify(columnDefs1))
+  for(let i=0;i<columnDefs1.length;i++){
+    if(columnDefs1[i].cellRenderer){
+      return true;
+    }
+  }
+  return false;
+}
 </script>
 
 
