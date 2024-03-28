@@ -6,6 +6,7 @@
 <script lang="ts" setup>
 import {ref, watch} from "vue";
 import {getCurrentInstance} from 'vue';
+import NestedDragItem from "@/components/form/designer/NestedDragItem.vue"
 interface Props {
   params?:object;
 }
@@ -24,18 +25,31 @@ watch(() => props.params, (newVal) =>{
 
   // 获取列定义中的某些属性，例如标题和字段名
   let cellRendererParams = colDef.cellRendererParams;
-  console.log('cellRendererParams',JSON.stringify(cellRendererParams))
+  console.log('cellRendererParams',cellRendererParams)
   if(cellRendererParams){
-    children.value = JSON.parse(cellRendererParams).children;
+    children.value = JSON.parse(cellRendererParams);
   }
 },{immediate: true,deep: true})
 watch(()=>children,(newVal)=>{
+  //console.log('enter children watch',JSON.stringify(newVal))
   //获取列定义
   let colDef = props.params.colDef;
-
-  // 获取列定义中的某些属性，例如标题和字段名
-  colDef.cellRendererParams=JSON.stringify(children.value);
-  console.log('cellRendererParams',colDef.cellRendererParams)
+  //
+  // // 获取列定义中的某些属性，例如标题和字段名
+  // colDef.cellRendererParams=JSON.stringify(children.value);
+  //let gridApi = props.params.api;
+  // 获取所有列的定义
+  //const allColumns = props.params.columnApi.getAllColumns();
+  if(props.params.columnApi){
+    console.log('column size:'+props.params.columnApi.api.columnModel.columnDefs.length)
+  }else{
+    console.log('props.params.columnApi is not object')
+  }
+  // 打印列定义到控制台
+  // allColumns.forEach(column => {
+  //   console.log(column.getColDef());
+  // });
+  //console.log('cellRendererParams',colDef.cellRendererParams)
 },{immediate: true,deep: true})
 </script>
 

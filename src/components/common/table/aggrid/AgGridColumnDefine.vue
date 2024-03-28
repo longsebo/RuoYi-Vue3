@@ -242,7 +242,7 @@ export default defineComponent({
         headerName: '最大宽度',
         cellRenderer: 'AgGridNumberInput',
         cellRendererParams: {
-          field: 'width'
+          field: 'maxWidth'
         },
         cellStyle: {
           display: 'flex',
@@ -255,7 +255,7 @@ export default defineComponent({
         headerName: '最小宽度',
         cellRenderer: 'AgGridNumberInput',
         cellRendererParams: {
-          field: 'width'
+          field: 'minWidth'
         },
         cellStyle: {
           display: 'flex',
@@ -319,7 +319,7 @@ export default defineComponent({
             if (rowNode) {
               rowNode.data['cellRenderer']='WrapNestedDragItem'
               //渲染参数为空数组
-              rowNode.data['cellRendererParams']="{'field':'"+rowNode.data['headerName']+"',children:[]}";
+              rowNode.data['cellRendererParams']="[]";
             }else{
               console.log('rowNode不存在')
             }

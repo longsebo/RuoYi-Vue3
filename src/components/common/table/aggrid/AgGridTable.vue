@@ -45,6 +45,13 @@ interface Props {
 
 const props = defineProps<Props>()
 
+interface Emits {
+  (e: 'changeColumnDefs', v: object): void
+  (e: 'changeRowData', v: object): void
+}
+
+
+const emits = defineEmits<Emits>()
 const defaultColDef = ref({
   // suppressEnterToBatchSort: true,
   singleClickEdit:true
@@ -74,17 +81,22 @@ watch(()=>props,(val)=>{
   //手工录入数据
   if(props.dataSourceType==='input'){
       rowData.value = props.rowData
+      emits('changeRowData', rowData.value)
   }else {
     //如果是设计模式且有自定义渲染列，则加一空行,以方便拖拽
     if(cMode.value==='design') {
       if (!isHaveCustomRenderColumn(props.columnDefs)) {
         rowData.value = [];
       } else {
-
-        rowData.value = [{}];
+        //如果没有数据，则添加一行，以便设计
+        if(rowData.value.length===0) {
+          rowData.value = [{}];
+        }
+        //列定义可能变化了，需要更新父组件
+        emits('changeColumnDefs', props.columnDefs)
       }
     }else {
-      //监控数据变化
+      //监控数据变化,来自其他组件数据不需保存
       let prefix = getBusKeyPrefix();
       bus.on(prefix + queryListResultKey, (data) => {
         rowData.value = data;

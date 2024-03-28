@@ -1,9 +1,9 @@
 <template>
   <template v-if="cMode === 'design'">
-    <ag-grid-table  v-bind="props"  />
+    <ag-grid-table  v-bind="props" @changeColumnDefs="changeColumnDefs"  />
   </template>
   <template v-else-if="cMode === 'edit'">
-    <ag-grid-table  v-bind="props"  />
+    <ag-grid-table  v-bind="props" @changeRowData="changeRowData" />
   </template>
   <template v-else-if="cMode === 'read'">
     <ag-grid-table  v-bind="props"  />
@@ -61,10 +61,29 @@ const cMode = computed<FormFieldMode>(() => {
   return "edit"
 })
 //console.log('$attrs:'+JSON.stringify(props));
-
-
-
-
+/**
+ * 改变列定义
+ * @param columnDefs
+ */
+function changeColumnDefs(columnDefs){
+  if(cMode==='design'){
+    console.log('enter changeColumnDefs columnDefs:'+JSON.stringify(columnDefs))
+    props.columnDefs = columnDefs
+  }else{
+    console.log('enter changeColumnDefs cMode:'+cMode.value)
+  }
+}
+/**
+ *  改变行数据
+ */
+function changeRowData(rowData) {
+  if(cMode==='edit'){
+     console.log('enter changeRowData rowData:'+JSON.stringify(rowData))
+     props.rowData =  rowData
+  }else{
+    console.log('enter changeColumnDefs cMode:'+cMode.value)
+  }
+}
 </script>
 
 <style scoped>
