@@ -46,7 +46,7 @@ interface Props {
 const props = defineProps<Props>()
 
 interface Emits {
-  (e: 'changeColumnDefs', v: object): void
+  // (e: 'changeColumnDefs', v: object): void
   (e: 'changeRowData', v: object): void
 }
 
@@ -93,7 +93,7 @@ watch(()=>props,(val)=>{
           rowData.value = [{}];
         }
         //列定义可能变化了，需要更新父组件
-        emits('changeColumnDefs', props.columnDefs)
+        // emits('changeColumnDefs', props.columnDefs)
       }
     }else {
       //监控数据变化,来自其他组件数据不需保存
