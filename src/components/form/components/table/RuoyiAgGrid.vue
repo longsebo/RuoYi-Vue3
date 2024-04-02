@@ -66,18 +66,19 @@ const cMode = computed<FormFieldMode>(() => {
  * @param columnDefs
  */
 function changeColumnDefs(columnDefs){
-  if(cMode==='design'){
-    console.log('enter changeColumnDefs columnDefs:'+JSON.stringify(columnDefs))
-    props.columnDefs = columnDefs
-  }else{
-    console.log('enter changeColumnDefs cMode:'+cMode.value)
-  }
+  // if(cMode.value==='design'){
+  //   console.log('enter changeColumnDefs columnDefs:'+JSON.stringify(columnDefs))
+  //   //props.columnDefs = columnDefs
+  //   emits('update:value', columnDefs)
+  // }else{
+  //   console.log('enter changeColumnDefs cMode:'+cMode.value)
+  // }
 }
 /**
  *  改变行数据
  */
 function changeRowData(rowData) {
-  if(cMode==='edit'){
+  if(cMode.value==='edit'){
      console.log('enter changeRowData rowData:'+JSON.stringify(rowData))
      props.rowData =  rowData
   }else{

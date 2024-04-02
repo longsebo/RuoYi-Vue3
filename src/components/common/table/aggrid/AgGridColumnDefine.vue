@@ -39,33 +39,28 @@
                  :rowSelection="rowSelection"
                  :defaultColDef="defaultColDef"
     ></ag-grid-vue>
+    <el-dialog
+        v-model="dialogVisible"
+        title="提示"
+        :fullscreen="true">
+      <FormDesigner1 name="UPDATE" :pageInfo="pageInfo" :isPage="false"  />
+    </el-dialog>
   </div>
 </template>
 
-<script>
+<script setup  lang="ts">
 import {defineComponent, ref, watch} from "vue";
 import {getCurrentInstance} from 'vue';
 import {Plus, Delete} from "@element-plus/icons-vue";
 import {useIcon} from "@/components/common/util";
-
+import FormDesigner1 from '@/views/modeling/form/designer.vue';
 import {AgGridVue} from "ag-grid-vue3";
 import {ElRow, ElCol, ElButton} from 'element-plus';
 import AgGridSelect from "./cell/AgGridSelect.vue";
 import NestedDragItem from '@/components/form/designer/NestedDragItem.vue';
 
-export default defineComponent({
-  components: {
-    AgGridVue,
-    NestedDragItem,
-    AgGridSelect,
-    ElRow,
-    ElCol,
-    ElButton,
-    Plus,
-    Delete
-  },
 
-  props: {
+const props=defineProps({
     columnDefs: {
       type: Array,
       default: () => [{
@@ -94,11 +89,13 @@ export default defineComponent({
         cellRendererParams: Object,
       }]
     }
-  },
-  emits: {
-    change: (newColumnsDef) => true,
-  },
-  setup(props,{emit}) {
+  })
+  interface Emits {
+    (e: 'change', newColumnsDef: object): void
+  }
+
+const emit = defineEmits<Emits>()
+
     const {proxy} = getCurrentInstance();
     const SaveIcon = useIcon('ali_save')
     const multiple = ref(false)
@@ -107,10 +104,19 @@ export default defineComponent({
     const rowDatas = ref([])
     const gridApi=ref(null)
     const  gridColumnApi=ref(null)
+    const dialogVisible =ref(false)
     const defaultColDef = ref({
       // suppressEnterToBatchSort: true,
       singleClickEdit:true
     });
+
+    const pageInfo = ref({ "mode": "design",
+      "size": "default",
+      "style": "",
+      "children": [],
+      "labelWidth": "120px",
+      "labelPosition": "auto"})
+    const currentRow = ref({})
     watch(() => props.columnDefs, (newVal) => {
       //将props的columnDefs转换为rowDatas
       rowDatas.value = props.columnDefs
@@ -167,38 +173,38 @@ export default defineComponent({
         cellEditor: "agCheckboxCellEditor",
       }
       returnVal.push(columnDef1)
-      columnDef1 = {
+      let columnDef11 = {
         field: 'checkboxSelection',
         headerName:'是否设置数据复选框',
         editable:true,
         cellEditor: "agCheckboxCellEditor",
         cellRenderer: 'agCheckboxCellRenderer',
       }
-      returnVal.push(columnDef1)
-      columnDef1 = {
+      returnVal.push(columnDef11)
+       columnDef11 = {
         field: 'headerCheckboxSelection',
         headerName:'表头是否显示复选框',
         editable:true,
         cellEditor: "agCheckboxCellEditor",
         cellRenderer: 'agCheckboxCellRenderer',
       }
-      returnVal.push(columnDef1)
-      columnDef1 = {
+      returnVal.push(columnDef11)
+      columnDef11 = {
         field: 'headerCheckboxSelectionFilteredOnly',
         headerName:'是否过滤后可见行可选',
         editable:true,
         cellEditor: "agCheckboxCellEditor",
         cellRenderer: 'agCheckboxCellRenderer',
       }
-      returnVal.push(columnDef1)
-      columnDef1 = {
+      returnVal.push(columnDef11)
+      columnDef11 = {
         field: 'lockPinned',
         headerName:'是否冻结列',
         editable:true,
         cellEditor: "agCheckboxCellEditor",
         cellRenderer: 'agCheckboxCellRenderer',
       }
-      returnVal.push(columnDef1)
+      returnVal.push(columnDef11)
       let columnDef2 = {
 
         field: 'pinned',
@@ -208,7 +214,7 @@ export default defineComponent({
         cellRenderer: 'agCheckboxCellRenderer',
       }
       returnVal.push(columnDef2)
-      columnDef1 = {
+      columnDef11 = {
         field: 'lockPosition',
         headerName:'是否禁止拖动列',
         editable:true,
@@ -216,15 +222,15 @@ export default defineComponent({
         cellRenderer: 'agCheckboxCellRenderer',
       }
       returnVal.push(columnDef1)
-      columnDef1 = {
+      columnDef11 = {
         field: 'lockVisible',
         headerName:'是否禁用通过菜单更改可见性',
         editable:true,
         cellEditor: "agCheckboxCellEditor",
         cellRenderer: 'agCheckboxCellRenderer',
       }
-      returnVal.push(columnDef1)
-      columnDef ={
+      returnVal.push(columnDef11)
+      let columnDef13 ={
         field: 'width',
         headerName: '列宽',
         cellRenderer: 'AgGridNumberInput',
@@ -236,8 +242,8 @@ export default defineComponent({
           alignItems: 'center'
         }
       }
-      returnVal.push(columnDef)
-      columnDef ={
+      returnVal.push(columnDef13)
+      columnDef13 ={
         field: 'maxWidth',
         headerName: '最大宽度',
         cellRenderer: 'AgGridNumberInput',
@@ -249,8 +255,8 @@ export default defineComponent({
           alignItems: 'center'
         }
       }
-      returnVal.push(columnDef)
-      columnDef ={
+      returnVal.push(columnDef13)
+      columnDef13 ={
         field: 'minWidth',
         headerName: '最小宽度',
         cellRenderer: 'AgGridNumberInput',
@@ -262,8 +268,8 @@ export default defineComponent({
           alignItems: 'center'
         }
       }
-      returnVal.push(columnDef)
-      columnDef2 = {
+      returnVal.push(columnDef13)
+      let columnDef14 = {
         field: 'cellEditor',
         headerName:'单元格编辑器',
         editable:true,
@@ -286,7 +292,7 @@ export default defineComponent({
             ]
         }
       }
-      returnVal.push(columnDef2)
+      returnVal.push(columnDef14)
       columnDef ={
         field: 'cellEditorParams',
         headerName: '编辑框参数',
@@ -301,7 +307,7 @@ export default defineComponent({
         cellEditor:'InputEditor'
       }
       returnVal.push(columnDef)
-      columnDef1 = {
+      let columnDef15 = {
         field: 'isCustomRenderer',
         headerName:'是否自定义单元格渲染器',
         editable:true,
@@ -325,13 +331,14 @@ export default defineComponent({
             }
           }else{
             console.log('清空自定义渲染器')
+            const rowNode = gridApi.value.getRowNode(params.node.rowIndex);
             rowNode.data['cellRenderer']=null
             rowNode.data['cellRendererParams']= null
           }
           return params.newValue;
         }
       }
-      returnVal.push(columnDef1)
+      returnVal.push(columnDef15)
       columnDef ={
         field: 'cellRendererParams',
         headerName: '自定义渲染器参数',
@@ -342,13 +349,13 @@ export default defineComponent({
       let columnDef3 ={
         field: 'cellRenderer',
         headerName: '自定义渲染器组件名称',
-        hide:true
+        onCellDoubleClicked: onCellDoubleClick
       }
       returnVal.push(columnDef3)
       return returnVal;
 
     }
-    window.makeNewRow = function makeNewRow() {
+    function makeNewRow() {
       let row = {
         headerName: '',
         field: '',
@@ -409,26 +416,32 @@ export default defineComponent({
       let selectedRows = gridApi.value.getSelectedRows();
       multiple.value = (selectedRows.length >=1)
     }
-
-    return {
-      ...props,
-      SaveIcon,
-      handleAdd,
-      handleSave,
-      handleDelete,
-      columnDefs1,
-      rowDatas,
-      handleSelectionChange,
-      Plus,
-      Delete,
-      multiple,
-      onGridReady,
-      rowSelection,
-      defaultColDef
+    //双击自定义渲染器
+    function onCellDoubleClick(event) {
+      //CellDoubleClickedEvent 包含 column: Column<TValue>;
+      // colDef: ColDef<TData, TValue>;
+      // // The value for the cell if available otherwise undefined.
+      // value: TValue | null | undefined;
+      // // The user provided data for the row. Data is `undefined` for row groups.
+      // data: TData | undefined;
+      // currentRowIndex = event.
+      //设置当前自定义参数
+      pageInfo.value.children = currentRow.value['cellRendererParams']
+      dialogVisible.value = true
+      currentRow.value = event.data;
     }
-  }
-
-});
+    //回填组件设计
+    function updatedesigner(formSchema){
+      console.log('enter updatedesigner:'+formSchema)
+      dialogVisible.value = false
+      if(formSchema){
+        //更新当前行的cellRendererParams
+        currentRow.value['cellRendererParams'] = formSchema
+        const itemsToUpdate = [currentRow.value];
+        const res = gridApi.value.applyTransaction({ update: itemsToUpdate });
+        console.log('res:'+JSON.stringify(res))
+      }
+    }
 </script>
 
 <style scoped>

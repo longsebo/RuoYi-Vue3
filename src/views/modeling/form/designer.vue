@@ -17,12 +17,13 @@
     </div>
     <div class="form-wrapper">
       <div class="form-designer-toolbar">
-        <div style="display: flex; align-items: center; padding-left: 10px; width: 400px">
+        <div  v-show="props.isPage" style="display: flex; align-items: center; padding-left: 10px; width: 400px">
           <span style="width: 100px; align-self: center; font-weight: bold">页面名称</span>
           <el-input :disabled="true" v-model="pageName" />
           <el-button text type="primary" :icon="saveIcon" @click="handleClickSave">保存</el-button>
         </div>
         <div>
+          <el-button text v-show="!props.isPage" type="primary" :icon="saveIcon" @click="handleUpdateBack">回填表格</el-button>
           <el-button text type="primary" :icon="Delete" @click="handleClickClear">清空</el-button>
           <el-button text type="primary" :icon="View" @click="handleClickPreview">预览</el-button>
           <!-- <el-button text type="primary" :icon="View" @click="handleClickViewJSON">查看JSON</el-button> -->
@@ -123,12 +124,23 @@ import VDialog from "@/components/dialog/VDialog.vue";
 import {getPage,updateDesign} from "@/api/business/page";
 const saveIcon = useIcon('Save')
 
-interface Props {
-  pageInfo:object
+
+const props = defineProps({
+  pageInfo:{
+    type:Object,
+  },
+  isPage:{
+    type:Boolean,
+    default:true
+  },
+});
+// const props = defineProps<Props>({isPage:true})
+interface Emits {
+  (e: 'updatedesigner', v: string): void
 }
 
-const props = defineProps<Props>()
 
+const emits = defineEmits<Emits>()
 const loading = ref(false)
 
 const pageInfo= ref({});
@@ -172,21 +184,25 @@ const labelPosition = computed(() => {
 
 watch(() => props.pageInfo, async () => {
   //console.log('enter watch')
-  pageInfo.value = await getPage(props.pageInfo.pageId)
-  if (pageInfo.value.data?.pageName) {
-    pageName.value = pageInfo.value.data.pageName
-  }
-  if (pageInfo.value.data?.pageScheme) {
-    formScheme.value = JSON.parse(pageInfo.value.data.pageScheme)
-  }else{
-    formScheme.value={
-      "mode": "design",
-      "size": "default",
-      "style": "",
-      "children": [],
-      "labelWidth": "120px",
-      "labelPosition": "auto"
+  if(props.isPage) {
+    pageInfo.value = await getPage(props.pageInfo.pageId)
+    if (pageInfo.value.data?.pageName) {
+      pageName.value = pageInfo.value.data.pageName
     }
+    if (pageInfo.value.data?.pageScheme) {
+      formScheme.value = JSON.parse(pageInfo.value.data.pageScheme)
+    } else {
+      formScheme.value = {
+        "mode": "design",
+        "size": "default",
+        "style": "",
+        "children": [],
+        "labelWidth": "120px",
+        "labelPosition": "auto"
+      }
+    }
+  }else{
+    formScheme.value = props.pageInfo
   }
 },{immediate: true ,deep: true})
 
@@ -244,6 +260,9 @@ async function handleClickValidateForm() {
   } catch(e) {
     console.error(e);
   }
+}
+function handleUpdateBack(){
+  emits('updatedesigner',JSON.stringify(formScheme))
 }
 </script>
 

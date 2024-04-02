@@ -36,19 +36,19 @@ watch(()=>children,(newVal)=>{
   let colDef = props.params.colDef;
   //
   // // 获取列定义中的某些属性，例如标题和字段名
-  // colDef.cellRendererParams=JSON.stringify(children.value);
-  //let gridApi = props.params.api;
   // 获取所有列的定义
-  //const allColumns = props.params.columnApi.getAllColumns();
-  if(props.params.columnApi){
-    console.log('column size:'+props.params.columnApi.api.columnModel.columnDefs.length)
-  }else{
-    console.log('props.params.columnApi is not object')
-  }
+  const allColumns = props.params.columnApi.api.columnModel.columnDefs;
+  // if(props.params.columnApi){
+  //   console.log('column size:'+props.params.columnApi.api.columnModel.columnDefs.length)
+  // }else{
+  //   console.log('props.params.columnApi is not object')
+  // }
   // 打印列定义到控制台
-  // allColumns.forEach(column => {
-  //   console.log(column.getColDef());
-  // });
+  allColumns.forEach(column => {
+    if(column.field===colDef.field){
+      column.cellRendererParams=JSON.stringify(children.value);
+    }
+  });
   //console.log('cellRendererParams',colDef.cellRendererParams)
 },{immediate: true,deep: true})
 </script>
