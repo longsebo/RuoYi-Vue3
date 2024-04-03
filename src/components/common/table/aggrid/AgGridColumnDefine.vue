@@ -43,7 +43,7 @@
         v-model="dialogVisible"
         title="提示"
         :fullscreen="true">
-      <FormDesigner1 name="UPDATE" :pageInfo="pageInfo" :isPage="false"  />
+      <FormDesigner1 name="UPDATE" :pageInfo="pageInfo" :isPage="false" @updatedesigner="updatedesigner" />
     </el-dialog>
   </div>
 </template>
@@ -426,12 +426,13 @@ const emit = defineEmits<Emits>()
       // data: TData | undefined;
       // currentRowIndex = event.
       //设置当前自定义参数
-      pageInfo.value.children = currentRow.value['cellRendererParams']
+      pageInfo.value.children = JSON.parse(event.data['cellRendererParams'])
       dialogVisible.value = true
       currentRow.value = event.data;
     }
     //回填组件设计
     function updatedesigner(formSchema){
+      debugger;
       console.log('enter updatedesigner:'+formSchema)
       dialogVisible.value = false
       if(formSchema){

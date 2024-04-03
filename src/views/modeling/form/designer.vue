@@ -202,6 +202,7 @@ watch(() => props.pageInfo, async () => {
       }
     }
   }else{
+    console.log('props.pageInfo:'+JSON.stringify(props.pageInfo))
     formScheme.value = props.pageInfo
   }
 },{immediate: true ,deep: true})
@@ -262,7 +263,8 @@ async function handleClickValidateForm() {
   }
 }
 function handleUpdateBack(){
-  emits('updatedesigner',JSON.stringify(formScheme))
+  console.log('回填表格:'+JSON.stringify(formScheme.value.children))
+  emits('updatedesigner',JSON.stringify(formScheme.value.children))
 }
 </script>
 
