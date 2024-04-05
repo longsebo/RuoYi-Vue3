@@ -85,7 +85,7 @@
       <ModelingViewUpdatePanel :src="activeView" :fields="modelingFields" @close="viewConfigVisible = false" @success="initPage" />
     </MaskWindow>
     <MaskWindow v-model="instanceVisible" :teleport-to="teleportTo">
-      <WorkflowInstanceTabsPage :mkey="props.mkey" :instance-id="instanceId" />
+      <WorkflowInstanceTabsPage1 :mkey="props.mkey" :instance-id="instanceId" />
     </MaskWindow>
 
     <dropdown-menu
@@ -113,7 +113,7 @@ import { useModelingFieldApi } from "@/service/modeling/field";
 import ModelingViewUpdatePanel from '@/views/modeling/view/ModelingViewUpdatePanel.vue'
 import { useWorkflowInstanceApi } from '@/service/workflow';
 import { useRoute, useRouter } from 'vue-router';
-import WorkflowInstanceTabsPage from "@/components/Flowable/instance/WorkflowInstanceTabsPage.vue";
+import WorkflowInstanceTabsPage1 from "@/components/Flowable/instance/WorkflowInstanceTabsPage1.vue";
 import { AgGridVue } from 'ag-grid-vue3';
 import {
   ColumnApi,
