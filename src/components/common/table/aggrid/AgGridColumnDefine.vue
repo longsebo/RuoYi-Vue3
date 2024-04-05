@@ -59,6 +59,7 @@ import {ElRow, ElCol, ElButton} from 'element-plus';
 import AgGridSelect from "./cell/AgGridSelect.vue";
 import NestedDragItem from '@/components/form/designer/NestedDragItem.vue';
 
+const cellRendererParams= ref([])
 
 const props=defineProps({
     columnDefs: {
@@ -323,7 +324,7 @@ const emit = defineEmits<Emits>()
             // console.log('rowNode:'+JSON.stringify(rowNode))
             // 如果行存在，则可以访问它的数据
             if (rowNode) {
-              rowNode.data['cellRenderer']='WrapNestedDragItem'
+              rowNode.data['cellRenderer']='WrapColumnDesignNestedDragItem'
               //渲染参数为空数组
               rowNode.data['cellRendererParams']="[]";
             }else{
@@ -336,7 +337,17 @@ const emit = defineEmits<Emits>()
             rowNode.data['cellRendererParams']= null
           }
           return params.newValue;
-        }
+        },
+		valueGetter: function(params) {
+		   
+		   const rowNode = gridApi.value.getRowNode(params.node.rowIndex);
+		   //console.log('rowNode:'+JSON.stringify(rowNode))
+		   if(rowNode.data['cellRenderer']==='WrapColumnDesignNestedDragItem'){
+		       return true;
+		   }else{
+			   return false;
+		   }
+		}
       }
       returnVal.push(columnDef15)
       columnDef ={
@@ -348,7 +359,8 @@ const emit = defineEmits<Emits>()
       returnVal.push(columnDef)
       let columnDef3 ={
         field: 'cellRenderer',
-        headerName: '自定义渲染器组件名称',
+        headerName: '自定义渲染器组件(双击设计)',
+		cellRenderer:'WrapColumnDesignNestedDragItem',
         onCellDoubleClicked: onCellDoubleClick
       }
       returnVal.push(columnDef3)
@@ -426,9 +438,13 @@ const emit = defineEmits<Emits>()
       // data: TData | undefined;
       // currentRowIndex = event.
       //设置当前自定义参数
-      pageInfo.value.children = JSON.parse(event.data['cellRendererParams'])
-      dialogVisible.value = true
-      currentRow.value = event.data;
+	  debugger;
+	  if(event.data['cellRenderer']==='WrapColumnDesignNestedDragItem'){
+		pageInfo.value.children = JSON.parse(event.data['cellRendererParams'])
+		cellRendererParams.value = pageInfo.value.children
+		dialogVisible.value = true
+		currentRow.value = event.data;
+	  }
     }
     //回填组件设计
     function updatedesigner(formSchema){
@@ -438,9 +454,9 @@ const emit = defineEmits<Emits>()
       if(formSchema){
         //更新当前行的cellRendererParams
         currentRow.value['cellRendererParams'] = formSchema
-        const itemsToUpdate = [currentRow.value];
-        const res = gridApi.value.applyTransaction({ update: itemsToUpdate });
-        console.log('res:'+JSON.stringify(res))
+        // const itemsToUpdate = [currentRow.value];
+        // const res = gridApi.value.applyTransaction({ update: itemsToUpdate });
+        // console.log('res:'+JSON.stringify(res))
       }
     }
 </script>
