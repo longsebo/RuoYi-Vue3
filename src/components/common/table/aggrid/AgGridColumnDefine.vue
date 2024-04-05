@@ -1,6 +1,6 @@
 <template>
-  <div class="app-container">
-    <el-row :gutter="10" class="mb8">
+  <div style="height: 300px; width: 100%;" >
+    <!-- <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
             :icon="Plus"
@@ -29,22 +29,27 @@
         >保存
         </el-button>
       </el-col>
-    </el-row>
-    <ag-grid-vue ref="agGrid" :columnDefs="columnDefs1"
-                 :rowData="rowDatas"
+    </el-row> -->
+    <ag-grid-vue ref="agGrid" 
+                 :grid-options="gridOptions"
                  class="ag-theme-balham"
-                 style="height: 300px; width: 100%;"
-                 @selection-changed="handleSelectionChange"
-                 @grid-ready="onGridReady"
-                 :rowSelection="rowSelection"
-                 :defaultColDef="defaultColDef"
+                 style="height: 300px; width: 100%;"                
     ></ag-grid-vue>
-    <el-dialog
+	<dropdown-menu
+      ref="menuRef"
+      v-click-outside="handleClickMenuOutside"
+      :y="y"
+      :x="x"
+      :options="menuOptions"
+      @item-click="handleMenuClick"
+    />
+	
+    <!-- <el-dialog
         v-model="dialogVisible"
         title="提示"
         :fullscreen="true">
       <FormDesigner1 name="UPDATE" :pageInfo="pageInfo" :isPage="false" @updatedesigner="updatedesigner" />
-    </el-dialog>
+    </el-dialog>-->
   </div>
 </template>
 
@@ -58,8 +63,14 @@ import {AgGridVue} from "ag-grid-vue3";
 import {ElRow, ElCol, ElButton} from 'element-plus';
 import AgGridSelect from "./cell/AgGridSelect.vue";
 import NestedDragItem from '@/components/form/designer/NestedDragItem.vue';
-
+import { CellContextMenuEvent, ColumnApi, GridApi, GridOptions, GridReadyEvent } from "ag-grid-community";
+import { MenuOption } from "@/components/menu";
+import DropdownMenu from "@/components/menu/DropdownMenu.vue";
 const cellRendererParams= ref([])
+const menuRef = ref<any>()
+const menuOptions = reactive<MenuOption[]>([
+  { text: '设计', command: 'designer' }
+])
 
 const props=defineProps({
     columnDefs: {
@@ -95,8 +106,8 @@ const props=defineProps({
     (e: 'change', newColumnsDef: object): void
   }
 
-const emit = defineEmits<Emits>()
-
+	const emit = defineEmits<Emits>()
+	const contextmenuRow = ref<any>()
     const {proxy} = getCurrentInstance();
     const SaveIcon = useIcon('ali_save')
     const multiple = ref(false)
@@ -106,10 +117,39 @@ const emit = defineEmits<Emits>()
     const gridApi=ref(null)
     const  gridColumnApi=ref(null)
     const dialogVisible =ref(false)
+	const x = ref(0)
+    const y = ref(0)
     const defaultColDef = ref({
       // suppressEnterToBatchSort: true,
       singleClickEdit:true
     });
+	
+	const gridOptions: GridOptions<any> = {
+	  rowHeight: 32,
+	  headerHeight: 32,
+	  preventDefaultOnContextMenu: true,
+	  rowSelection:'multiple',
+	  onGridReady(event) {
+		  gridApi.value = event.api;
+		  gridColumnApi.value = event.columnApi;
+		  columnDefs1.value = makeColumnDefs()
+		  event.api.setGridOption('columnDefs', columnDefs1.value)			  
+		  event.api.setGridOption('rowData', rowDatas.value)		  
+		  event.api.setGridOption('defaultColDef', defaultColDef.value)
+		  
+	  },
+	  onCellContextMenu(event: CellContextMenuEvent<any>) {
+		console.log('event', event)
+		debugger;
+		contextmenuRow.value = event.data
+		const ev = event.event as PointerEvent
+		x.value = ev.clientX
+		y.value = ev.clientY
+		menuRef.value?.show()
+	  },
+	  rowData: [],
+	}
+
 
     const pageInfo = ref({ "mode": "design",
       "size": "default",
@@ -122,7 +162,7 @@ const emit = defineEmits<Emits>()
       //将props的columnDefs转换为rowDatas
       rowDatas.value = props.columnDefs
       //循环将props的columnDefs转换为columnDefs
-      columnDefs1.value = makeColumnDefs()
+      //columnDefs1.value = makeColumnDefs()
       console.log('columnDefs.value:' + JSON.stringify(columnDefs1.value))
     }, {deep: true, immediate: true})
     function onGridReady(params) {
@@ -421,7 +461,12 @@ const emit = defineEmits<Emits>()
       emit('change', allRowData)
     }
 
-
+function handleMenuClick(item: MenuOption, ev: PointerEvent) {
+  if (item.command === 'designer') {
+    console.log('enter handleMenuClick!');
+  }
+  
+}
 // 多选框选中数据
     function handleSelectionChange(event) {
       console.log('enter handleSelectionChange')
@@ -459,6 +504,9 @@ const emit = defineEmits<Emits>()
         // console.log('res:'+JSON.stringify(res))
       }
     }
+	function handleClickMenuOutside() {
+		menuRef.value?.hide()
+	}
 </script>
 
 <style scoped>
