@@ -1,6 +1,6 @@
 <template>
-  <div style="height: 300px; width: 100%;" >
-    <!-- <el-row :gutter="10" class="mb8">
+  <div >
+    <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
             :icon="Plus"
@@ -29,7 +29,7 @@
         >保存
         </el-button>
       </el-col>
-    </el-row> -->
+    </el-row> 
     <ag-grid-vue ref="agGrid" 
                  :grid-options="gridOptions"
                  class="ag-theme-balham"
@@ -40,16 +40,17 @@
       v-click-outside="handleClickMenuOutside"
       :y="y"
       :x="x"
+	  style="position:absolute;"
       :options="menuOptions"
       @item-click="handleMenuClick"
     />
 	
-    <!-- <el-dialog
+     <el-dialog
         v-model="dialogVisible"
         title="提示"
         :fullscreen="true">
       <FormDesigner1 name="UPDATE" :pageInfo="pageInfo" :isPage="false" @updatedesigner="updatedesigner" />
-    </el-dialog>-->
+    </el-dialog>
   </div>
 </template>
 
@@ -108,6 +109,7 @@ const props=defineProps({
 
 	const emit = defineEmits<Emits>()
 	const contextmenuRow = ref<any>()
+	const contextmenuColDef = ref<any>()
     const {proxy} = getCurrentInstance();
     const SaveIcon = useIcon('ali_save')
     const multiple = ref(false)
@@ -140,12 +142,15 @@ const props=defineProps({
 	  },
 	  onCellContextMenu(event: CellContextMenuEvent<any>) {
 		console.log('event', event)
-		debugger;
+		//debugger;
 		contextmenuRow.value = event.data
-		const ev = event.event as PointerEvent
-		x.value = ev.clientX
-		y.value = ev.clientY
-		menuRef.value?.show()
+		contextmenuColDef.value = event.colDef
+		if(contextmenuColDef.value['field']==='cellRenderer'){
+			const ev = event.event as PointerEvent
+			x.value = ev.clientX
+			y.value = ev.clientY
+			menuRef.value?.show()
+		}
 	  },
 	  rowData: [],
 	}
@@ -399,7 +404,7 @@ const props=defineProps({
       returnVal.push(columnDef)
       let columnDef3 ={
         field: 'cellRenderer',
-        headerName: '自定义渲染器组件(双击设计)',
+        headerName: '自定义渲染器组件(右键菜单设计)',
 		cellRenderer:'WrapColumnDesignNestedDragItem',
         onCellDoubleClicked: onCellDoubleClick
       }
@@ -464,6 +469,13 @@ const props=defineProps({
 function handleMenuClick(item: MenuOption, ev: PointerEvent) {
   if (item.command === 'designer') {
     console.log('enter handleMenuClick!');
+	debugger;
+	if(contextmenuRow.value['cellRenderer']==='WrapColumnDesignNestedDragItem'){
+		pageInfo.value.children = JSON.parse(contextmenuRow.value['cellRendererParams'])
+		cellRendererParams.value = pageInfo.value.children
+		dialogVisible.value = true
+		currentRow.value = contextmenuRow.value;
+	}
   }
   
 }
@@ -483,13 +495,8 @@ function handleMenuClick(item: MenuOption, ev: PointerEvent) {
       // data: TData | undefined;
       // currentRowIndex = event.
       //设置当前自定义参数
-	  debugger;
-	  if(event.data['cellRenderer']==='WrapColumnDesignNestedDragItem'){
-		pageInfo.value.children = JSON.parse(event.data['cellRendererParams'])
-		cellRendererParams.value = pageInfo.value.children
-		dialogVisible.value = true
-		currentRow.value = event.data;
-	  }
+	  //debugger;
+	  
     }
     //回填组件设计
     function updatedesigner(formSchema){
