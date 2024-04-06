@@ -2,6 +2,7 @@
   <div>
   <ag-grid-vue class="ag-theme-balham"
                v-bind="props"
+			   :columnDefs="columnDefs"
                :rowData="rowData"
                :style="style"
                @rowSelected="handleSelectionChange"
@@ -78,25 +79,13 @@ const cMode = computed<FormFieldMode>(() => {
   return "edit"
 })
 watch(()=>props,(val)=>{
-  //手工录入数据
+  columnDefs.value = makeColumnDefs(props.columnDefs)
+  //手工录入数据  
   if(props.dataSourceType==='input'){
       rowData.value = props.rowData
       emits('changeRowData', rowData.value)
   }else {
-    //如果是设计模式且有自定义渲染列，则加一空行,以方便拖拽
-    if(cMode.value==='design') {
-      if (!isHaveCustomRenderColumn(props.columnDefs)) {
-        rowData.value = [];
-      } else {
-        //如果没有数据，则添加一行，以便设计
-        if(rowData.value.length===0) {
-          rowData.value = [{}];
-        }
-        //列定义可能变化了，需要更新父组件
-        // emits('changeColumnDefs', props.columnDefs)
-      }
-    }else {
-      //监控数据变化,来自其他组件数据不需保存
+       //监控数据变化,来自其他组件数据不需保存
       let prefix = getBusKeyPrefix();
       bus.on(prefix + queryListResultKey, (data) => {
         rowData.value = data;
@@ -111,9 +100,22 @@ watch(()=>props,(val)=>{
       bus.on(prefix + loadingKey, (data) => {
         loading.value = data;
       })
-    }
+    
   }
 },{immediate:true,deep:true})
+
+//构造列定义
+function makeColumnDefs(columnDefs){
+  let newColumnDefs=[];
+  for(let i=0;i<columnDefs.length;i++){
+     //判断自定义渲染器是否为
+	 newColumnDefs.push(columnDefs[i]);
+	 if(newColumnDefs[i].cellRenderer==='WrapColumnDesignNestedDragItem'){
+	    newColumnDefs[i].cellRenderer='WrapNestedDragItem'
+	 }
+  }
+  return newColumnDefs;
+}
 const style = computed(
     () => {
       let tableHeight='300px';

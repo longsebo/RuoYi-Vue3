@@ -67,6 +67,7 @@ import NestedDragItem from '@/components/form/designer/NestedDragItem.vue';
 import { CellContextMenuEvent, ColumnApi, GridApi, GridOptions, GridReadyEvent } from "ag-grid-community";
 import { MenuOption } from "@/components/menu";
 import DropdownMenu from "@/components/menu/DropdownMenu.vue";
+import { genId } from "@/components/form/designer/util/common";
 const cellRendererParams= ref([])
 const menuRef = ref<any>()
 const menuOptions = reactive<MenuOption[]>([
@@ -109,6 +110,7 @@ const props=defineProps({
 
 	const emit = defineEmits<Emits>()
 	const contextmenuRow = ref<any>()
+	const currentRowId =ref<any>()
 	const contextmenuColDef = ref<any>()
     const {proxy} = getCurrentInstance();
     const SaveIcon = useIcon('ali_save')
@@ -137,13 +139,14 @@ const props=defineProps({
 		  columnDefs1.value = makeColumnDefs()
 		  event.api.setGridOption('columnDefs', columnDefs1.value)			  
 		  event.api.setGridOption('rowData', rowDatas.value)		  
-		  event.api.setGridOption('defaultColDef', defaultColDef.value)
+		  event.api.setGridOption('defaultColDef', defaultColDef.value)		  
 		  
 	  },
 	  onCellContextMenu(event: CellContextMenuEvent<any>) {
 		console.log('event', event)
-		//debugger;
+		debugger;
 		contextmenuRow.value = event.data
+		currentRowId.value = event.data.id
 		contextmenuColDef.value = event.colDef
 		if(contextmenuColDef.value['field']==='cellRenderer'){
 			const ev = event.event as PointerEvent
@@ -153,6 +156,15 @@ const props=defineProps({
 		}
 	  },
 	  rowData: [],
+	  getRowId: function(params) {
+	      //debugger;
+         return params.data.id;
+      },
+	  onSelectionChanged:function(event) {
+       console.log('enter handleSelectionChange')
+       let selectedRows = gridApi.value.getSelectedRows();
+       multiple.value = (selectedRows.length >=1)
+     }
 	}
 
 
@@ -166,10 +178,23 @@ const props=defineProps({
     watch(() => props.columnDefs, (newVal) => {
       //将props的columnDefs转换为rowDatas
       rowDatas.value = props.columnDefs
+	  //填充id
+	  fillIdForRow(rowDatas.value)
       //循环将props的columnDefs转换为columnDefs
       //columnDefs1.value = makeColumnDefs()
-      console.log('columnDefs.value:' + JSON.stringify(columnDefs1.value))
+      console.log('enter watch columnDefs.value:' + JSON.stringify(columnDefs1.value))
     }, {deep: true, immediate: true})
+	//填充id
+	function fillIdForRow(rows){
+	   debugger;
+	   let i=0;
+	   for(i=0;i<rows.length;i++){
+	     if(!rows[i].id){
+		   rows[i].id = genId();
+		 }
+	   }	   
+	   console.log('rows:'+JSON.stringify(rows));
+	}
     function onGridReady(params) {
       gridApi.value = params.api;
       gridColumnApi.value = params.columnApi;
@@ -362,10 +387,10 @@ const props=defineProps({
         valueSetter: function(params) {
           debugger;
           // 设置值时的逻辑
-          console.log('Cell ' + params.colDef.headerName + ' in row ' + (params.node.rowIndex + 1) + ' was changed to ' + params.newValue);
+          console.log('Cell ' + params.colDef.headerName + ' in row ' + (params.node.id + 1) + ' was changed to ' + params.newValue);
           //改变自定义渲染
           if(params.newValue){
-            const rowNode = gridApi.value.getRowNode(params.node.rowIndex);
+            const rowNode = gridApi.value.getRowNode(params.node.id);
             // console.log('rowNode:'+JSON.stringify(rowNode))
             // 如果行存在，则可以访问它的数据
             if (rowNode) {
@@ -377,15 +402,15 @@ const props=defineProps({
             }
           }else{
             console.log('清空自定义渲染器')
-            const rowNode = gridApi.value.getRowNode(params.node.rowIndex);
+            const rowNode = gridApi.value.getRowNode(params.node.id);
             rowNode.data['cellRenderer']=null
             rowNode.data['cellRendererParams']= null
           }
           return params.newValue;
         },
 		valueGetter: function(params) {
-		   
-		   const rowNode = gridApi.value.getRowNode(params.node.rowIndex);
+		   //debugger;
+		   const rowNode = gridApi.value.getRowNode(params.node.id);
 		   //console.log('rowNode:'+JSON.stringify(rowNode))
 		   if(rowNode.data['cellRenderer']==='WrapColumnDesignNestedDragItem'){
 		       return true;
@@ -412,31 +437,33 @@ const props=defineProps({
       return returnVal;
 
     }
-    function makeNewRow() {
-      let row = {
-        headerName: '',
-        field: '',
-        editable: true,
-        cellEditor: '',
-        cellEditorParams: '',
-        cellStyle: '',
-        isCustomRenderer: false,
-        cellRendererParams:'',
-        cellRenderer: null,
-        sortable: true,
-        resizable: true,
-        filter: true,
-        pinned: '',
-        lockPinned: false,
-        lockPosition: false,
-        lockVisible: false,
-        width: 100,
-        maxWidth: 100,
-        minWidth: 100,
-        headerCheckboxSelection:true,
-        checkboxSelection:true,
-        headerCheckboxSelectionFilteredOnly:true,
-      }
+    function makeNewRow(){
+      let row={
+		headerName: '',
+		field: '',
+		editable: true,
+		cellEditor: '',
+		cellEditorParams: '',
+		cellStyle: '',
+		isCustomRenderer: false,
+		cellRendererParams:'',
+		cellRenderer: null,
+		sortable: true,
+		resizable: true,
+		filter: true,
+		pinned: '',
+		lockPinned: false,
+		lockPosition: false,
+		lockVisible: false,
+		width: 100,
+		maxWidth: 100,
+		minWidth: 100,
+		headerCheckboxSelection:true,
+		checkboxSelection:true,
+		headerCheckboxSelectionFilteredOnly:true,
+		id:''
+		};		
+	  row.id = genId();
       return row;
     }
     function handleAdd() {
@@ -468,15 +495,21 @@ const props=defineProps({
 
 function handleMenuClick(item: MenuOption, ev: PointerEvent) {
   if (item.command === 'designer') {
-    console.log('enter handleMenuClick!');
+    
 	debugger;
 	if(contextmenuRow.value['cellRenderer']==='WrapColumnDesignNestedDragItem'){
-		pageInfo.value.children = JSON.parse(contextmenuRow.value['cellRendererParams'])
-		cellRendererParams.value = pageInfo.value.children
-		dialogVisible.value = true
-		currentRow.value = contextmenuRow.value;
+		const rowNode = gridApi.value.getRowNode(currentRowId.value);
+		
+		   if(rowNode){
+			  console.log('handleMenuClick cellRendererParams:'+rowNode.data.cellRendererParams);
+			  pageInfo.value.children = JSON.parse(rowNode.data.cellRendererParams)
+			  cellRendererParams.value = pageInfo.value.children
+			  dialogVisible.value = true
+			  currentRow.value = contextmenuRow.value;			 
+		   }
+		}
+		
 	}
-  }
   
 }
 // 多选框选中数据
@@ -505,10 +538,33 @@ function handleMenuClick(item: MenuOption, ev: PointerEvent) {
       dialogVisible.value = false
       if(formSchema){
         //更新当前行的cellRendererParams
-        currentRow.value['cellRendererParams'] = formSchema
-        // const itemsToUpdate = [currentRow.value];
-        // const res = gridApi.value.applyTransaction({ update: itemsToUpdate });
-        // console.log('res:'+JSON.stringify(res))
+        contextmenuRow.value['cellRendererParams'] = formSchema
+        const itemsToUpdate = [contextmenuRow.value];
+		
+        //const res = gridApi.value.applyTransaction({ update: itemsToUpdate });
+		//const rowNode = gridApi.value.getRowNode(contextmenuRow.value['id']);
+		//if(rowNode.data['cellRendererParams']===formSchema){
+		 //   console.log('update success!');
+		//}else{
+			//console.log('update fail!');
+		//}
+		//改变对应的行
+		for(let i=0;i<rowDatas.value.length;i++){
+		   if(rowDatas.value[i].id === contextmenuRow.value['id']){
+		      rowDatas.value[i].cellRendererParams = formSchema
+			  console.log('update rowDatas row id:'+rowDatas.value[i].id);
+			  break;
+		   }
+		}
+		//同时更新列定义
+		//for(let i=0;i<columnDefs1.value.length;i++){
+		//   if(columnDefs1.value[i].field==='cellRendererParams'){
+		//	  columnDefs1.value[i].cellRendererParams = formSchema
+		//	  console.log('update columnDefs1 field:'+columnDefs1.value[i].field);
+		//	  break;
+		//  }
+		//}
+        //console.log('res:'+JSON.stringify(res))
       }
     }
 	function handleClickMenuOutside() {
