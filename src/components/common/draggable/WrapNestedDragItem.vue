@@ -22,7 +22,7 @@ const children = ref([]);
 watch(() => props.params, (newVal) =>{
    //获取列定义
   let colDef = props.params.colDef;
-
+  console.log('colDef:'+JSON.stringify(colDef))
   // 获取列定义中的某些属性，例如标题和字段名
   let cellRendererParams = colDef.cellRendererParams;
   console.log('cellRendererParams',cellRendererParams)

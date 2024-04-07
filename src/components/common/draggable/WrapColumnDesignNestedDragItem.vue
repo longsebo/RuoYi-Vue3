@@ -40,11 +40,11 @@ watch(() => props.params, (newVal) =>{
 	  }
   }else{
 	  //否则，则为运行阶段普通列 获取列定义中的某些属性，例如标题和字段名
-	  //let cellRendererParams = colDef.cellRendererParams;
+	  let cellRendererParams = colDef.cellRendererParams;
 	  //console.log('cellRendererParams',cellRendererParams)
-	  //if(cellRendererParams){
-		//children.value = JSON.parse(cellRendererParams);
-	  //}
+	  if(cellRendererParams){
+		children.value = JSON.parse(cellRendererParams);
+	  }
   }
 },{immediate: true,deep: true})
 watch(()=>children,(newVal)=>{

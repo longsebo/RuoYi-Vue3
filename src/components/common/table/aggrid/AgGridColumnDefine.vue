@@ -100,7 +100,7 @@ const props=defineProps({
         cellStyle: Object,
         //isCustomRenderer:Boolean//是否自定义单元格渲染器
         cellRenderer: String,//当自定义渲染组件时，固定为NestedDragItem可以拖拽嵌套组件，可以往拖拽其他组件
-        cellRendererParams: Object,
+        cellRendererParams: String,
       }]
     }
   })
@@ -144,7 +144,7 @@ const props=defineProps({
 	  },
 	  onCellContextMenu(event: CellContextMenuEvent<any>) {
 		console.log('event', event)
-		debugger;
+		//debugger;
 		contextmenuRow.value = event.data
 		currentRowId.value = event.data.id
 		contextmenuColDef.value = event.colDef
@@ -186,7 +186,7 @@ const props=defineProps({
     }, {deep: true, immediate: true})
 	//填充id
 	function fillIdForRow(rows){
-	   debugger;
+	   //debugger;
 	   let i=0;
 	   for(i=0;i<rows.length;i++){
 	     if(!rows[i].id){
@@ -385,7 +385,7 @@ const props=defineProps({
         cellEditor: "agCheckboxCellEditor",
         cellRenderer: 'agCheckboxCellRenderer',
         valueSetter: function(params) {
-          debugger;
+          //debugger;
           // 设置值时的逻辑
           console.log('Cell ' + params.colDef.headerName + ' in row ' + (params.node.id + 1) + ' was changed to ' + params.newValue);
           //改变自定义渲染
@@ -496,7 +496,7 @@ const props=defineProps({
 function handleMenuClick(item: MenuOption, ev: PointerEvent) {
   if (item.command === 'designer') {
 
-	debugger;
+	//debugger;
 	if(contextmenuRow.value['cellRenderer']==='WrapColumnDesignNestedDragItem'){
        console.log('handleMenuClick currentRowId:'+currentRowId.value)
 		   const rowNode = gridApi.value.getRowNode(currentRowId.value);

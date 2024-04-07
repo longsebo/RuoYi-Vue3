@@ -82,7 +82,7 @@
   </el-form>
    <el-dialog title="列定义" v-model="columnDefineVisible" width="100%" height="95vh" append-to-body>
      <AgGridColumnDefine
-        v-model:columnDefs="vFormSelectElem.attrs.columnDefs" @change="updateColumnDefs" />
+        :columnDefs="vFormSelectElem.attrs.columnDefs" @change="updateColumnDefs" />
   </el-dialog>
 </template>
 

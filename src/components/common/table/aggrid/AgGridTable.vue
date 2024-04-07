@@ -80,6 +80,7 @@ const cMode = computed<FormFieldMode>(() => {
 })
 watch(()=>props,(val)=>{
   columnDefs.value = makeColumnDefs(props.columnDefs)
+  console.log('AgGrid Table convert to columnDefs:'+JSON.stringify(columnDefs.value));
   //手工录入数据
   if(props.dataSourceType==='input'){
       rowData.value = props.rowData
