@@ -80,7 +80,7 @@ const cMode = computed<FormFieldMode>(() => {
 })
 watch(()=>props,(val)=>{
   columnDefs.value = makeColumnDefs(props.columnDefs)
-  //手工录入数据  
+  //手工录入数据
   if(props.dataSourceType==='input'){
       rowData.value = props.rowData
       emits('changeRowData', rowData.value)
@@ -100,7 +100,7 @@ watch(()=>props,(val)=>{
       bus.on(prefix + loadingKey, (data) => {
         loading.value = data;
       })
-    
+
   }
 },{immediate:true,deep:true})
 
@@ -109,7 +109,7 @@ function makeColumnDefs(columnDefs){
   let newColumnDefs=[];
   for(let i=0;i<columnDefs.length;i++){
      //判断自定义渲染器是否为
-	 newColumnDefs.push(columnDefs[i]);
+	 newColumnDefs.push(Object.assign({}, columnDefs[i]));
 	 if(newColumnDefs[i].cellRenderer==='WrapColumnDesignNestedDragItem'){
 	    newColumnDefs[i].cellRenderer='WrapNestedDragItem'
 	 }

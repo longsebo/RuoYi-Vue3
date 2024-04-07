@@ -418,8 +418,8 @@ export const TableComponents: CandidateComponentConfig[] = [
     },
     attrs: {
       //表格全局配置
-      checkboxSelection: true, //设置数据复选框
-      headerCheckboxSelection: true,  //表头是否也显示复选框，用于全选反选用
+      checkboxSelection: false, //设置数据复选框
+      headerCheckboxSelection: false,  //表头是否也显示复选框，用于全选反选用
       rowSelection: 'multiple', //设置多行选中 ，若是single
       rowHeight:"30",//行高
       width:"80",//列宽

@@ -29,11 +29,11 @@
         >保存
         </el-button>
       </el-col>
-    </el-row> 
-    <ag-grid-vue ref="agGrid" 
+    </el-row>
+    <ag-grid-vue ref="agGrid"
                  :grid-options="gridOptions"
                  class="ag-theme-balham"
-                 style="height: 300px; width: 100%;"                
+                 style="height: 300px; width: 100%;"
     ></ag-grid-vue>
 	<dropdown-menu
       ref="menuRef"
@@ -44,7 +44,7 @@
       :options="menuOptions"
       @item-click="handleMenuClick"
     />
-	
+
      <el-dialog
         v-model="dialogVisible"
         title="提示"
@@ -127,7 +127,7 @@ const props=defineProps({
       // suppressEnterToBatchSort: true,
       singleClickEdit:true
     });
-	
+
 	const gridOptions: GridOptions<any> = {
 	  rowHeight: 32,
 	  headerHeight: 32,
@@ -137,10 +137,10 @@ const props=defineProps({
 		  gridApi.value = event.api;
 		  gridColumnApi.value = event.columnApi;
 		  columnDefs1.value = makeColumnDefs()
-		  event.api.setGridOption('columnDefs', columnDefs1.value)			  
-		  event.api.setGridOption('rowData', rowDatas.value)		  
-		  event.api.setGridOption('defaultColDef', defaultColDef.value)		  
-		  
+		  event.api.setGridOption('columnDefs', columnDefs1.value)
+		  event.api.setGridOption('rowData', rowDatas.value)
+		  event.api.setGridOption('defaultColDef', defaultColDef.value)
+
 	  },
 	  onCellContextMenu(event: CellContextMenuEvent<any>) {
 		console.log('event', event)
@@ -192,7 +192,7 @@ const props=defineProps({
 	     if(!rows[i].id){
 		   rows[i].id = genId();
 		 }
-	   }	   
+	   }
 	   console.log('rows:'+JSON.stringify(rows));
 	}
     function onGridReady(params) {
@@ -292,7 +292,7 @@ const props=defineProps({
         cellEditor: "agCheckboxCellEditor",
         cellRenderer: 'agCheckboxCellRenderer',
       }
-      returnVal.push(columnDef1)
+      returnVal.push(columnDef11)
       columnDef11 = {
         field: 'lockVisible',
         headerName:'是否禁用通过菜单更改可见性',
@@ -430,7 +430,7 @@ const props=defineProps({
       let columnDef3 ={
         field: 'cellRenderer',
         headerName: '自定义渲染器组件(右键菜单设计)',
-		cellRenderer:'WrapColumnDesignNestedDragItem',
+		    cellRenderer:'WrapColumnDesignNestedDragItem',
         onCellDoubleClicked: onCellDoubleClick
       }
       returnVal.push(columnDef3)
@@ -441,16 +441,16 @@ const props=defineProps({
       let row={
 		headerName: '',
 		field: '',
-		editable: true,
+		editable: false,
 		cellEditor: '',
 		cellEditorParams: '',
 		cellStyle: '',
 		isCustomRenderer: false,
 		cellRendererParams:'',
 		cellRenderer: null,
-		sortable: true,
+		sortable: false,
 		resizable: true,
-		filter: true,
+		filter: false,
 		pinned: '',
 		lockPinned: false,
 		lockPosition: false,
@@ -458,11 +458,11 @@ const props=defineProps({
 		width: 100,
 		maxWidth: 100,
 		minWidth: 100,
-		headerCheckboxSelection:true,
-		checkboxSelection:true,
-		headerCheckboxSelectionFilteredOnly:true,
+		headerCheckboxSelection:false,
+		checkboxSelection:false,
+		headerCheckboxSelectionFilteredOnly:false,
 		id:''
-		};		
+		};
 	  row.id = genId();
       return row;
     }
@@ -495,22 +495,23 @@ const props=defineProps({
 
 function handleMenuClick(item: MenuOption, ev: PointerEvent) {
   if (item.command === 'designer') {
-    
+
 	debugger;
 	if(contextmenuRow.value['cellRenderer']==='WrapColumnDesignNestedDragItem'){
-		const rowNode = gridApi.value.getRowNode(currentRowId.value);
-		
+       console.log('handleMenuClick currentRowId:'+currentRowId.value)
+		   const rowNode = gridApi.value.getRowNode(currentRowId.value);
+
 		   if(rowNode){
-			  console.log('handleMenuClick cellRendererParams:'+rowNode.data.cellRendererParams);
+			  console.log('handleMenuClick cellRendererParams:'+rowNode.data["cellRendererParams"]);
 			  pageInfo.value.children = JSON.parse(rowNode.data.cellRendererParams)
 			  cellRendererParams.value = pageInfo.value.children
 			  dialogVisible.value = true
-			  currentRow.value = contextmenuRow.value;			 
+			  currentRow.value = contextmenuRow.value;
 		   }
 		}
-		
+
 	}
-  
+
 }
 // 多选框选中数据
     function handleSelectionChange(event) {
@@ -529,7 +530,7 @@ function handleMenuClick(item: MenuOption, ev: PointerEvent) {
       // currentRowIndex = event.
       //设置当前自定义参数
 	  //debugger;
-	  
+
     }
     //回填组件设计
     function updatedesigner(formSchema){
@@ -539,32 +540,30 @@ function handleMenuClick(item: MenuOption, ev: PointerEvent) {
       if(formSchema){
         //更新当前行的cellRendererParams
         contextmenuRow.value['cellRendererParams'] = formSchema
-        const itemsToUpdate = [contextmenuRow.value];
-		
+
+
         //const res = gridApi.value.applyTransaction({ update: itemsToUpdate });
-		//const rowNode = gridApi.value.getRowNode(contextmenuRow.value['id']);
-		//if(rowNode.data['cellRendererParams']===formSchema){
-		 //   console.log('update success!');
-		//}else{
-			//console.log('update fail!');
-		//}
+        console.log('updatedesigner currentRowId:'+currentRowId.value)
+        const rowNode = gridApi.value.getRowNode(currentRowId.value);
+        rowNode.data['cellRendererParams'] = formSchema;
+        const itemsToUpdate = [rowNode.data];
+        gridApi.value.applyTransaction({ update: itemsToUpdate });
+        gridApi.value.redrawRows({ rowNodes: [rowNode] });
+        const rowNode1 = gridApi.value.getRowNode(currentRowId.value);
+        if(rowNode1.data['cellRendererParams']===formSchema){
+           console.log('update success!');
+        }else{
+          console.log('update fail!');
+        }
 		//改变对应的行
-		for(let i=0;i<rowDatas.value.length;i++){
-		   if(rowDatas.value[i].id === contextmenuRow.value['id']){
-		      rowDatas.value[i].cellRendererParams = formSchema
-			  console.log('update rowDatas row id:'+rowDatas.value[i].id);
-			  break;
-		   }
-		}
-		//同时更新列定义
-		//for(let i=0;i<columnDefs1.value.length;i++){
-		//   if(columnDefs1.value[i].field==='cellRendererParams'){
-		//	  columnDefs1.value[i].cellRendererParams = formSchema
-		//	  console.log('update columnDefs1 field:'+columnDefs1.value[i].field);
-		//	  break;
-		//  }
-		//}
-        //console.log('res:'+JSON.stringify(res))
+		// for(let i=0;i<rowDatas.value.length;i++){
+		//    if(rowDatas.value[i].id === contextmenuRow.value['id']){
+		//       rowDatas.value[i].cellRendererParams = formSchema
+		// 	  console.log('update rowDatas row id:'+rowDatas.value[i].id);
+		// 	  break;
+		//    }
+		// }
+
       }
     }
 	function handleClickMenuOutside() {
