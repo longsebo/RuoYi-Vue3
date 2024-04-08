@@ -175,11 +175,14 @@ const props=defineProps({
       "labelWidth": "120px",
       "labelPosition": "auto"})
     const currentRow = ref({})
-    watch(() => props.columnDefs, (newVal) => {
+    watch(() => props, (newVal) => {
       //将props的columnDefs转换为rowDatas
       rowDatas.value = props.columnDefs
 	  //填充id
 	  fillIdForRow(rowDatas.value)
+     if(gridApi && gridApi.value) {
+       gridApi.value.setRowData(rowDatas.value)
+     }
       //循环将props的columnDefs转换为columnDefs
       //columnDefs1.value = makeColumnDefs()
       console.log('enter watch columnDefs.value:' + JSON.stringify(columnDefs1.value))

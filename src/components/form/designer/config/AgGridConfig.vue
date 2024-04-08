@@ -100,7 +100,7 @@ const vFormSelectElem = inject(vFormActiveElementKey)
 const columnDefineIcon  = useIcon('ali_columndef')
 const columnDefineVisible = ref(false)
 
-//console.log('inject vFormSelectElem', JSON.stringify(vFormSelectElem.value.attrs.operationdata.parameterList));
+console.log('inject vFormSelectElem', JSON.stringify(vFormSelectElem.value.attrs));
 
 
 const mode = computed({
