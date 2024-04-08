@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div class="my-grid">
     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
@@ -574,6 +574,28 @@ function handleMenuClick(item: MenuOption, ev: PointerEvent) {
 	}
 </script>
 
-<style scoped>
-
+<style >
+.my-grid .ag-body-viewport {
+  overflow-x: auto;
+}
+ 
+.my-grid .ag-body-viewport::-webkit-scrollbar {
+  width: 10px;  /* 水平滚动条的宽度 */
+  height: 10px; /* 垂直滚动条的高度 */
+}
+ 
+.my-grid .ag-body-viewport::-webkit-scrollbar-thumb {
+  background-color: darkgrey; /* 滚动条的颜色 */
+  border-radius: 10px; /* 滚动条的圆角 */
+}
+ 
+.my-grid .ag-body-viewport::-webkit-scrollbar-track {
+  background-color: lightgrey; /* 滚动条轨道的颜色 */
+}
+ 
+/* 兼容非Webkit浏览器的样式 */
+.my-grid .ag-body-viewport {
+  scrollbar-width: thin;
+  scrollbar-color: darkgrey lightgrey;
+}
 </style>
