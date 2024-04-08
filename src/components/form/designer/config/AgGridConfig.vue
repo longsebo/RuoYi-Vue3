@@ -56,7 +56,7 @@
     <el-form-item  label="表格数据" v-show="vFormSelectElem.attrs.dataSourceType==='input'">
     <el-scrollbar always>
       <AgGridInputData
-          v-model:rowData="vFormSelectElem.attrs.rowData" :columnDefs="vFormSelectElem.attrs.columnDefs" />
+          v-model:rowData="vFormSelectElem.attrs.rowData" :columnDefs="columnDefs" />
     </el-scrollbar>
     </el-form-item>
     <el-form-item  label="绑定数据来源组件" v-show="vFormSelectElem.attrs.dataSourceType==='bindcomponent'">
@@ -82,7 +82,7 @@
   </el-form>
    <el-dialog title="列定义" v-model="columnDefineVisible" width="100%" height="95vh" append-to-body>
      <AgGridColumnDefine
-        :columnDefs="vFormSelectElem.attrs.columnDefs" @change="updateColumnDefs" />
+        :columnDefs="columnDefs" @change="updateColumnDefs" />
   </el-dialog>
 </template>
 
@@ -102,6 +102,13 @@ const columnDefineVisible = ref(false)
 
 console.log('inject vFormSelectElem', JSON.stringify(vFormSelectElem.value.attrs));
 
+
+const columnDefs = computed({
+  get: () => { 
+    console.log('enter columndefs computed,vFormSelectElem.value.attrs.columnDefs:'+JSON.stringify(vFormSelectElem.value.attrs.columnDefs));
+    return vFormSelectElem.value.attrs.columnDefs ? vFormSelectElem.value.attrs.columnDefs : [];
+  }
+})  
 
 const mode = computed({
   get: () => vFormSelectElem.value.attrs.mode ? [vFormSelectElem.value.attrs.mode] : [],
