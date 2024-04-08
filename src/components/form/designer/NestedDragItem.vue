@@ -12,7 +12,7 @@
         <template v-if="'el-row' === element.component">
           <el-row
             v-bind="element.attrs"
-            style="min-height: 100px; padding: 6px;"
+            style="min-height: 100px; "
             class="widget-row-item"
             :class="vFormActiveElement === element ? 'active' : ''"
           >
@@ -23,7 +23,7 @@
               @click.stop="handleClickElement(item)"
               class="widget-col-item"
               :class="vFormActiveElement === item ? 'active' : ''"
-              style="min-height: 80px; padding: 6px; "
+              style="min-height: 80px;"
             >
               <nested-drag-item style="width: 100%; height: 100%;min-height: 80px; background-color: #fff; " :children="item.children"></nested-drag-item>
               <div v-if="vFormActiveElement === item" class="field-id">
