@@ -55,7 +55,7 @@
 </template>
 
 <script setup  lang="ts">
-import {defineComponent, ref, watch} from "vue";
+import {defineComponent, ref, watch,onBeforeUnmount } from "vue";
 import {getCurrentInstance} from 'vue';
 import {Plus, Delete} from "@element-plus/icons-vue";
 import {useIcon} from "@/components/common/util";
@@ -140,6 +140,8 @@ const props=defineProps({
 		  event.api.setGridOption('columnDefs', columnDefs1.value)
 		  event.api.setGridOption('rowData', rowDatas.value)
 		  event.api.setGridOption('defaultColDef', defaultColDef.value)
+		  // 添加事件监听
+		  document.addEventListener('keydown', handleKeyDown);
 
 	  },
 	  onCellContextMenu(event: CellContextMenuEvent<any>) {
@@ -164,7 +166,8 @@ const props=defineProps({
        console.log('enter handleSelectionChange')
        let selectedRows = gridApi.value.getSelectedRows();
        multiple.value = (selectedRows.length >=1)
-     }
+     },
+	  
 	}
 
 
@@ -187,6 +190,20 @@ const props=defineProps({
       //columnDefs1.value = makeColumnDefs()
       console.log('enter watch columnDefs.value:' + JSON.stringify(columnDefs1.value))
     }, {deep: true, immediate: true})
+	
+	function  handleKeyDown(event) {
+	  //debugger;
+      //if (event.key === 'Tab') {
+      //  event.preventDefault(); // 阻止默认的Tab行为
+      //  if (gridApi.value) {
+      //      gridApi.value.setFocusedCell(gridApi.value.getFocusedCell().rowIndex + 1, gridApi.value.getFocusedCell().column);
+       // }
+      //}
+    }
+	onBeforeUnmount(() => {
+       // 清理监听器
+	   document.removeEventListener('keydown', handleKeyDown);
+    });
 	//填充id
 	function fillIdForRow(rows){
 	   //debugger;
@@ -208,14 +225,14 @@ const props=defineProps({
         field: 'headerName',
         headerName: '显示名称',
         editable:true,
-        cellEditor:'InputEditor'
+        //cellEditor:'InputEditor'
       }
       returnVal.push(columnDef)
       columnDef ={
         field: 'field',
         headerName: '字段名称',
         editable:true,
-        cellEditor:'InputEditor'
+        //cellEditor:'InputEditor'
       }
       returnVal.push(columnDef)
       let columnDef1 = {
