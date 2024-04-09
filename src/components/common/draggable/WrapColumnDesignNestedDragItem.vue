@@ -1,12 +1,13 @@
 <template>
-  <nested-drag-item style="width: 100%; height: 100%;min-height: 80px; background-color: #fff; "
-                    :children="children"></nested-drag-item>
+  <v-form-render style="width: 100%; height: 100%;min-height: 80px; background-color: #fff; "
+                    :scheme="scheme"></v-form-render>
 </template>
 
 <script lang="ts" setup>
 import {ref, watch} from "vue";
 import {getCurrentInstance} from 'vue';
-import NestedDragItem from "@/components/form/designer/NestedDragItem.vue"
+//import NestedDragItem from "@/components/form/designer/NestedDragItem.vue"
+import VFormRender  from "@/components/form/designer/VFormRender.vue"
 interface Props {
   params?:object;
 }
@@ -18,14 +19,14 @@ interface Emits {
 
 
 const emits = defineEmits<Emits>()
-const children = ref([]);
+const scheme = ref({});
 watch(() => props.params, (newVal) =>{
   //获取列定义
-  let colDef = props.params.colDef; 
+  let colDef = props.params.colDef;
   console.log('colDef:'+JSON.stringify(colDef));
   //如果是设计字段
   if(colDef['field']==='cellRenderer'){
-	  //获取数据行   
+	  //获取数据行
 	  let row = props.params.data;
 
 	  // 获取列定义中的某些属性，例如标题和字段名
@@ -33,9 +34,9 @@ watch(() => props.params, (newVal) =>{
 	  console.log('cellRendererParams',cellRendererParams)
 	  if(cellRendererParams){
 		try {
-			children.value = JSON.parse(cellRendererParams);
+      scheme.value.children = JSON.parse(cellRendererParams);
 		}catch(err){
-			children.value =[]
+      scheme.value.children.value =[]
 		}
 	  }
   }else{
@@ -43,17 +44,17 @@ watch(() => props.params, (newVal) =>{
 	  let cellRendererParams = colDef.cellRendererParams;
 	  //console.log('cellRendererParams',cellRendererParams)
 	  if(cellRendererParams){
-		children.value = JSON.parse(cellRendererParams);
+      scheme.value.children = JSON.parse(cellRendererParams);
 	  }
   }
 },{immediate: true,deep: true})
-watch(()=>children,(newVal)=>{
-  
+watch(()=>scheme,(newVal)=>{
+
   //获取列定义
   let colDef = props.params.colDef;
   //如果是设计字段
   if(colDef['field']==='cellRenderer'){
-	
+
   }else{
 	  //
 	  // // 获取列定义中的某些属性，例如标题和字段名
@@ -67,7 +68,7 @@ watch(()=>children,(newVal)=>{
 	  // 打印列定义到控制台
 	  allColumns.forEach(column => {
 		if(column.field===colDef.field){
-		  column.cellRendererParams=JSON.stringify(children.value);
+		  column.cellRendererParams=JSON.stringify(scheme.value.children);
 		}
 	  });
 	  //console.log('cellRendererParams',colDef.cellRendererParams)
