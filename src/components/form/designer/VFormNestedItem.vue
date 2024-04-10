@@ -78,12 +78,13 @@ import LabelField from "@/components/form/components/display/LabelField.vue";
 import NormalButton from "../components/button/NormalButton.vue"
 import RuoyiElSelect from "../components/select/RuoyiElSelect.vue";
 import RuoyiAgGrid from "../components/table/RuoyiAgGrid.vue"
+import SearchForm from "../components/form/searchForm/SearchForm.vue"
 export default defineComponent({
   name: 'VFormNestedItem',
   components: {
     ElFormItem, ElSelect, ElOption, ElInput, ElRow, ElCol,ElButton, NumberInput, UserSelectorInput, DeptSelectorInput, TextInput,
     SingleSelect, MultiSelect, UserSelect, DeptSelect, DatePicker, DateRangePicker, LabelField,
-    NormalButton,RuoyiElSelect,RuoyiAgGrid
+    NormalButton,RuoyiElSelect,RuoyiAgGrid,SearchForm
   },
   props: {
     item: {

@@ -37,6 +37,7 @@ import bus from '@/event/bus'
 import {onMounted, ref, watch, onUnmounted, computed, getCurrentInstance} from "vue";
 import NestedDragItem from "@/components/form/designer/NestedDragItem.vue"
 import VFormRender  from "@/components/form/designer/VFormRender.vue"
+import { formModeKey } from "@/components/form/state.key";
 const { proxy } = getCurrentInstance();
 const queryParams = ref({
       pageNum: 1,
@@ -58,6 +59,7 @@ const props = defineProps<Props>()
 const emits = defineEmits<Emits>()
 const children = ref([])
 const scheme = ref({})
+const formMode = inject(formModeKey)
 const cMode = computed<FormFieldMode>(() => {
   if (props.mode) {
     return props.mode

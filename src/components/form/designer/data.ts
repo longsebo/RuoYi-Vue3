@@ -284,6 +284,21 @@ export const InputComponents: CandidateComponentConfig[] = [
       value:''
     }
   },
+    {
+    id: genId(),
+    icon: 'ali_search_form',
+    component: 'ruoyi-search-form',
+    category: 'form-item',
+    title: "查询Form",
+    formItemAttrs: {
+      label: "查询Form",
+      labelWidth: "120px",
+      required: false,
+    },
+    attrs: {
+      
+    }
+  },
 ]
 export const LayoutComponents: CandidateComponentConfig[] = [
   {
