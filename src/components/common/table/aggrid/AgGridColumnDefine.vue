@@ -150,7 +150,7 @@ const props=defineProps({
 		contextmenuRow.value = event.data
 		currentRowId.value = event.data.id
 		contextmenuColDef.value = event.colDef
-		if(contextmenuColDef.value['field']==='cellRenderer'){
+		if(contextmenuColDef.value['field']==='cellRenderer' && contextmenuRow.value['cellRenderer']==='WrapColumnDesignNestedDragItem'){
 			const ev = event.event as PointerEvent
 			x.value = ev.clientX
 			y.value = ev.clientY
@@ -167,7 +167,7 @@ const props=defineProps({
        let selectedRows = gridApi.value.getSelectedRows();
        multiple.value = (selectedRows.length >=1)
      },
-	  
+
 	}
 
 
@@ -190,7 +190,7 @@ const props=defineProps({
       //columnDefs1.value = makeColumnDefs()
       console.log('enter watch columnDefs.value:' + JSON.stringify(columnDefs1.value))
     }, {deep: true, immediate: true})
-	
+
 	function  handleKeyDown(event) {
 	  //debugger;
       //if (event.key === 'Tab') {
@@ -516,7 +516,7 @@ const props=defineProps({
 function handleMenuClick(item: MenuOption, ev: PointerEvent) {
   if (item.command === 'designer') {
 
-	//debugger;
+	// debugger;
 	if(contextmenuRow.value['cellRenderer']==='WrapColumnDesignNestedDragItem'){
        console.log('handleMenuClick currentRowId:'+currentRowId.value)
 		   const rowNode = gridApi.value.getRowNode(currentRowId.value);
@@ -595,21 +595,21 @@ function handleMenuClick(item: MenuOption, ev: PointerEvent) {
 .my-grid .ag-body-viewport {
   overflow-x: auto;
 }
- 
+
 .my-grid .ag-body-viewport::-webkit-scrollbar {
   width: 10px;  /* 水平滚动条的宽度 */
   height: 10px; /* 垂直滚动条的高度 */
 }
- 
+
 .my-grid .ag-body-viewport::-webkit-scrollbar-thumb {
   background-color: darkgrey; /* 滚动条的颜色 */
   border-radius: 10px; /* 滚动条的圆角 */
 }
- 
+
 .my-grid .ag-body-viewport::-webkit-scrollbar-track {
   background-color: lightgrey; /* 滚动条轨道的颜色 */
 }
- 
+
 /* 兼容非Webkit浏览器的样式 */
 .my-grid .ag-body-viewport {
   scrollbar-width: thin;
