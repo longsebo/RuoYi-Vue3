@@ -291,12 +291,12 @@ export const InputComponents: CandidateComponentConfig[] = [
     category: 'form-item',
     title: "查询Form",
     formItemAttrs: {
-      label: "查询Form",
+      label: "",
       labelWidth: "120px",
       required: false,
     },
     attrs: {
-      
+
     }
   },
 ]

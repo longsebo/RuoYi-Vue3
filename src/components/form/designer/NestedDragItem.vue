@@ -250,13 +250,14 @@ import { genId } from "@/components/form/designer/util/common";
 import { Plus, Delete, CopyDocument } from "@element-plus/icons-vue";
 import { findTreeItemParentById } from "@/utils/common";
 import RuoyiElSelect from "../components/select/RuoyiElSelect.vue";
-import SearchForm from "../components/form/searchForm/SearchForm.vue"
+//import SearchForm from "@/components/form/components/form/searchform/SearchForm.vue"
 export default defineComponent({
   name: "NestedDragItem",
   components: {
     Draggable, ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElRow, ElCol,ElButton, SVGIcon, ElCheckboxGroup, ElCheckbox,
     UserSelectorInput, DeptSelectorInput, NumberInput, TextInput, SingleSelect, MultiSelect, UserSelect, DeptSelect,
-    Plus, Delete, CopyDocument, DatePicker, DateRangePicker, LabelField,NormalButton,RuoyiElSelect,RuoyiAgGrid,SearchForm
+    Plus, Delete, CopyDocument, DatePicker, DateRangePicker, LabelField,NormalButton,RuoyiElSelect,RuoyiAgGrid,
+    SearchForm:defineAsyncComponent (()=> import('@/components/form/components/form/searchform/SearchForm.vue'))
   },
   props: {
     children: Array as PropType<ComponentConfig[]>

@@ -11,7 +11,7 @@
 </template>
 
 <script setup name="Application">
-import SearchForm from '@/components/common/form/searchform/SearchForm.vue';
+import SearchForm from "@/components/form/components/form/searchform/SearchForm.vue"
 import ElPlusTable from '@/components/common/table/elplustable/ElPlusTable.vue';
 import NormalListToolbar from '@/components/common/toolbar/NormalListToolbar.vue';
 import NormalListDialog from   '@/components/common/dialog/NormalListDialog.vue';

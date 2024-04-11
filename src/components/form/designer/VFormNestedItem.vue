@@ -78,7 +78,7 @@ import LabelField from "@/components/form/components/display/LabelField.vue";
 import NormalButton from "../components/button/NormalButton.vue"
 import RuoyiElSelect from "../components/select/RuoyiElSelect.vue";
 import RuoyiAgGrid from "../components/table/RuoyiAgGrid.vue"
-import SearchForm from "../components/form/searchForm/SearchForm.vue"
+import SearchForm from "@/components/form/components/form/searchform/SearchForm.vue"
 export default defineComponent({
   name: 'VFormNestedItem',
   components: {

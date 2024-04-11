@@ -34,7 +34,7 @@ import {
   queryParamKey,resetQueryFormKey,showSearchKey
 } from "@/config/app.keys";
 import bus from '@/event/bus'
-import {onMounted, ref, watch, onUnmounted, computed, getCurrentInstance} from "vue";
+import {onMounted, ref, watch, onUnmounted, computed, getCurrentInstance, inject} from "vue";
 import NestedDragItem from "@/components/form/designer/NestedDragItem.vue"
 import VFormRender  from "@/components/form/designer/VFormRender.vue"
 import { formModeKey } from "@/components/form/state.key";
@@ -56,7 +56,7 @@ interface Props {
 const showSearch = ref(true)
 const props = defineProps<Props>()
 
-const emits = defineEmits<Emits>()
+// const emits = defineEmits<Emits>()
 const children = ref([])
 const scheme = ref({})
 const formMode = inject(formModeKey)
