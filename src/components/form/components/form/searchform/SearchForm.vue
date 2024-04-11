@@ -30,6 +30,7 @@
 </template>
 
 <script lang="ts" setup>
+console.log('enter searchForm') 
 import {
   queryParamKey,resetQueryFormKey,showSearchKey
 } from "@/config/app.keys";
@@ -70,14 +71,15 @@ const cMode = computed<FormFieldMode>(() => {
   return "edit"
 })
 watch(() => props, (newVal) =>{
-
-  if(props.children && cMode =='design'){
+  console.log('cMode:'+cMode.value) 
+  if(props.children && cMode.value =='design'){
     children.value = JSON.parse(props.children);
   }else{
     scheme.value.children = JSON.parse(props.children);
   }
 },{immediate: true,deep: true})
-onMounted(() => {
+onMounted(() => {  
+  console.log('cMode:'+cMode) 
   bus.on(resetQueryFormKey,() => {
     proxy.resetForm("queryRef");
   })

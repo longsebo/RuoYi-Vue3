@@ -94,7 +94,7 @@ const configMap = {
   'normal-button':markRaw(NormalButtonConfig),
   'ruoyi-el-select':markRaw(DropdownSelectConfig),
   'ruoyi-ag-grid':markRaw(AgGridConfig),
-  'ruoyi-search-form':markRaw(FormConfig),
+  'search-form':markRaw(FormConfig),
 }
 
 </script>

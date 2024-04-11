@@ -250,7 +250,6 @@ import { genId } from "@/components/form/designer/util/common";
 import { Plus, Delete, CopyDocument } from "@element-plus/icons-vue";
 import { findTreeItemParentById } from "@/utils/common";
 import RuoyiElSelect from "../components/select/RuoyiElSelect.vue";
-//import SearchForm from "@/components/form/components/form/searchform/SearchForm.vue"
 export default defineComponent({
   name: "NestedDragItem",
   components: {

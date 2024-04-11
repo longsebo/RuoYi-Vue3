@@ -287,7 +287,7 @@ export const InputComponents: CandidateComponentConfig[] = [
     {
     id: genId(),
     icon: 'ali_search_form',
-    component: 'ruoyi-search-form',
+    component: 'search-form',
     category: 'form-item',
     title: "查询Form",
     formItemAttrs: {
@@ -296,7 +296,7 @@ export const InputComponents: CandidateComponentConfig[] = [
       required: false,
     },
     attrs: {
-
+	  children:'[]'	
     }
   },
 ]
