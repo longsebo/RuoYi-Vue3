@@ -284,21 +284,6 @@ export const InputComponents: CandidateComponentConfig[] = [
       value:''
     }
   },
-    {
-    id: genId(),
-    icon: 'ali_search_form',
-    component: 'search-form',
-    category: 'form-item',
-    title: "查询Form",
-    formItemAttrs: {
-      label: "",
-      labelWidth: "120px",
-      required: false,
-    },
-    attrs: {
-	  children:'[]'	
-    }
-  },
 ]
 export const LayoutComponents: CandidateComponentConfig[] = [
   {
@@ -478,4 +463,22 @@ export const TableComponents: CandidateComponentConfig[] = [
       rowSelectTriggerComponents:'',//行选择触发组件，通知组件进行处理
     }
   },
+]
+
+export const ContainerComponents: CandidateComponentConfig[] = [
+  {
+    id: genId(),
+    icon: 'ali_search_form',
+    component: 'search-form',
+    category: 'container',
+    title: "查询Form",
+    formItemAttrs: {
+      label: "",
+      labelWidth: "120px",
+      required: false,
+    },
+    attrs: {
+      children:'[]'
+    }
+  }
 ]
