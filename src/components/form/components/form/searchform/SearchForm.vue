@@ -50,14 +50,18 @@ watch(() => queryParams, () => {
   bus.emit(queryParamKey, queryParams)
 },{immediate: true,deep: true})
 
+
+
 interface Props {
-  children?: string,
+  modelValue:object,
   mode?: FormFieldMode
 }
 const showSearch = ref(true)
 const props = defineProps<Props>()
 
-// const emits = defineEmits<Emits>()
+
+const emit = defineEmits(['update:modelValue'])
+
 const children = ref([])
 const scheme = ref({})
 const formMode = inject(formModeKey)
@@ -72,12 +76,20 @@ const cMode = computed<FormFieldMode>(() => {
 })
 watch(() => props, (newVal) =>{
   console.log('cMode:'+cMode.value) 
-  if(props.children && cMode.value =='design'){
-    children.value = JSON.parse(props.children);
+  if(props.modelValue.children && cMode.value =='design'){
+    children.value = JSON.parse(props.modelValue.children);
   }else{
-    scheme.value.children = JSON.parse(props.children);
+    scheme.value.children = JSON.parse(props.modelValue.children);
   }
 },{immediate: true,deep: true})
+
+watch(()=> children,(newVal)=>{
+
+  let tempJson = {children:JSON.stringify(children.value)}
+  console.log('emit change children:'+JSON.stringify(tempJson))
+  emit('update:modelValue',tempJson)
+},{immediate: true,deep: true})
+
 onMounted(() => {  
   console.log('cMode:'+cMode) 
   bus.on(resetQueryFormKey,() => {

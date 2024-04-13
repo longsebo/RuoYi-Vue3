@@ -222,7 +222,7 @@
         <template v-else-if="'container' === element.category">
           <component
               :is="element.component"
-              v-bind="element.attrs"
+              v-model="element.attrs"
           >
 
           </component>
