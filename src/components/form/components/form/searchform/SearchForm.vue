@@ -75,11 +75,16 @@ const cMode = computed<FormFieldMode>(() => {
   return "edit"
 })
 watch(() => props, (newVal) =>{
+  debugger;
   console.log('cMode:'+cMode.value) 
   if(props.modelValue.children && cMode.value =='design'){
-    children.value = JSON.parse(props.modelValue.children);
+    if(props.modelValue.children!=JSON.stringify(children.value)) {
+      children.value = JSON.parse(props.modelValue.children);
+    }
   }else{
-    scheme.value.children = JSON.parse(props.modelValue.children);
+    if(props.modelValue.children!=JSON.stringify(scheme.value.children)) {
+      scheme.value.children = JSON.parse(props.modelValue.children);
+    }
   }
 },{immediate: true,deep: true})
 
@@ -87,7 +92,9 @@ watch(()=> children,(newVal)=>{
 
   let tempJson = {children:JSON.stringify(children.value)}
   console.log('emit change children:'+JSON.stringify(tempJson))
-  emit('update:modelValue',tempJson)
+  if(props.modelValue.children!=JSON.stringify(children.value)) {
+    emit('update:modelValue', tempJson)
+  }
 },{immediate: true,deep: true})
 
 onMounted(() => {  
