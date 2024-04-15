@@ -16,6 +16,11 @@
                       :scheme="scheme"
                       :form-data="queryParams"></v-form-render>
     </template>
+    <template v-else-if="cMode === 'edit'">
+      <v-form-render  style="width: 100%; height: 100%;min-height: 80px; background-color: #fff; "
+                      :scheme="scheme"
+                      :form-data="queryParams"></v-form-render>
+    </template>
     <template v-else-if="cMode === 'read'">
       <v-form-render  style="width: 100%; height: 100%;min-height: 80px; background-color: #fff; "
                       :scheme="scheme"
@@ -30,7 +35,7 @@
 </template>
 
 <script lang="ts" setup>
-console.log('enter searchForm') 
+console.log('enter searchForm')
 import {
   queryParamKey,resetQueryFormKey,showSearchKey
 } from "@/config/app.keys";
@@ -76,7 +81,7 @@ const cMode = computed<FormFieldMode>(() => {
 })
 watch(() => props, (newVal) =>{
   debugger;
-  console.log('cMode:'+cMode.value) 
+  console.log('cMode:'+cMode.value)
   if(props.modelValue.children && cMode.value =='design'){
     if(props.modelValue.children!=JSON.stringify(children.value)) {
       children.value = JSON.parse(props.modelValue.children);
@@ -97,8 +102,8 @@ watch(()=> children,(newVal)=>{
   }
 },{immediate: true,deep: true})
 
-onMounted(() => {  
-  console.log('cMode:'+cMode) 
+onMounted(() => {
+  console.log('cMode:'+cMode)
   bus.on(resetQueryFormKey,() => {
     proxy.resetForm("queryRef");
   })
