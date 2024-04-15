@@ -32,7 +32,7 @@ interface Props {
 }
 
 const props = defineProps<Props>()
-console.log('==============',props)
+console.log('==============111'+JSON.stringify(props))
 
 const mode = computed<FormFieldMode>(() => props.scheme.mode)
 provide(formModeKey, mode)

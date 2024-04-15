@@ -84,7 +84,7 @@
       <v-form-render ref="formRenderRef" :scheme="formScheme" :form-data="dialogInfo.formData"></v-form-render>
       <div style="margin-top: 6px; margin-bottom: 6px">
         <el-scrollbar always>
-          <pre> {{ JSON.stringify(dialogInfo.formData) }} </pre>
+          <pre> {{ JSON.stringify(formScheme) }} </pre>
         </el-scrollbar>
 
       </div>

@@ -285,7 +285,8 @@ export default defineComponent({
     children: Array as PropType<ComponentConfig[]>
   },
   setup(props, { emit }) {
-
+    debugger;
+    console.log('==============2222'+JSON.stringify(props))
     function selectMultipleChangedHandler(event: SelectMultipleChangedEvent) {
       console.log('selectedMultipleChanged', event, formData.value[event.prop])
       vFormActiveElement.value.attrs.multiple = event.multiple

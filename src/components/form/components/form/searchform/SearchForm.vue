@@ -59,7 +59,7 @@ interface Props {
 const showSearch = ref(true)
 const props = defineProps<Props>()
 
-
+console.log('SearchForm props:'+JSON.stringify(props))
 const emit = defineEmits(['update:modelValue'])
 
 const children = ref([])
@@ -91,14 +91,14 @@ watch(() => props, (newVal) =>{
 watch(()=> children,(newVal)=>{
 
   let tempJson = {children:JSON.stringify(children.value)}
-  console.log('emit change children:'+JSON.stringify(tempJson))
-  if(props.modelValue.children!=JSON.stringify(children.value)) {
+  if(props.modelValue.children!=JSON.stringify(children.value) && cMode.value === 'edit') {
+    console.log('emit change children:'+JSON.stringify(tempJson))
     emit('update:modelValue', tempJson)
   }
 },{immediate: true,deep: true})
 
 onMounted(() => {  
-  console.log('cMode:'+cMode) 
+  console.log('cMode:'+cMode.value)
   bus.on(resetQueryFormKey,() => {
     proxy.resetForm("queryRef");
   })
