@@ -71,7 +71,7 @@
       @confirm="dialogInfo.visible = false"
     >
       <div style="display: flex; align-items: center; gap: 6px;">
-        <el-radio-group v-model="formScheme.mode">
+        <el-radio-group v-model="formScheme.mode" >
           <el-radio-button value="design">设计</el-radio-button>
           <el-radio-button value="edit">编辑</el-radio-button>
           <el-radio-button value="read">预览</el-radio-button>
@@ -182,6 +182,10 @@ const labelPosition = computed(() => {
   return formScheme.value.labelPosition
 })
 
+watch(() =>formScheme.mode,
+  (newValue, oldValue) => {
+   console.log('watch formScheme.mode');
+  },{immediate: true ,deep: true});
 
 watch(() => props.pageInfo, async () => {
   //console.log('enter watch')

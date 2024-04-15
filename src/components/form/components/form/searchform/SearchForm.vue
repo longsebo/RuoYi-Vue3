@@ -16,6 +16,11 @@
                       :scheme="scheme"
                       :form-data="queryParams"></v-form-render>
     </template>
+    <template v-else-if="cMode === 'edit'">
+      <v-form-render  style="width: 100%; height: 100%;min-height: 80px; background-color: #fff; "
+                      :scheme="scheme"
+                      :form-data="queryParams"></v-form-render>
+    </template>
     <template v-else-if="cMode === 'read'">
       <v-form-render  style="width: 100%; height: 100%;min-height: 80px; background-color: #fff; "
                       :scheme="scheme"
@@ -30,7 +35,7 @@
 </template>
 
 <script lang="ts" setup>
-console.log('enter searchForm') 
+console.log('enter searchForm')
 import {
   queryParamKey,resetQueryFormKey,showSearchKey
 } from "@/config/app.keys";
@@ -59,7 +64,7 @@ interface Props {
 const showSearch = ref(true)
 const props = defineProps<Props>()
 
-console.log('SearchForm props:'+JSON.stringify(props))
+
 const emit = defineEmits(['update:modelValue'])
 
 const children = ref([])
@@ -91,14 +96,14 @@ watch(() => props, (newVal) =>{
 watch(()=> children,(newVal)=>{
 
   let tempJson = {children:JSON.stringify(children.value)}
-  if(props.modelValue.children!=JSON.stringify(children.value) && cMode.value === 'edit') {
-    console.log('emit change children:'+JSON.stringify(tempJson))
+  console.log('emit change children:'+JSON.stringify(tempJson))
+  if(props.modelValue.children!=JSON.stringify(children.value)) {
     emit('update:modelValue', tempJson)
   }
 },{immediate: true,deep: true})
 
 onMounted(() => {  
-  console.log('cMode:'+cMode.value)
+  console.log('cMode:'+cMode) 
   bus.on(resetQueryFormKey,() => {
     proxy.resetForm("queryRef");
   })

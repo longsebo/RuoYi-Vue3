@@ -49,6 +49,25 @@
         </tr>
       </table>
     </template>
+    <template v-else-if="item.component === 'container'">
+      <table v-bind="item.attrs">
+        <tr
+            v-for="tr in item.children"
+            :key="tr.id"
+            v-bind="tr.attrs"
+        >
+          <td
+              v-for="td in tr.children"
+              :key="td.id"
+              v-bind="td.attrs"
+          >
+            <template v-for="it in td.children" :key="it.id">
+              <VFormNestedItem :form-data="formData" :item="it"/>
+            </template>
+          </td>
+        </tr>
+      </table>
+    </template>
   </template>
   <template v-else-if="item.category === 'display'">
     <component :is="item.component" v-bind="item.attrs"></component>
@@ -81,7 +100,7 @@ import LabelField from "@/components/form/components/display/LabelField.vue";
 import NormalButton from "../components/button/NormalButton.vue"
 import RuoyiElSelect from "../components/select/RuoyiElSelect.vue";
 import RuoyiAgGrid from "../components/table/RuoyiAgGrid.vue"
-
+import SearchForm from "@/components/form/components/form/searchform/SearchForm.vue"
 export default defineComponent({
   name: 'VFormNestedItem',
   components: {
