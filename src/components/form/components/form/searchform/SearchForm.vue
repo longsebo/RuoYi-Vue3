@@ -11,11 +11,7 @@
     >
     </nested-drag-item>
     </template>
-    <template v-else-if="cMode === 'edit'">
-      <v-form-render  style="width: 100%; height: 100%;min-height: 80px; background-color: #fff; "
-                      :scheme="scheme"
-                      :form-data="queryParams"></v-form-render>
-    </template>
+
     <template v-else-if="cMode === 'edit'">
       <v-form-render  style="width: 100%; height: 100%;min-height: 80px; background-color: #fff; "
                       :scheme="scheme"
@@ -81,16 +77,22 @@ const cMode = computed<FormFieldMode>(() => {
 })
 watch(() => props, (newVal) =>{
   debugger;
-  console.log('cMode:'+cMode.value) 
-  if(props.modelValue.children && cMode.value =='design'){
+  console.log('cMode:'+cMode.value)
+  // if(props.modelValue.children && cMode.value =='design'){
+  //   if(props.modelValue.children!=JSON.stringify(children.value)) {
+  //     children.value = JSON.parse(props.modelValue.children);
+  //   }
+  // }else{
+  //   if(props.modelValue.children!=JSON.stringify(scheme.value.children)) {
+  //     scheme.value.children = JSON.parse(props.modelValue.children);
+  //   }
+  // }
     if(props.modelValue.children!=JSON.stringify(children.value)) {
       children.value = JSON.parse(props.modelValue.children);
     }
-  }else{
     if(props.modelValue.children!=JSON.stringify(scheme.value.children)) {
       scheme.value.children = JSON.parse(props.modelValue.children);
     }
-  }
 },{immediate: true,deep: true})
 
 watch(()=> children,(newVal)=>{
@@ -102,8 +104,8 @@ watch(()=> children,(newVal)=>{
   }
 },{immediate: true,deep: true})
 
-onMounted(() => {  
-  console.log('cMode:'+cMode) 
+onMounted(() => {
+  console.log('cMode:'+cMode)
   bus.on(resetQueryFormKey,() => {
     proxy.resetForm("queryRef");
   })
