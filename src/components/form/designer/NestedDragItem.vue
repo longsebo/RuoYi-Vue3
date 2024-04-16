@@ -177,6 +177,7 @@
             <component
                 :is="element.component"
                 v-bind="element.attrs"
+                :id = "element.id"
             >
 
             </component>
@@ -223,6 +224,7 @@
           <component
               :is="element.component"
               v-model="element.attrs"
+              :id="element.id"
           >
 
           </component>
@@ -273,13 +275,15 @@ import { genId } from "@/components/form/designer/util/common";
 import { Plus, Delete, CopyDocument } from "@element-plus/icons-vue";
 import { findTreeItemParentById } from "@/utils/common";
 import RuoyiElSelect from "../components/select/RuoyiElSelect.vue";
+import SearchDesignButton from "../components/button/SearchDesignButton.vue"
 export default defineComponent({
   name: "NestedDragItem",
   components: {
     Draggable, ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElRow, ElCol,ElButton, SVGIcon, ElCheckboxGroup, ElCheckbox,
     UserSelectorInput, DeptSelectorInput, NumberInput, TextInput, SingleSelect, MultiSelect, UserSelect, DeptSelect,
     Plus, Delete, CopyDocument, DatePicker, DateRangePicker, LabelField,NormalButton,RuoyiElSelect,RuoyiAgGrid,
-    SearchForm:defineAsyncComponent (()=> import('@/components/form/components/form/searchform/SearchForm.vue'))
+    SearchForm:defineAsyncComponent (()=> import('@/components/form/components/form/searchform/SearchForm.vue')),
+    SearchDesignButton
   },
   props: {
     children: Array as PropType<ComponentConfig[]>
@@ -306,7 +310,7 @@ export default defineComponent({
     const formData = ref({})
 
     function handleClickElement(elem) {
-      console.log('handleClickElement:'+JSON.stringify(elem))
+      console.log('rhandleClickElement:'+JSON.stringify(elem))
       vFormActiveElement.value = elem
     }
 

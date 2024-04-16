@@ -73,7 +73,7 @@
     <component :is="item.component" v-bind="item.attrs"></component>
   </template>
   <template v-else-if="item.category === 'button'">
-    <component :is="item.component" v-bind="item.attrs" v-model:formData="formData"></component>
+    <component :is="item.component" v-bind="item.attrs" v-model:formData="formData" :id = "element.id"></component>
   </template>
   <template v-else-if="item.category === 'table'">
     <component :is="item.component" v-bind="item.attrs" v-model:formData="formData"></component>
@@ -101,12 +101,14 @@ import NormalButton from "../components/button/NormalButton.vue"
 import RuoyiElSelect from "../components/select/RuoyiElSelect.vue";
 import RuoyiAgGrid from "../components/table/RuoyiAgGrid.vue"
 import SearchForm from "@/components/form/components/form/searchform/SearchForm.vue"
+import SearchDesignButton from "../components/button/SearchDesignButton.vue"
 export default defineComponent({
   name: 'VFormNestedItem',
   components: {
     ElFormItem, ElSelect, ElOption, ElInput, ElRow, ElCol,ElButton, NumberInput, UserSelectorInput, DeptSelectorInput, TextInput,
     SingleSelect, MultiSelect, UserSelect, DeptSelect, DatePicker, DateRangePicker, LabelField,
-    NormalButton,RuoyiElSelect,RuoyiAgGrid,SearchForm:defineAsyncComponent (()=> import('@/components/form/components/form/searchform/SearchForm.vue'))
+    NormalButton,RuoyiElSelect,RuoyiAgGrid,SearchForm:defineAsyncComponent (()=> import('@/components/form/components/form/searchform/SearchForm.vue')),
+    SearchDesignButton
   },
   props: {
     item: {

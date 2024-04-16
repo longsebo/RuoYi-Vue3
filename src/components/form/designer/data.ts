@@ -41,6 +41,32 @@ export const ButtonComponents: CandidateComponentConfig[] = [
 
     },
   },
+  {
+    id: genId(),
+    icon: 'Search',
+    component: 'search-design-button',
+    category: 'button',
+    title: "查询按钮",
+    attrs: {
+      size:'default',
+      type:'primary',
+      plain:false,
+      text:true,
+      bg:false,
+      link:false,
+      round:false,
+      circle:false,
+      loading:false,
+      disabled:false,
+      autofocus:false,
+      label:'查询按钮',
+      //操作数据
+      operationdata:{
+        interfaceCode:'',
+        parameterList:[]
+      }
+    },
+  },
 ]
 export const InputComponents: CandidateComponentConfig[] = [
   {

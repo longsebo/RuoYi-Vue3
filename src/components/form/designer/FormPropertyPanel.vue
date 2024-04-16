@@ -73,6 +73,7 @@ import LabelFieldConfig from "@/components/form/designer/config/LabelFieldConfig
 import NormalButtonConfig from "@/components/form/designer/config/NormalButtonConfig.vue";
 import DropdownSelectConfig from "@/components/form/designer/config/DropdownSelectionConfig.vue";
 import AgGridConfig from  "@/components/form/designer/config/AgGridConfig.vue";
+import SearchButtonConfig from "@/components/form/designer/config/SearchButtonConfig.vue";
 
 const vFormSelectElem = inject(vFormActiveElementKey)
 
@@ -95,6 +96,7 @@ const configMap = {
   'ruoyi-el-select':markRaw(DropdownSelectConfig),
   'ruoyi-ag-grid':markRaw(AgGridConfig),
   'search-form':markRaw(FormConfig),
+  'search-design-button':markRaw(SearchButtonConfig)
 }
 
 </script>

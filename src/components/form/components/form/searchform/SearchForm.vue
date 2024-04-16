@@ -55,7 +55,8 @@ watch(() => queryParams, () => {
 
 interface Props {
   modelValue:object,
-  mode?: FormFieldMode
+  mode?: FormFieldMode,
+  id?:string
 }
 const showSearch = ref(true)
 const props = defineProps<Props>()
@@ -76,17 +77,9 @@ const cMode = computed<FormFieldMode>(() => {
   return "edit"
 })
 watch(() => props, (newVal) =>{
-  debugger;
-  console.log('cMode:'+cMode.value)
-  // if(props.modelValue.children && cMode.value =='design'){
-  //   if(props.modelValue.children!=JSON.stringify(children.value)) {
-  //     children.value = JSON.parse(props.modelValue.children);
-  //   }
-  // }else{
-  //   if(props.modelValue.children!=JSON.stringify(scheme.value.children)) {
-  //     scheme.value.children = JSON.parse(props.modelValue.children);
-  //   }
-  // }
+   debugger;
+   console.log('cMode:'+cMode.value)
+   console.log('id:'+props.id)
     if(props.modelValue.children!=JSON.stringify(children.value)) {
       children.value = JSON.parse(props.modelValue.children);
     }
