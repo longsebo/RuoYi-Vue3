@@ -1,11 +1,12 @@
 <template>
-  <el-button v-bind="props" :icon="Search" @click="handleQuery">{$attrs.title}</el-button>
+  <el-button v-bind="props" :icon="Search" @click="handleQuery">{{props.label}}</el-button>
 </template>
 
 <script lang="ts" setup>
 import bus from '@/event/bus'
 import {onMounted, ref, onUnmounted, defineProps} from "vue";
 import { listApplication  } from "@/api/business/application";
+import { Search } from '@element-plus/icons-vue';
 import {
   queryParamKey,queryListResultKey,executeQueryKey,totalKey,loadingKey
 } from "@/config/app.keys";
@@ -25,11 +26,12 @@ interface Props {
   formData:object
   operationtype?:string
   operationdata:object,
-  id?:string
+  id?:string,
+  label:string
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  title: '搜索'
+  label: '搜索'
 })
 const queryParams = ref({})
 onMounted(() => {

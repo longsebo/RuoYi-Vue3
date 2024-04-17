@@ -73,7 +73,7 @@
     <component :is="item.component" v-bind="item.attrs"></component>
   </template>
   <template v-else-if="item.category === 'button'">
-    <component :is="item.component" v-bind="item.attrs" v-model:formData="formData" :id = "element.id"></component>
+    <component :is="item.component" v-bind="item.attrs" v-model:formData="formData" :id="item.id"></component>
   </template>
   <template v-else-if="item.category === 'table'">
     <component :is="item.component" v-bind="item.attrs" v-model:formData="formData"></component>
