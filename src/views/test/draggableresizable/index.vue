@@ -20,7 +20,28 @@
           @drag-end="print('drag-end')"
           @resize-end="print('resize-end')"
       >
-        This is a test example
+        <el-row>
+          <el-col>
+            <el-text class="mx-1" type="primary">人员信息</el-text>
+          </el-col>
+          <el-col>
+            <el-input v-model="input" style="width: 100%" placeholder="请输入别名" />
+          </el-col>
+          <el-col>
+            <el-table
+                ref="multipleTableRef"
+                :data="tableData"
+                style="width: 100%"
+                border
+            >
+              <el-table-column type="selection" width="55" />
+              <el-table-column label="字段名" width="120">
+                <template #default="scope">{{ scope.row.fieldName }}</template>
+              </el-table-column>
+
+            </el-table>
+          </el-col>
+        </el-row>
       </Vue3DraggableResizable>
     </div>
   </div>
@@ -39,7 +60,19 @@ export default defineComponent({
       y: 100,
       h: 100,
       w: 100,
-      active: false
+      active: false,
+      input:'',
+      tableData: [
+      {
+        fieldName: 'name',
+      },
+      {
+        fieldName: 'age',
+      },
+      {
+        fieldName: 'sex',
+      }
+    ]
     }
   },
   methods: {
