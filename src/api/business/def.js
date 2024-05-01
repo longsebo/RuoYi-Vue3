@@ -50,3 +50,19 @@ export function getInstance(query) {
     params:query
   })
 }
+// 查询所有模型树列表
+export function tree(query) {
+  return request({
+    url: '/business/def/tree',
+    method: 'get',
+    params: query
+  })
+}
+// 查询模型所有字段
+export function getAllField(query) {
+  return request({
+    url: '/business/def/getAllField',
+    method: 'get',
+    params: query
+  })
+}

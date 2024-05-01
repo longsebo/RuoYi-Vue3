@@ -177,12 +177,14 @@
              <el-option v-for="item in dataSourceList" :key="item.datasourceName" :value="item.datasourceName" :label="item.datasourceName"/>
            </el-select>
          </el-form-item>
-        <!-- <el-form-item label="是否选数据源" prop="isSelectDatasource">
-           <el-input v-model="form.isSelectDatasource" placeholder="请输入是否选数据源" />
+         <el-form-item label="SQL设计" prop="designSql" v-show="form.interfaceType=='search'">
+           <el-button type="primary" text @click="showDesignSql">SQL设计</el-button>
          </el-form-item>
-         <el-form-item label="是否通用URL" prop="isCommonUrl">
-           <el-input v-model="form.isCommonUrl" placeholder="请输入是否通用URL" />
-         </el-form-item> -->
+         <el-form-item label="SQL预览" prop="produceSql" v-show="form.interfaceType=='search'">
+           <el-scrollbar always>
+             {{form.produceSql}}
+           </el-scrollbar>
+         </el-form-item>
        </el-form>
        <template #footer>
          <div class="dialog-footer">
@@ -199,6 +201,10 @@
      <el-dialog title="返回值维护" v-model="returnValOpen" :fullscreen="true" @close="returnValOpen=false" append-to-body>
        <ReturnValueMaintenance :interfaceCode="interfaceCode" />
      </el-dialog>
+     <!-- SQL设计-->
+     <el-dialog title="SQL设计" v-model="showDesignSqlDlg" :fullscreen="true" @close="showDesignSqlDlg=false" append-to-body>
+       <DesignSql />
+     </el-dialog>
    </div>
 </template>
 
@@ -214,6 +220,7 @@ import {listAllDatasource} from "@/api/business/datasource"
 import { useIcon } from "@/components/common/util";
 import ParameterMaintenance from "@/views/business/parameter/index.vue"
 import ReturnValueMaintenance from  "@/views/business/value/index.vue"
+import DesignSql form "@/views/business/designsql/index.vue"
 import {listAllUrl} from "@/api/business/url"
 
 const router = useRouter();
@@ -292,10 +299,11 @@ const data = reactive({
     interfaceType: [
       { required: true, message: "接口类型不能为空", trigger: "blur" }
     ],
-  }
+  },
+  showDesignSqlDlg:false
 })
 
-const { queryParams, form, rules,queryDictParams } = toRefs(data)
+const { queryParams, form, rules,queryDictParams,showDesignSqlDlg } = toRefs(data)
 
 /** 通过条件过滤节点  */
 const filterNode = (value, data) => {
@@ -507,6 +515,13 @@ function formatInterfaceMethod(row,column){
  */
 function formatInterfaceType(row,column){
   return interface_type.value.find(k=>k.value == row.interfaceType)?.label??'';
+}
+
+/**
+ * 显示设计sql对话框
+ */
+function showDesignSql(){
+  showDesignSqlDlg = true;
 }
 loading.value = true;
 getFunctionTree();
