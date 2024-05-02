@@ -31,5 +31,6 @@ export const showDialogKey="showDialogKey"
 export const showSearchKey="showSearchKey"
 export const validateFormKey="validateFormKey"
 export const tableRowSelectChangeKey="tablerowSelectChangeKey"
+export const tabDesignColumnSelectChangeKey="tabDesignColumnSelectChangeKey"
 
 

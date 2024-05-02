@@ -7,6 +7,7 @@
       </el-row>
     </el-header>
     <el-main>
+      <TableDraggingComponent :modelDefs="tablesModel" @updateTableDefine="updateTableDefine"  />
     </el-main>
     <el-footer>
       <div class="resizable" v-resize="onResize">
@@ -39,8 +40,13 @@
 <script lang="ts" setup>
 import { ElMessage } from 'element-plus'
 import { tree,getDef,getAllField } from "@/api/business/def";
-import { onMounted,Directive, DirectiveBinding, onBeforeUpdate,ref } from 'vue';
+import TableDraggingComponent from "@/views/business/designsql/tableDraggingComponent.vue"
+import { onMounted,Directive, watch,ref } from 'vue';
+interface Emits {
+  (e: 'updateDesignModel', updateDesignModel: object): void
+}
 
+    const emit = defineEmits<Emits>()
     const  form=ref({});
     const  tableFormRules=ref({
         tableEnName: [
@@ -49,7 +55,127 @@ import { onMounted,Directive, DirectiveBinding, onBeforeUpdate,ref } from 'vue';
       })
     const  treeModelDef=ref([])
     const  openSelectTab=ref(false)
-    const  modelDefs=ref([])
+    const designModel =ref({
+      selectColumnTabModel:{},//列表模型
+      distinct:Boolean,//是否排重
+      conditionTreeModel:{},//条件列树模型
+      groupConditionTreeModel:{},//分组列树模型
+      tablesModel:[],//表模型列表
+      sortColumnModel:[],//排序列模型
+      tableJoinModels:[],//表关系模型
+    })
+
+    const props= defineProps({
+      designModel: {
+        type:Object,
+        default: () => [{
+        selectColumnTabModel: {
+          type: Array,
+          default: () => [{
+            columAndExp: String,//列/表达式
+            alias: String,//alias
+            aggregation: String,//聚合
+            group: Boolean,//是否分组
+            chineseName: String,//中文名
+            orgTableName: String,//原始表名
+            tableAlias: String,//表别名
+            fieldName: String,//字段名
+          }]
+        },
+        distinct: {
+          type: Boolean
+        },
+        conditionTreeModel: {
+          type: Object,
+          default: () => [{
+            type: Number,
+            parentLevel: String,//父级层次
+            currentLevel: Number,//当前级别
+            childConditionTreeModels: Array,//子树模型
+            left: String,//	左边操作列/表达式
+            operator: String,//操作符
+            right: String,// 右边操作列/表达式
+          }]
+        },
+        groupConditionTreeModel: {
+          type: Object
+        },
+        tablesModel: {
+          type: Array,
+          default: () => [{
+            orgTableName: String,//原始表名
+            tableAlias: String,//表别名
+            tableCnName: String,//表中文名
+            datasourceName: String,//数据源
+            x: Number,
+            y: Number,
+            h: Number,
+            w: Number,
+            active: Boolean,
+            columns: {
+              type: Array,
+              default: () => [{
+                fieldName: String,//字段英文名
+                fieldCnName: String,//字段中文名
+              }]
+            }
+          }]
+        },
+        sortColumnModel: {
+          type: Array,
+          default: () => [{
+            orgTableName: String,//原始表名
+            tableAlias: String,//表别名
+            columAndExp: String,//列/表达式
+            alias: String,//列别名
+            fieldName: String,//字段名
+            descending: Boolean,//是否倒排
+          }]
+        },
+        tableJoinModels: {
+          type: Array,
+          default: () => [{
+            joinType: String,//表关联类型
+            tableAlias: String,//表别名
+            tableCnName: String,//表中文名
+            dbColumnJoinModels: {
+              type: Array,
+              default: () => [{
+                operatorSign: String,//操作符
+                startColumnName: String,//开始列名
+                endColumnName: String,//结束列名
+                startPt: {
+                  type: Object,
+                  default: () => [{
+                    x: Number,
+                    y: Number
+                  }]
+                },//开始点
+                endPt: {
+                  type: Object,
+                  default: () => [{
+                    x: Number,
+                    y: Number
+                  }]
+                },//结束点
+                startIndex: Number,//开始索引
+                endIndex: Number,//结束索引
+                modelRect: {
+                  type: Object,
+                  default: () => [{
+                    x: Number,
+                    y: Number,
+                    width: Number,
+                    height: Number
+                  }]
+                }
+              }]
+            }
+          }]
+        },
+        }]
+        }
+    })
 
     const Resize:Directive = {
         bind(el, binding) {
@@ -74,11 +200,11 @@ import { onMounted,Directive, DirectiveBinding, onBeforeUpdate,ref } from 'vue';
         openSelectTab.value = true
       }
     function  handleDelete(){
-
-      }
+      designModel.value.tablesModel = [];
+     }
     async function selectTable() {
       //检查目前是否有模型，有则提示，只能增加一个表;否则模型列表增加一个
-      if (modelDefs.length > 0) {
+      if (designModel.value.tablesModel.length > 0) {
         ElMessage('目前只支持一张表!请删除后再加入');
         return
       } else {
@@ -90,13 +216,24 @@ import { onMounted,Directive, DirectiveBinding, onBeforeUpdate,ref } from 'vue';
           alias:'',
           cnName:'',
           enName:'',
+          x: 100,
+          y: 100,
+          h: 100,
+          w: 100,
+          active: false,
+          datasourceName:'',
           columns:[]
         }
         resp = await getAllField(modelDef);
         newModelDef.cnName = modelDef.cnName;
         newModelDef.enName = modelDef.enName;
-        newModelDef.columns = resp.data;
-        modelDefs.push(newModelDef);
+        newModelDef.datasourceName = modelDef.datasourceName;
+        for(let i=0;i<resp.data.length;i++){
+          let item = resp.data[i];
+          let tmpItem = {fieldName:item.fieldName,fieldCnName:item.fieldCnName}
+          newModelDef.columns.push(tmpItem)
+        }
+        designModel.value.tablesModel.push(newModelDef);
       }
       openSelectTab.value = false;
 
@@ -108,12 +245,24 @@ import { onMounted,Directive, DirectiveBinding, onBeforeUpdate,ref } from 'vue';
         treeModelDef.value = response.data;
       });
      }
-
+     function updateTableDefine( tableDefineItems) {
+       designModel.value.tablesModel = JSON.parse(JSON.stringify(tableDefineItems));
+       //更新父窗口模型
+       emit('updateDesignModel', designModel.value);
+     }
 
      onMounted(()=>{
        getTreeModelDef()
     })
-
+    watch(() => props, val => {
+      designModel.value.selectColumnTabModel = JSON.parse(JSON.stringify(props.selectColumnTabModel));
+      designModel.value.distinct = props.distinct;
+      designModel.value.conditionTreeModel = JSON.parse(JSON.stringify(props.conditionTreeModel));
+      designModel.value.groupConditionTreeModel = JSON.parse(JSON.stringify(props.groupConditionTreeModel));
+      designModel.value.tablesModel = JSON.parse(JSON.stringify(props.tablesModel));
+      designModel.value.sortColumnModel = JSON.parse(JSON.stringify(props.sortColumnModel));
+      designModel.value.tableJoinModels = JSON.parse(JSON.stringify(props.tableJoinModels));
+    });
 
 </script>
 

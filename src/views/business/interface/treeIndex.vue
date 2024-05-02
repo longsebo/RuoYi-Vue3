@@ -203,7 +203,7 @@
      </el-dialog>
      <!-- SQL设计-->
      <el-dialog title="SQL设计" v-model="showDesignSqlDlg" :fullscreen="true" @close="showDesignSqlDlg=false" append-to-body>
-       <DesignSql />
+       <DesignSql :designModel="designModel" @updateDesignModel="updateDesignModel"/>
      </el-dialog>
    </div>
 </template>
@@ -237,7 +237,7 @@ const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
 const open = ref(false);
-
+const designModel = ref({})
 const businessFunctionName = ref("");
 const businessFunctionOptions = ref(undefined);
 
@@ -521,7 +521,15 @@ function formatInterfaceType(row,column){
  * 显示设计sql对话框
  */
 function showDesignSql(){
-  showDesignSqlDlg = true;
+  showDesignSqlDlg.value = true;
+}
+
+/**
+ * 更新模型
+ * @param newDesignModel
+ */
+function updateDesignModel(newDesignModel){
+  designModel.value = JSON.parse(JSON.stringify(newDesignModel))
 }
 loading.value = true;
 getFunctionTree();
