@@ -11,8 +11,20 @@
     </el-main>
     <el-footer>
       <div class="resizable" v-resize="onResize">
-        <!-- 这里是你的底部内容 -->
-        底部内容
+        <el-tabs v-model="activeName" @tab-click="handleElTabClick">
+          <el-tab-pane label="列" name="columnTab">
+            <ColumnTabPane/>
+          </el-tab-pane>
+          <el-tab-pane label="查询条件" name="searchConditionTab">
+            <SearchConditionTabPane/>
+          </el-tab-pane>
+          <el-tab-pane label="排序" name="sortTab">
+            <SortTabPane/>
+          </el-tab-pane>
+          <el-tab-pane label="SQL预览" name="sqlPreview">
+            <SqlPreviewTabPane/>
+          </el-tab-pane>
+        </el-tabs>
       </div>
     </el-footer>
     <!--添加表 -->
@@ -42,6 +54,12 @@ import { ElMessage } from 'element-plus'
 import { tree,getDef,getAllField } from "@/api/business/def";
 import TableDraggingComponent from "@/views/business/designsql/tableDraggingComponent.vue"
 import { onMounted,Directive, watch,ref } from 'vue';
+import { ElTabs, ElTabPane } from 'element-plus';
+import ColumnTabPane from "@/views/business/designsql/columnTabPane.vue"
+import SearchConditionTabPane from "@/views/business/designsql/searchConditionTabPane.vue"
+import SortTabPane from "@/views/business/designsql/sortTabPane.vue"
+import ColumnTabPane from "@/views/business/designsql/sqlPreviewTabPane.vue"
+import SqlPreviewTabPane from "./sqlPreviewTabPane.vue";
 interface Emits {
   (e: 'updateDesignModel', updateDesignModel: object): void
 }
@@ -64,6 +82,7 @@ interface Emits {
       sortColumnModel:[],//排序列模型
       tableJoinModels:[],//表关系模型
     })
+   const activeName=ref('columnTab')
 
     const props= defineProps({
       designModel: {
@@ -263,7 +282,10 @@ interface Emits {
       designModel.value.sortColumnModel = JSON.parse(JSON.stringify(props.sortColumnModel));
       designModel.value.tableJoinModels = JSON.parse(JSON.stringify(props.tableJoinModels));
     });
+    //页签单击
+    function handleElTabClick(tab, event){
 
+    }
 </script>
 
 <style>
