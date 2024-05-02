@@ -10,6 +10,7 @@
 1. 零代码业务平台
    平台功能xmind图:
 ![输入图片说明](src/assets/platformintroduction/bspl.pngimage.png)
+   业务平台由业务功能，业务建模，接口定义，页面定义，菜单挂页面，权限注解 六大模块组成
 ## 前端运行
 
 ```bash
