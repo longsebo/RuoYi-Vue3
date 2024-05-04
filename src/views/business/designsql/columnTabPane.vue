@@ -22,14 +22,29 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, watch,ref } from 'vue';
+import {onMounted, ref,onUnmounted,watch} from "vue";
 import { useIcon } from "@/components/common/util";
+import bus from '@/event/bus'
+import {
+  tabDesignColumnSelectChangeKey
+} from "@/config/app.keys";
+import {
+  tabDesignColumnSelectChangeKey
+} from "@/config/app.keys";
 
 const upArrowIcon = useIcon("ali_up_arrow")
 const downArrowIcon = useIcon("ali_down_arrow")
 const distinct = ref(false)
 const selectColumnTabModel =ref([])
 
+onMounted(() => {
+  bus.on(tabDesignColumnSelectChangeKey,(tableDefine,selection) =>{
+    //applicationList.value = data;
+  })
+})
+onUnmounted(() => {
+  bus.off(tabDesignColumnSelectChangeKey);
+})
 </script>
 
 <style scoped>
