@@ -30,3 +30,9 @@
 <br>
 ![输入图片说明](static/datasource2.png)
 <br>业务建模就是创建业务存放的数据表,包括选择数据源，表名，字段名
+接口定义:<br>
+![输入图片说明](static/inteface1.png)
+<br>
+![输入图片说明](static/inteface2.png)
+<br>
+接口定义就是后台暴露的API，分为通用URL和自定义URL.比如新增，修改，删除，查询都可以弄成通用URL，只是传参不同而已.
