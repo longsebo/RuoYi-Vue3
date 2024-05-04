@@ -52,10 +52,15 @@
 <br>
 ![输入图片说明](static/pagedefine6.png)
 <br>
-页面定义比较复杂，尚未完全完成。设计页面设计，页面接口，页面参数三大块。<br>
+页面定义比较复杂，尚未完全完成。页面设计，页面接口，页面参数三大块。<br>
 目前正在丰富组件，以便能串通一个基本页面功能维护!<br>
 2.  **零代码流程平台** 
 功能图:<br>
 ![输入图片说明](static/flowfunction.png)
 <br>
 流程是基于业务平台基础上，利用业务平台业务功能，再加上flowable流程能力，实现完全可视化功能。所以必须等业务平台完毕后，才能启动，敬请期待！
+【补充说明】：
+前端技术：使用vue3
+后端技术：使用springcloud,flowable 7.0
+数据库:mysql 8 
+本项目对应后台项目git url为：https://gitee.com/longsebo/RuoYi-Cloud.git
