@@ -12,4 +12,5 @@
    业务平台由业务功能，业务建模，接口定义，页面定义，菜单挂页面，权限注解 六大模块组成<br>
 业务功能:<br>
 ![输入图片说明](https://gitee.com/longsebo/RuoYi-Vue3/raw/master/src/assets/platformintroduction/businessfunction.png)
+![输入图片说明](src/assets/platformintroduction/%E5%BE%AE%E4%BF%A1%E6%88%AA%E5%9B%BE_20240504201941.png)
 业务功能是树状结构，后面业务模型，接口，页面都是挂在业务功能节点上。方面后面过滤选择，符合业务人员习惯<br>
