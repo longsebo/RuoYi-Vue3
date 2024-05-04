@@ -58,9 +58,9 @@
 功能图:<br>
 ![输入图片说明](static/flowfunction.png)
 <br>
-流程是基于业务平台基础上，利用业务平台业务功能，再加上flowable流程能力，实现完全可视化功能。所以必须等业务平台完毕后，才能启动，敬请期待！
-【补充说明】：
-前端技术：使用vue3
-后端技术：使用springcloud,flowable 7.0
-数据库:mysql 8 
-本项目对应后台项目git url为：https://gitee.com/longsebo/RuoYi-Cloud.git
+流程是基于业务平台基础上，利用业务平台业务功能，再加上flowable流程能力，实现完全可视化功能。所以必须等业务平台完毕后，才能启动，敬请期待！<br>
+【补充说明】：<br>
+前端技术：使用vue3<br>
+后端技术：使用springcloud,flowable 7.0<br>
+数据库:mysql 8 <br>
+本项目对应后台项目git url为：https://gitee.com/longsebo/RuoYi-Cloud.git<br>
