@@ -25,4 +25,8 @@
 ![输入图片说明](static/modifymodel3.png)
 <br>
 ![输入图片说明](static/modifymodel4.png)
+<br>
+![输入图片说明](static/datasource1.png)
+<br>
+![输入图片说明](static/datasource2.png)
 <br>业务建模就是创建业务存放的数据表,包括选择数据源，表名，字段名
