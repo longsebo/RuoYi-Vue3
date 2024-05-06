@@ -115,6 +115,7 @@ interface Emits {
             left: String,//	左边操作列/表达式
             operator: String,//操作符
             right: String,// 右边操作列/表达式
+            id:String,//行唯一标识=parentLevel+"."+currentLevel
           }]
         },
         groupConditionTreeModel: {
