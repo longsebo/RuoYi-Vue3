@@ -99,6 +99,7 @@ interface Emits {
             orgTableName: String,//原始表名
             tableAlias: String,//表别名
             fieldName: String,//字段名
+            datasourceName:String,//数据源名称
           }]
         },
         distinct: {

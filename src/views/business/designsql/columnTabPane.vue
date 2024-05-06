@@ -37,11 +37,76 @@ const downArrowIcon = useIcon("ali_down_arrow")
 const distinct = ref(false)
 const selectColumnTabModel =ref([])
 
+/**
+ * 构造一项
+ * @param tableDefine
+ * @param selectionElement
+ */
+function makeItem(tableDefine, selectionElement) {
+  let item={ alias: '',//alias
+    aggregation: '',//聚合
+    group: false,//是否分组
+    chineseName: tableDefine.cnName,//中文名
+    orgTableName:tableDefine.enName,//原始表名
+    tableAlias: tableDefine.alias,//表别名
+    fieldName: selectionElement.fieldName,//字段名
+    datasourceName:tableDefine.datasourceName,//数据源名称
+     }
+    return item;
+}
+
+/**
+ * 判断selectColumnTabModel是否在新的选择中
+ * @param testItem
+ * @param tableDefine
+ * @param selection
+ */
+function isExistsInNewSelection(testItem, tableDefine, selection) {
+  for(let i=0;i<selection.length;i++){
+    if(testItem.fieldName==selection[i].fieldName && testItem.orgTableName==tableDefine.enName &&
+       testItem.datasourceName==tableDefine.datasourceName){
+      return true;
+    }
+  }
+  return false;
+}
+
 onMounted(() => {
   bus.on(tabDesignColumnSelectChangeKey,(tableDefine,selection) =>{
-    //applicationList.value = data;
+
+    //查找tableDefine selection在selectColumnTabModel中是否存在,不存在则添加
+     for(let i=0;i<selection.length;i++){
+        if(!isExistsInSelectColumnTabModel(tableDefine,selection[i])){
+          selectColumnTabModel.value.push(makeItem(tableDefine,selection[i]);
+        }
+     }
+      //查找selectCoumnTableModel在selectColumnTabModel中是否存在,不存在则删除
+     for(let i=selectColumnTabModel.value.length-1;i>=0;i--){
+       if(!isExistsInNewSelection(selectColumnTabModel.value[i],tableDefine,selection)){
+         selectColumnTabModel.value.splice(i,1);
+        }
+      }
   })
 })
+
+/**
+ * 判断selectColumnTabModel是否在旧的selection中
+ * @param tableDefine
+ * @param selectionElement
+ */
+function isExistsInSelectColumnTabModel(tableDefine, selectionElement) {
+  for (let i = 0; i < selectColumnTabModel.value.length; i++) {
+    if (
+        selectColumnTabModel.value[i].datasourceName === tableDefine.datasourceName &&
+        selectColumnTabModel.value[i].orgTableName = tableDefine.enName &&
+        selectColumnTabModel.value[i].fieldName === selectionElement.fieldName
+    ) {
+      return true;
+    }
+  }
+  return false;
+}
+
 onUnmounted(() => {
   bus.off(tabDesignColumnSelectChangeKey);
 })
