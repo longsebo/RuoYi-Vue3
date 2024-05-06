@@ -1,16 +1,16 @@
 <template>
   <el-container>
     <el-header>
-      <el-checkbox  v-model="distinct">是否排重</el-checkbox>
+      <el-checkbox  v-model="distinct" @updateDistinct="updateDistinct">是否排重</el-checkbox>
     </el-header>
     <el-main>
       <el-row :gutter="15">
-        <el-col :span="1.5"><el-button link type="primary" :icon="upArrowIcon" @click="moveUp"/></el-col>
-        <el-col :span="1.5"><el-button link type="primary" :icon="downArrowIcon" @click="moveDown"/></el-col>
+        <el-col :span="1.5"><el-button link type="primary" :icon="upArrowIcon" @click="moveUp"  :disabled="currentIndex === 0"/></el-col>
+        <el-col :span="1.5"><el-button link type="primary" :icon="downArrowIcon" @click="moveDown" :disabled="currentIndex === selectColumnTabModel.length - 1"/></el-col>
         <el-col :span="1.5"><el-button link type="primary" icon="Plus" @click="addColumn"/></el-col>
         <el-col :span="1.5"><el-button link type="primary" icon="Delete" @click="deleteColumn"/></el-col>
       </el-row>
-      <el-table :data="selectColumnTabModel" @selection-change="handleSelectionChange">
+      <el-table :data="selectColumnTabModel" @row-click="handleRowClick">
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="列表达式" align="center" prop="columAndExp" />
         <el-table-column label="别名" align="center" prop="alias" />
@@ -31,12 +31,17 @@ import {
 import {
   tabDesignColumnSelectChangeKey
 } from "@/config/app.keys";
+interface Emits {
+  (e: 'updateDistinct', distinct: boolean): void
+}
+
+const emit = defineEmits<Emits>()
 
 const upArrowIcon = useIcon("ali_up_arrow")
 const downArrowIcon = useIcon("ali_down_arrow")
 const distinct = ref(false)
 const selectColumnTabModel =ref([])
-
+const currentIndex=ref(-1)
 /**
  * 构造一项
  * @param tableDefine
@@ -77,7 +82,7 @@ onMounted(() => {
     //查找tableDefine selection在selectColumnTabModel中是否存在,不存在则添加
      for(let i=0;i<selection.length;i++){
         if(!isExistsInSelectColumnTabModel(tableDefine,selection[i])){
-          selectColumnTabModel.value.push(makeItem(tableDefine,selection[i]);
+          selectColumnTabModel.value.push(makeItem(tableDefine,selection[i]));
         }
      }
       //查找selectCoumnTableModel在selectColumnTabModel中是否存在,不存在则删除
@@ -96,15 +101,46 @@ onMounted(() => {
  */
 function isExistsInSelectColumnTabModel(tableDefine, selectionElement) {
   for (let i = 0; i < selectColumnTabModel.value.length; i++) {
-    if (
-        selectColumnTabModel.value[i].datasourceName === tableDefine.datasourceName &&
-        selectColumnTabModel.value[i].orgTableName = tableDefine.enName &&
+    if(selectColumnTabModel.value[i].datasourceName === tableDefine.datasourceName &&
+        selectColumnTabModel.value[i].orgTableName === tableDefine.enName &&
         selectColumnTabModel.value[i].fieldName === selectionElement.fieldName
     ) {
       return true;
     }
   }
   return false;
+}
+//更新排重模型
+function updateDistinct(){
+  emit('updateDistinct',distinct.value);
+}
+//上移
+function moveUp(){
+  if (currentIndex.value === 0) return;
+  const temp = selectColumnTabModel.value[currentIndex.value - 1];
+  selectColumnTabModel.value.splice(currentIndex.value - 1, 2);
+  selectColumnTabModel.value.splice(currentIndex.value - 2, 0, temp);
+}
+//下移
+function moveDown(){
+  if (currentIndex.value === selectColumnTabModel.value.length - 1) return;
+  const temp = selectColumnTabModel.value[currentIndex.value  + 1];
+  selectColumnTabModel.value.splice(currentIndex.value  + 1, 2);
+  selectColumnTabModel.value.splice(currentIndex.value , 0, temp);
+}
+//增加列
+function addColumn(){
+  selectColumnTabModel.value.push({})
+}
+//删除列
+function deleteColumn(){
+  if(currentIndex.value>=0 && currentIndex.value<selectColumnTabModel.value.length) {
+    selectColumnTabModel.value.splice(currentIndex.value, 1);
+  }
+}
+//单击行
+function handleRowClick(row, column, event, index){
+ currentIndex.value = index;
 }
 
 onUnmounted(() => {
