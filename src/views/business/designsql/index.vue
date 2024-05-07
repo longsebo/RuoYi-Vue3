@@ -109,6 +109,7 @@ interface Emits {
           type: Object,
           default: () => [{
             type: Number,
+            conditionRelaType:String,//条件关系类型:All,Any,None,NotAll
             parentLevel: String,//父级层次
             currentLevel: Number,//当前级别
             childConditionTreeModels: Array,//子树模型
