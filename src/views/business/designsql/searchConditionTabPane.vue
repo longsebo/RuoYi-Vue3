@@ -102,20 +102,108 @@ function handleRowClick(row, column, event, index){
       allowDeleteCondition.value = true;
     }
 }
+
+/**
+ * 获取下一个级别，取子节点最大级别+1
+ * @param children
+ */
+function getNextLevel(children) {
+  let level;
+  for(let i=0;i<children.length;i++){
+    if(children[i].level>level){
+      level = children[i].level;
+    }
+  }
+  return level+1;
+}
+
+/**
+ *
+ * @param row
+ * @param value
+ */
+function getParentNode(row, tree) {
+  //从树根从上往下找
+  if(tree.id === row.parentLevel){
+    return tree
+  }
+  let foundNode = null;
+  for(let i=0;i<tree.childConditionTreeModels.length;i++){
+     if(tree.childConditionTreeModels[i].id ===row.parentLevel){
+         return tree.childConditionTreeModels[i];
+     }
+     //否则查找下级
+     foundNode = getParentNode(row,tree.childConditionTreeModels[i]);
+     if(foundNode!=null){
+       return foundNode;
+     }
+  }
+  return null;
+}
+
 //新增条件
 function handleAdd(row){
  //构造新行
- //如果row为最顶级，则获取子节点最大序号+1作为新节点currentLevel
- //如果row为条件，则获取父节点，取父节点子节点最大序号+1作为新节点currentLevel
- //如果row为分组 ，则获取子节点最大序号+1作为新节点currentLevel
+ //如果row为类型1，为最顶级，则获取子节点最大序号+1作为新节点currentLevel
+  //如果row为分组 ，则获取子节点最大序号+1作为新节点currentLevel
+  let currentLevel =0
+  let parentLevel;
+  let parentNode;
+  if(row.type===1){
+    currentLevel = getNextLevel(row.children);
+    parentLevel = row.id;
+    parentNode = row;
+  }else {
+    //如果row为条件，则获取父节点，取父节点子节点最大序号+1作为新节点currentLevel
+    parentNode = getParentNode(row,treeData.value);
+    if(parentNode!=null) {
+      currentLevel = getNextLevel(parentNode.children);
+      parentLevel = parentNode.id;
+    }else{
+      return;
+    }
+  }
+  let child = {
+    type: 2,
+    conditionRelaType:'',
+    parentLevel:parentLevel ,//父级层次
+    currentLevel: currentLevel,//当前级别
+  }
+  parentNode.childConditionTreeModels.push(child);
 }
 //改成条件组
 function handleChangeToGroup(row){
-
+  row.type = 1
 }
+
+/**
+ * 查询row在child索引
+ * @param row
+ * @param child
+ */
+function findNodeIndex(row,child) {
+  for(let i=0;i<child.length;i++){
+    if(child[i].id ===row.id){
+      return i;
+    }
+  }
+  return -1
+}
+
 //删除条件
 function handleDelete(row){
-
+  //根节点不能删除
+  if(row.id==='1'){
+    return;
+  }
+  //查询父节点
+  let parentNode = getParentNode(row,treeData.value);
+  if(parentNode!=null){
+    let index = findNodeIndex(row,parentNode.childConditionTreeModels)
+    if(index!=-1) {
+      parentNode.childConditionTreeModels.splice(index, 1)
+    }
+  }
 }
 </script>
 
