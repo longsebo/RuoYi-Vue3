@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, ref,onUnmounted,watch} from "vue";
+import {onMounted, ref,onUnmounted,watch,defineProps,defineEmits} from "vue";
 import { useIcon } from "@/components/common/util";
 import bus from '@/event/bus'
 import {
@@ -33,8 +33,40 @@ import {
 } from "@/config/app.keys";
 interface Emits {
   (e: 'updateDistinct', distinct: boolean): void
+  (e: 'update:modelValue', selectColumnTabModel:object): void
 }
+const props= defineProps({
+  selectColumnTabModel: {
+    type: Array,
+    default: () => [{
+      columAndExp: String,//列/表达式
+      alias: String,//alias
+      aggregation: String,//聚合
+      group: Boolean,//是否分组
+      chineseName: String,//中文名
+      orgTableName: String,//原始表名
+      tableAlias: String,//表别名
+      fieldName: String,//字段名
+      datasourceName:String,//数据源名称
+    }]
+  },
+  distinct: {
+    type: Boolean
+  }
+})
 
+watch(() => props, val => {
+  distinct.value = props.distinct;
+  selectColumnTabModel.value = JSON.parse(JSON.stringify(props.selectColumnTabModel))
+});
+watch(()=>selectColumnTabModel.value,val=>{
+  //如果发生变化，则更新
+  let tmp1 = JSON.stringify(props.selectColumnTabModel);
+  let tmp2 = JSON.stringify(selectColumnTabModel.value);
+  if(tmp1!=tmp2){
+    emit('update:selectColumnTabModel', selectColumnTabModel.value);
+  }
+})
 const emit = defineEmits<Emits>()
 
 const upArrowIcon = useIcon("ali_up_arrow")

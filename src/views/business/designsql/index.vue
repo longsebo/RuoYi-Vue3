@@ -13,10 +13,10 @@
       <div class="resizable" v-resize="onResize">
         <el-tabs v-model="activeName" @tab-click="handleElTabClick">
           <el-tab-pane label="列" name="columnTab">
-            <ColumnTabPane/>
+            <ColumnTabPane v-model:selectColumnTabModel="designModel.value.selectColumnTabModel" :distinct="designModel.value.distinct" @updateDistinct="updateDistinct"/>
           </el-tab-pane>
           <el-tab-pane label="查询条件" name="searchConditionTab">
-            <SearchConditionTabPane/>
+            <SearchConditionTabPane v-model:conditionTreeModel="designModel.value.conditionTreeModel" />
           </el-tab-pane>
           <el-tab-pane label="排序" name="sortTab">
             <SortTabPane/>
@@ -272,7 +272,9 @@ interface Emits {
        //更新父窗口模型
        emit('updateDesignModel', designModel.value);
      }
-
+     function updateDistinct(value){
+       designModel.value.distinct = value;
+     }
      onMounted(()=>{
        getTreeModelDef()
     })

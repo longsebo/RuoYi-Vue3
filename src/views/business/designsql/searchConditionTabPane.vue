@@ -61,9 +61,27 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted,Directive, watch,ref } from 'vue';
+import { onMounted,Directive, watch,ref,defineEmits } from 'vue';
 import { useIcon } from "@/components/common/util";
 const changToGroupIcon = useIcon("ali_changetogroup")
+
+const props= defineProps({
+  conditionTreeModel: {
+    type: Object,
+    default: () => [{
+      type: Number,
+      conditionRelaType:String,//条件关系类型:All,Any,None,NotAll
+      parentLevel: String,//父级层次
+      currentLevel: Number,//当前级别
+      childConditionTreeModels: Array,//子树模型
+      left: String,//	左边操作列/表达式
+      operator: String,//操作符
+      right: String,// 右边操作列/表达式
+      id:String,//行唯一标识=parentLevel+"."+currentLevel
+    }]
+  }
+})
+
 const conditionTypes=ref[{label:'分支内所有条件必须匹配',value:'All'},
     {label:'分支内所有条件任意一个匹配',value:'Any'},
     {label:'分支中的任何条件都不能匹配',value:'None'},
@@ -88,6 +106,19 @@ const operators=ref([
 const allowChangeToGroup=ref(false)
 const allowDeleteCondition = ref(false)
 const treeData =ref([])
+const emit = defineEmits(['update:modelValue'])
+watch(() => props, val => {
+  treeData.value = JSON.parse(JSON.stringify(props.conditionTreeModel));
+
+});
+watch(()=>treeData.value,val=>{
+  //如果发生变化，则更新
+  let tmp1 = JSON.stringify(props.conditionTreeModel);
+  let tmp2 = JSON.stringify(treeData.value);
+  if(tmp1!=tmp2){
+    emit('update:conditionTreeModel', treeData.value);
+  }
+})
 //单击行
 function handleRowClick(row, column, event, index){
     //如果最父级，不能改成组条件,不能删除
