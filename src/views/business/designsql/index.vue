@@ -19,7 +19,7 @@
             <SearchConditionTabPane v-model:conditionTreeModel="designModel.value.conditionTreeModel" />
           </el-tab-pane>
           <el-tab-pane label="排序" name="sortTab">
-            <SortTabPane/>
+            <SortTabPane :validColumnModel="validColumnModel" :sortColumnModel="designModel.value.sortColumnModel"/>
           </el-tab-pane>
           <el-tab-pane label="SQL预览" name="sqlPreview">
             <SqlPreviewTabPane/>
@@ -53,7 +53,7 @@
 import { ElMessage } from 'element-plus'
 import { tree,getDef,getAllField } from "@/api/business/def";
 import TableDraggingComponent from "@/views/business/designsql/tableDraggingComponent.vue"
-import { onMounted,Directive, watch,ref } from 'vue';
+import { onMounted,Directive, watch,ref,computed,defineEmits,defineProps } from 'vue';
 import { ElTabs, ElTabPane } from 'element-plus';
 import ColumnTabPane from "@/views/business/designsql/columnTabPane.vue"
 import SearchConditionTabPane from "@/views/business/designsql/searchConditionTabPane.vue"
@@ -291,6 +291,55 @@ interface Emits {
     function handleElTabClick(tab, event){
 
     }
+
+/**
+ * 判断表列是否在排序列模型
+ * @param tablesModelElement
+ * @param column
+ */
+function isExistsInSortColumns(tablesModelElement: any, column: any) {
+  let sortColumnModel1 = designModel.value.sortColumnModel;
+  for(let i=0;i<sortColumnModel1.length;i++){
+    if(sortColumnModel1[i].orgTableName === tablesModelElement.orgTableName &&
+        sortColumnModel1[i].tableAlias === tablesModelElement.tableAlias &&
+        sortColumnModel1[i].fieldName===tablesModelElement.fieldName){
+        return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * 构造排序列模型
+ * @param tablesModelElement
+ * @param column
+ */
+function makeSortColumn(tablesModelElement: any, column: any) {
+   let sortColumn={
+     orgTableName: tablesModelElement.orgTableName,//原始表名
+     tableAlias: tablesModelElement.tableAlias,//表别名
+     columAndExp: '',//列/表达式
+     alias: '',//列别名
+     fieldName: column.fieldName,//字段名
+     descending: false//是否倒排
+   }
+   return sortColumn;
+}
+
+//计算排序字段有效列
+    const validColumnModel = computed(() => {
+      //所有表列，排除sortColumnModel就是有效列
+      let validColumnModels=[];
+      for(let i=0;i<designModel.value.tablesModel.length;i++){
+        let columns = designModel.value.tablesModel.columns;
+         for(let j=0;j<columns.length;j++){
+             if(!isExistsInSortColumns(designModel.value.tablesModel[i],columns[j])){
+               validColumnModels.push(makeSortColumn(designModel.value.tablesModel[i],columns[j]))
+             }
+         }
+      }
+      return validColumnModels;
+    })
 </script>
 
 <style>
