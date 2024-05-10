@@ -19,7 +19,7 @@
             <SearchConditionTabPane v-model:conditionTreeModel="designModel.value.conditionTreeModel" />
           </el-tab-pane>
           <el-tab-pane label="排序" name="sortTab">
-            <SortTabPane :validColumnModel="validColumnModel" :sortColumnModel="designModel.value.sortColumnModel"/>
+            <SortTabPane :validColumnModel="validColumnModel" v-model:sortColumnModel="designModel.value.sortColumnModel"/>
           </el-tab-pane>
           <el-tab-pane label="SQL预览" name="sqlPreview">
             <SqlPreviewTabPane/>

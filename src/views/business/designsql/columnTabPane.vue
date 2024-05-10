@@ -150,14 +150,14 @@ function updateDistinct(){
 function moveUp(){
   if (currentIndex.value === 0) return;
   const temp = selectColumnTabModel.value[currentIndex.value - 1];
-  selectColumnTabModel.value.splice(currentIndex.value - 1, 2);
+  selectColumnTabModel.value.splice(currentIndex.value - 1, 1);
   selectColumnTabModel.value.splice(currentIndex.value - 2, 0, temp);
 }
 //下移
 function moveDown(){
   if (currentIndex.value === selectColumnTabModel.value.length - 1) return;
   const temp = selectColumnTabModel.value[currentIndex.value  + 1];
-  selectColumnTabModel.value.splice(currentIndex.value  + 1, 2);
+  selectColumnTabModel.value.splice(currentIndex.value  + 1, 1);
   selectColumnTabModel.value.splice(currentIndex.value , 0, temp);
 }
 //增加列
