@@ -220,7 +220,7 @@ import {listAllDatasource} from "@/api/business/datasource"
 import { useIcon } from "@/components/common/util";
 import ParameterMaintenance from "@/views/business/parameter/index.vue"
 import ReturnValueMaintenance from  "@/views/business/value/index.vue"
-import DesignSql form "@/views/business/designsql/index.vue"
+import DesignSql from "@/views/business/designsql/index.vue"
 import {listAllUrl} from "@/api/business/url"
 
 const router = useRouter();
