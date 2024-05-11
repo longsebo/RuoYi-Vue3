@@ -58,3 +58,11 @@ export function tree(query) {
     params: query
   })
 }
+// 产生sql
+export function generatesql(data) {
+  return request({
+    url: '/business/generatesql',
+    method: 'post',
+    data: data
+  })
+}
