@@ -9,8 +9,8 @@
             </el-table>
           </el-col>
           <el-col :span="2" :flex="'wrap'">
-            <el-button @click="addToSort" :disabled="isDisableRightBt" > > </el-button>
-            <el-button @click="removeFromSort" :disabled="isDisableLeftBt"> < </el-button>
+            <el-button @click="addToSort" :disabled="isDisableRightBt" > &lt; </el-button>
+            <el-button @click="removeFromSort" :disabled="isDisableLeftBt"> &lt; </el-button>
           </el-col>
         </el-row>
       </el-aside>
