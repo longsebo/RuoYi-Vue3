@@ -55,7 +55,6 @@ import { tree,getDef,getAllField } from "@/api/business/def";
 import TableDraggingComponent from "@/views/business/designsql/tableDraggingComponent.vue"
 import { onMounted,Directive, watch,ref,computed,defineEmits,defineProps } from 'vue';
 import { ElTabs, ElTabPane } from 'element-plus';
-import ColumnTabPane from "@/views/business/designsql/columnTabPane.vue"
 import SearchConditionTabPane from "@/views/business/designsql/searchConditionTabPane.vue"
 import SortTabPane from "@/views/business/designsql/sortTabPane.vue"
 import ColumnTabPane from "@/views/business/designsql/sqlPreviewTabPane.vue"
