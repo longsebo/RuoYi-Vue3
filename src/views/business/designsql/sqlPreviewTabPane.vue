@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import {defineProps, ref, watch} from "vue";
-import {generatesql} from '@/api/business/inteface.js'
+import {generatesql} from '@/api/business/inteface'
 const textarea =ref('')
 const props= defineProps({
   designModel: {
