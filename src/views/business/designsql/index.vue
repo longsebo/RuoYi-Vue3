@@ -278,13 +278,13 @@ interface Emits {
        getTreeModelDef()
     })
     watch(() => props, val => {
-      designModel.value.selectColumnTabModel = JSON.parse(JSON.stringify(props.selectColumnTabModel));
-      designModel.value.distinct = props.distinct;
-      designModel.value.conditionTreeModel = JSON.parse(JSON.stringify(props.conditionTreeModel));
-      designModel.value.groupConditionTreeModel = JSON.parse(JSON.stringify(props.groupConditionTreeModel));
-      designModel.value.tablesModel = JSON.parse(JSON.stringify(props.tablesModel));
-      designModel.value.sortColumnModel = JSON.parse(JSON.stringify(props.sortColumnModel));
-      designModel.value.tableJoinModels = JSON.parse(JSON.stringify(props.tableJoinModels));
+      designModel.value.selectColumnTabModel = JSON.parse(JSON.stringify(props.designModel.selectColumnTabModel));
+      designModel.value.distinct = props.designModel.distinct;
+      designModel.value.conditionTreeModel = JSON.parse(JSON.stringify(props.designModel.conditionTreeModel));
+      designModel.value.groupConditionTreeModel = JSON.parse(JSON.stringify(props.designModel.groupConditionTreeModel));
+      designModel.value.tablesModel = JSON.parse(JSON.stringify(props.designModel.tablesModel));
+      designModel.value.sortColumnModel = JSON.parse(JSON.stringify(props.designModel.sortColumnModel));
+      designModel.value.tableJoinModels = JSON.parse(JSON.stringify(props.designModel.tableJoinModels));
     });
     //页签单击
     function handleElTabClick(tab, event){
