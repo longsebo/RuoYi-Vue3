@@ -278,6 +278,7 @@ interface Emits {
        getTreeModelDef()
     })
     watch(() => props, val => {
+      debugger;
       designModel.value.selectColumnTabModel = JSON.parse(JSON.stringify(props.designModel.selectColumnTabModel));
       designModel.value.distinct = props.designModel.distinct;
       designModel.value.conditionTreeModel = JSON.parse(JSON.stringify(props.designModel.conditionTreeModel));
