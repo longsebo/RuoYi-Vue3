@@ -237,7 +237,25 @@ const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
 const open = ref(false);
-const designModel = ref({})
+const designModel = ref({
+  selectColumnTabModel:[],
+  distinct:false,
+  conditionTreeModel:{
+    type: 1,
+    conditionRelaType:'All',//条件关系类型:All,Any,None,NotAll
+    parentLevel: '',//父级层次
+    currentLevel:1,//当前级别
+    childConditionTreeModels: [],//子树模型
+    left: '',//	左边操作列/表达式
+    operator: '',//操作符
+    right: '',// 右边操作列/表达式
+    id:'1'
+  },
+  groupConditionTreeModel:{},
+  tablesModel:[],
+  sortColumnModel:[],
+  tableJoinModels:[]
+})
 const businessFunctionName = ref("");
 const businessFunctionOptions = ref(undefined);
 
