@@ -198,7 +198,7 @@ interface Emits {
         }
     })
 
-    const Resize:Directive = {
+    const vResize:Directive = {
         bind(el, binding) {
           const onResize = () => {
             let height = window.innerHeight - el.getBoundingClientRect().top;
