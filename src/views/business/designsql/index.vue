@@ -7,7 +7,7 @@
       </el-row>
     </el-header>
     <el-main>
-      <TableDraggingComponent :modelDefs="tablesModel" @updateTableDefine="updateTableDefine"  />
+      <TableDraggingComponent :modelDefs="designModel.tablesModel" @updateTableDefine="updateTableDefine"  />
     </el-main>
     <el-footer>
       <div class="resizable" v-resize="onResize">
