@@ -1,13 +1,16 @@
 <template>
-  <div class="container">
-    <div class="top" :style="{ height: topHeight + 'px' }">
-      顶部内容
-    </div>
+  <el-container class="container">
+    <el-header>
+      头部内容
+    </el-header>
+    <el-main :style="{ height: topHeight + 'px' }">
+      中部内容
+    </el-main>
     <div class="splitter" @mousedown="startResize" @touchstart="startResize"></div>
-    <div class="bottom" :style="{ height: bottomHeight + 'px' }">
+    <el-footer class="bottom" :style="{ height: bottomHeight + 'px' }">
       底部内容
-    </div>
-  </div>
+    </el-footer>
+  </el-container>
 </template>
 
 <script setup>
@@ -47,7 +50,7 @@ const stopResize = () => {
 .container {
   display: flex;
   flex-direction: column;
-  height: 500px;
+  height: 100vh;
 }
 .top, .bottom {
   resize: vertical;
