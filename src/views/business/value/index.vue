@@ -18,7 +18,7 @@
         />
       </el-form-item>
       <el-form-item label="前端是否可见" prop="isFrontpageVisible" label-width="auto">
-        <el-checkbox v-model="queryParams.isFrontpageVisible" true-label="Y" false-label="N" />
+        <el-checkbox v-model="queryParams.isFrontpageVisible" true-value="Y" false-value="N" />
       </el-form-item>
       <el-form-item label="返回值格式" prop="returnFormat" label-width="auto">
         <el-input
@@ -115,7 +115,7 @@
           <el-input v-model="form.returnDesc" placeholder="请输入返回值描述" />
         </el-form-item>
         <el-form-item label="前端是否可见" prop="isFrontpageVisible" label-width="auto">
-          <el-checkbox v-model="form.isFrontpageVisible"  size="small" true-label="Y" false-label="N"/>
+          <el-checkbox v-model="form.isFrontpageVisible"  size="small" true-value="Y" false-value="N"/>
         </el-form-item>
         <el-form-item label="返回值类型" prop="returnType" label-width="auto">
           <el-select v-model="form.returnType" >

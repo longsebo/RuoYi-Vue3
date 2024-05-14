@@ -18,7 +18,7 @@
         />
       </el-form-item>
       <el-form-item label="前端是否可见" prop="isFrontpageVisible" label-width="auto">
-        <el-checkbox v-model="queryParams.isFrontpageVisible"  size="small" true-label="Y" false-label="N" />
+        <el-checkbox v-model="queryParams.isFrontpageVisible"  size="small" true-value="Y" false-value="N" />
       </el-form-item>
       <el-form-item label="参数格式" prop="parameterFormat">
         <el-input
@@ -114,7 +114,7 @@
           <el-input v-model="form.parameterDesc" placeholder="请输入参数描述" />
         </el-form-item>
         <el-form-item label="前端是否可见" prop="isFrontpageVisible" label-width="auto">
-          <el-checkbox v-model="form.isFrontpageVisible"  size="small" true-label="Y" false-label="N"/>
+          <el-checkbox v-model="form.isFrontpageVisible"  size="small" true-value="Y" false-value="N"/>
         </el-form-item>
         <el-form-item label="参数类型" prop="parameterType">
           <el-select v-model="form.parameterType" >
