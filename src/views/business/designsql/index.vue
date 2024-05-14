@@ -13,13 +13,13 @@
     <el-footer class="bottom" :style="{ height: bottomHeight + 'px' }">
         <el-tabs v-model="activeName" @tab-click="handleElTabClick">
           <el-tab-pane label="列" name="columnTab">
-            <ColumnTabPane v-model:selectColumnTabModel="designModel.value.selectColumnTabModel" :distinct="designModel.value.distinct" @updateDistinct="updateDistinct"/>
+            <ColumnTabPane v-model:selectColumnTabModel="designModel.selectColumnTabModel" :distinct="designModel.distinct" @updateDistinct="updateDistinct"/>
           </el-tab-pane>
           <el-tab-pane label="查询条件" name="searchConditionTab">
-            <SearchConditionTabPane v-model:conditionTreeModel="designModel.value.conditionTreeModel" />
+            <SearchConditionTabPane v-model:conditionTreeModel="designModel.conditionTreeModel" />
           </el-tab-pane>
           <el-tab-pane label="排序" name="sortTab">
-            <SortTabPane :validColumnModel="validColumnModel" v-model:sortColumnModel="designModel.value.sortColumnModel"/>
+            <SortTabPane :validColumnModel="validColumnModel" v-model:sortColumnModel="designModel.sortColumnModel"/>
           </el-tab-pane>
           <el-tab-pane label="SQL预览" name="sqlPreview">
             <SqlPreviewTabPane/>

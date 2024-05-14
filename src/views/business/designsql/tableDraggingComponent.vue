@@ -1,13 +1,14 @@
 <template>
   <div id="app">
     <div class="parent">
-      <Vue3DraggableResizable
+      <vue3-draggable-resizable
           :initW="110"
           :initH="120"
-          v-model:x="x"
-          v-model:y="y"
-          v-model:w="w"
-          v-model:h="h"
+          v-for="item in tableDefineItems"
+          v-model:x="item.x"
+          v-model:y="item.y"
+          v-model:w="item.w"
+          v-model:h="item.h"
           v-model:active="active"
           :draggable="true"
           :resizable="true"
@@ -20,8 +21,8 @@
           @drag-end="print('drag-end')"
           @resize-end="print('resize-end')"
       >
-        <TableDefineItem  v-for="item in tableDefineItems"  :tableDefine="item" @updateTableDefine="updateTableDefine"/>
-      </Vue3DraggableResizable>
+        <TableDefineItem    :tableDefine="item" @updateTableDefine="updateTableDefine"/>
+      </vue3-draggable-resizable>
     </div>
   </div>
 </template>
@@ -29,7 +30,8 @@
 <script setup lang="ts">
 import TableDefineItem from './tableDefineItem'
 import {getCurrentInstance, inject, ref, watch} from "vue";
-
+import Vue3DraggableResizable from 'vue3-draggable-resizable'
+import 'vue3-draggable-resizable/dist/Vue3DraggableResizable.css'
 interface Emits {
   (e: 'updateTableDefine', tableDefineItems: object): void
 }
@@ -54,9 +56,13 @@ const props= defineProps({
   }
 })
 const tableDefineItems =ref([])
+const active = ref(false);
 watch(() => props.tableDefineItems, val => {
  tableDefineItems.value = JSON.parse(JSON.stringify(props.tableDefineItems));
 });
+function print(test){
+  console.log(test)
+}
 function updateTableDefine(tableDefineItem){
   // 替换元素
   tableDefineItems.value = tableDefineItems.value.map((element, i) => {
