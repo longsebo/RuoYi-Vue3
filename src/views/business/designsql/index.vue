@@ -6,8 +6,8 @@
         <el-col :span="1.5"><el-button link type="primary" icon="Delete" @click="handleDelete()" v-hasPermi="['business:interface:removedesignsql']">删除</el-button></el-col>
       </el-row>
     </el-header>
-    <el-main :style="{ height: topHeight + 'px;border:\'1px solid black\'' }">
-      <TableDraggingComponent :modelDefs="designModel.tablesModel" @updateTableDefine="updateTableDefine"  />
+    <el-main :style="{ height: topHeight + 'px' }">
+      <TableDraggingComponent  style="border:1px solid black"  :modelDefs="designModel.tablesModel" @updateTableDefine="updateTableDefine"  />
     </el-main>
     <div class="splitter" @mousedown="startResize" @touchstart="startResize"></div>
     <el-footer class="bottom" :style="{ height: bottomHeight + 'px' }">
