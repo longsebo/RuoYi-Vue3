@@ -6,8 +6,8 @@
         <el-col :span="1.5"><el-button link type="primary" icon="Delete" @click="handleDelete()" v-hasPermi="['business:interface:removedesignsql']">删除</el-button></el-col>
       </el-row>
     </el-header>
-    <el-main :style="{ height: topHeight + 'px' }">
-      <TableDraggingComponent  style="border:1px solid black"  :modelDefs="designModel.tablesModel" @updateTableDefine="updateTableDefine"  />
+    <el-main :style="{ height: topHeight + 'px' }" class="bordered-main">
+      <TableDraggingComponent   :modelDefs="designModel.tablesModel" @updateTableDefine="updateTableDefine"  />
     </el-main>
     <div class="splitter" @mousedown="startResize" @touchstart="startResize"></div>
     <el-footer class="bottom" :style="{ height: bottomHeight + 'px' }">
@@ -367,5 +367,9 @@ function makeSortColumn(tablesModelElement: any, column: any) {
   height: 10px;
   cursor: ns-resize;
   background-color: #ccc;
+}
+.bordered-main {
+  border: 1px solid #eee; /* 边框样式，可以根据需要自定义颜色和宽度 */
+  border-radius: 4px; /* 可选：圆角 */
 }
 </style>
