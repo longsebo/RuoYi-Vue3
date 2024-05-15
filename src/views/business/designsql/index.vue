@@ -79,8 +79,10 @@ const startResize = (event) => {
 const doResize = (event) => {
   event.preventDefault();
   const diff = event.clientY - startY;
-  topHeight.value = startTopHeight + diff;
-  bottomHeight.value = 500 - topHeight.value; // 假设容器高度是500px
+  if(startTopHeight + diff>50 && (500-startTopHeight - diff>50)) {
+    topHeight.value = startTopHeight + diff;
+    bottomHeight.value = 500 - topHeight.value; // 假设容器高度是500px
+  }
 };
 
 const stopResize = () => {
@@ -369,7 +371,7 @@ function makeSortColumn(tablesModelElement: any, column: any) {
   background-color: #ccc;
 }
 .bordered-main {
-  border: 1px solid #eee; /* 边框样式，可以根据需要自定义颜色和宽度 */
+  border: 1px solid #ccc; /* 边框样式，可以根据需要自定义颜色和宽度 */
   border-radius: 4px; /* 可选：圆角 */
 }
 </style>
