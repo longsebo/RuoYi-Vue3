@@ -7,7 +7,7 @@
       </el-row>
     </el-header>
     <el-main :style="{ height: topHeight + 'px' }" class="bordered-main">
-      <TableDraggingComponent   :modelDefs="designModel.tablesModel" @updateTableDefine="updateTableDefine"  />
+      <TableDraggingComponent   :tableDefineItems="designModel.tablesModel" @updateTableDefine="updateTableDefine"  />
     </el-main>
     <div class="splitter" @mousedown="startResize" @touchstart="startResize"></div>
     <el-footer class="bottom" :style="{ height: bottomHeight + 'px' }">
@@ -241,7 +241,7 @@ async function selectTable() {
     return
   } else {
     //根据模型定义id查询模型
-    let resp = await getDef(form.modelDefId)
+    let resp = await getDef(form.value.modelDefId)
     let modelDef = resp.data;
     //构造新模型加入模型列表
     let newModelDef={
@@ -262,7 +262,7 @@ async function selectTable() {
     newModelDef.datasourceName = modelDef.datasourceName;
     for(let i=0;i<resp.data.length;i++){
       let item = resp.data[i];
-      let tmpItem = {fieldName:item.fieldName,fieldCnName:item.fieldCnName}
+      let tmpItem = {fieldEnName:item.fieldEnName,fieldCnName:item.fieldCnName}
       newModelDef.columns.push(tmpItem)
     }
     designModel.value.tablesModel.push(newModelDef);
@@ -342,7 +342,7 @@ function makeSortColumn(tablesModelElement: any, column: any) {
       //所有表列，排除sortColumnModel就是有效列
       let validColumnModels=[];
       for(let i=0;i<designModel.value.tablesModel.length;i++){
-        let columns = designModel.value.tablesModel.columns;
+        let columns = designModel.value.tablesModel[i].columns;
          for(let j=0;j<columns.length;j++){
              if(!isExistsInSortColumns(designModel.value.tablesModel[i],columns[j])){
                validColumnModels.push(makeSortColumn(designModel.value.tablesModel[i],columns[j]))

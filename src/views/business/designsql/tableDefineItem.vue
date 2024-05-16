@@ -16,10 +16,10 @@
       >
         <el-table-column type="selection" width="55" />
         <el-table-column label="字段中文名" width="120">
-          <template #default="scope">{{ scope.row.fieldName }}</template>
+          <template #default="scope">{{ scope.row.fieldCnName }}</template>
         </el-table-column>
         <el-table-column label="字段英文名" width="120">
-          <template #default="scope">{{ scope.row.fieldCnName }}</template>
+          <template #default="scope">{{ scope.row.fieldEnName }}</template>
         </el-table-column>
       </el-table>
     </el-col>
@@ -54,6 +54,7 @@ const props= defineProps({
 })
 const tableDefine =ref([])
 watch(() => props.tableDefine, val => {
+  console.log('tableDefine:'+JSON.stringify(props.tableDefine));
   tableDefine.value = JSON.parse(JSON.stringify(props.tableDefine));
 });
 watch(()=>tableDefine.alias,val=>{

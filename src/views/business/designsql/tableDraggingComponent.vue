@@ -58,6 +58,7 @@ const props= defineProps({
 const tableDefineItems =ref([])
 const active = ref(false);
 watch(() => props.tableDefineItems, val => {
+  console.log('tableDefineItems', JSON.stringify(props.tableDefineItems))
  tableDefineItems.value = JSON.parse(JSON.stringify(props.tableDefineItems));
 });
 function print(test){
