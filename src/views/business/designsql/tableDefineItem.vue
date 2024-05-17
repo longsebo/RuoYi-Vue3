@@ -1,6 +1,6 @@
 <template>
   <el-row>
-    <el-col>
+    <el-col >
       <el-text class="mx-1" type="primary">{{tableDefine.cnName}}</el-text>
     </el-col>
     <el-col>
@@ -68,6 +68,11 @@ function handleSelectionChange(selection) {
 }
 </script>
 
-<style scoped>
-
+<style >
+.mx-1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px; /* 根据需要设置容器的高度 */
+}
 </style>

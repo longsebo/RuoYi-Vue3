@@ -57,7 +57,7 @@ const tableDefineItems =ref([])
 const active = ref(false);
 
 watch(() => props.tableDefineItems, val => {
-  console.log('tableDefineItems', JSON.stringify(props.tableDefineItems))
+  //console.log('tableDefineItems', JSON.stringify(props.tableDefineItems))
  tableDefineItems.value = JSON.parse(JSON.stringify(props.tableDefineItems));
 },{deep: true,immediate: true});
 onMounted(() =>{
@@ -68,7 +68,7 @@ function print(test){
   console.log(test)
 }
 function resizeEnd1(){
-  console.log('tableDefineItems', JSON.stringify(tableDefineItems.value))
+  //console.log('tableDefineItems', JSON.stringify(tableDefineItems.value))
 }
 function updateTableDefine(tableDefineItem){
   // 替换元素
