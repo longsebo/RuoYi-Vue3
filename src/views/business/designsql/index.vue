@@ -250,7 +250,7 @@ async function selectTable() {
       enName:'',
       x: 10,
       y: 10,
-      h: 100,
+      h: 150,
       w: 100,
       active: false,
       datasourceName:'',

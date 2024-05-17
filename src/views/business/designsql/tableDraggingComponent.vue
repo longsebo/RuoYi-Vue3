@@ -2,13 +2,11 @@
   <div id="app">
     <div class="parent">
       <vue3-draggable-resizable
-          :initW="110"
-          :initH="120"
           v-for="item in tableDefineItems"
           v-model:x="item.x"
           v-model:y="item.y"
-          v-model:w="item.w"
-          v-model:h="item.h"
+          v-model:width="item.w"
+          v-model:height="item.h"
           v-model:active="active"
           :draggable="true"
           :resizable="true"
@@ -19,7 +17,7 @@
           @dragging="print('dragging')"
           @resizing="print('resizing')"
           @drag-end="print('drag-end')"
-          @resize-end="print('resize-end')"
+          @resize-end="resizeEnd1()"
       >
         <TableDefineItem    :tableDefine="item" @updateTableDefine="updateTableDefine"/>
       </vue3-draggable-resizable>
@@ -57,9 +55,7 @@ const props= defineProps({
 })
 const tableDefineItems =ref([])
 const active = ref(false);
-const dynamicTableDefineItems = computed(() => {
-  return tableDefineItems;
-})
+
 watch(() => props.tableDefineItems, val => {
   console.log('tableDefineItems', JSON.stringify(props.tableDefineItems))
  tableDefineItems.value = JSON.parse(JSON.stringify(props.tableDefineItems));
@@ -70,6 +66,9 @@ onMounted(() =>{
 })
 function print(test){
   console.log(test)
+}
+function resizeEnd1(){
+  console.log('tableDefineItems', JSON.stringify(tableDefineItems.value))
 }
 function updateTableDefine(tableDefineItem){
   // 替换元素
