@@ -73,6 +73,6 @@ function handleSelectionChange(selection) {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100px; /* 根据需要设置容器的高度 */
+  height: 20px; /* 根据需要设置容器的高度 */
 }
 </style>
