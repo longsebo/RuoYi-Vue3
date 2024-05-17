@@ -1,7 +1,7 @@
 <template>
   <el-row>
     <el-col>
-      <el-text class="mx-1" type="primary">tableDefine.cnName</el-text>
+      <el-text class="mx-1" type="primary">{{tableDefine.cnName}}</el-text>
     </el-col>
     <el-col>
       <el-input v-model="tableDefine.alias" style="width: 100%" placeholder="请输入别名" />
@@ -11,6 +11,7 @@
           ref="multipleTableRef"
           :data="tableDefine.columns"
           style="width: 100%"
+          height="150px"
           border
           @selection-change="handleSelectionChange"
       >
@@ -56,7 +57,7 @@ const tableDefine =ref([])
 watch(() => props.tableDefine, val => {
   console.log('tableDefine:'+JSON.stringify(props.tableDefine));
   tableDefine.value = JSON.parse(JSON.stringify(props.tableDefine));
-});
+},{immediate:true,deep:true});
 watch(()=>tableDefine.alias,val=>{
   //更新父窗口
   emit('updateTableDefine', tableDefine.value)

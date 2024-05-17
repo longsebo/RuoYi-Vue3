@@ -29,7 +29,7 @@
 
 <script setup lang="ts">
 import TableDefineItem from './tableDefineItem'
-import {getCurrentInstance, inject, ref, watch} from "vue";
+import {computed, getCurrentInstance, inject, onMounted, ref, watch} from "vue";
 import Vue3DraggableResizable from 'vue3-draggable-resizable'
 import 'vue3-draggable-resizable/dist/Vue3DraggableResizable.css'
 interface Emits {
@@ -57,10 +57,17 @@ const props= defineProps({
 })
 const tableDefineItems =ref([])
 const active = ref(false);
+const dynamicTableDefineItems = computed(() => {
+  return tableDefineItems;
+})
 watch(() => props.tableDefineItems, val => {
   console.log('tableDefineItems', JSON.stringify(props.tableDefineItems))
  tableDefineItems.value = JSON.parse(JSON.stringify(props.tableDefineItems));
-});
+},{deep: true,immediate: true});
+onMounted(() =>{
+  console.log('tableDefineItems', JSON.stringify(props.tableDefineItems))
+  tableDefineItems.value = JSON.parse(JSON.stringify(props.tableDefineItems));
+})
 function print(test){
   console.log(test)
 }
@@ -78,6 +85,9 @@ function updateTableDefine(tableDefineItem){
 }
 </script>
 
-<style scoped>
-
+<style >
+.parent {
+  position: relative; /* 父div需要设置为相对定位 */
+  background-color: #f0f0f0;
+}
 </style>

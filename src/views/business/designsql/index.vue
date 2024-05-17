@@ -7,7 +7,7 @@
       </el-row>
     </el-header>
     <el-main :style="{ height: topHeight + 'px' }" class="bordered-main">
-      <TableDraggingComponent   :tableDefineItems="designModel.tablesModel" @updateTableDefine="updateTableDefine"  />
+      <TableDraggingComponent :tableDefineItems="designModel.tablesModel" @updateTableDefine="updateTableDefine"  />
     </el-main>
     <div class="splitter" @mousedown="startResize" @touchstart="startResize"></div>
     <el-footer class="bottom" :style="{ height: bottomHeight + 'px' }">
@@ -248,8 +248,8 @@ async function selectTable() {
       alias:'',
       cnName:'',
       enName:'',
-      x: 100,
-      y: 100,
+      x: 10,
+      y: 10,
       h: 100,
       w: 100,
       active: false,
