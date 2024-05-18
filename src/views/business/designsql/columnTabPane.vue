@@ -28,9 +28,6 @@ import bus from '@/event/bus'
 import {
   tabDesignColumnSelectChangeKey
 } from "@/config/app.keys";
-import {
-  tabDesignColumnSelectChangeKey
-} from "@/config/app.keys";
 interface Emits {
   (e: 'updateDistinct', distinct: boolean): void
   (e: 'update:modelValue', selectColumnTabModel:object): void
