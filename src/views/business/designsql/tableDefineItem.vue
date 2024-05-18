@@ -66,7 +66,7 @@ function handleSelectionChange(selection) {
   console.log('selection len:'+selection.length)
   debugger;
   //通知bus，选择发生变化
-  bus.emit(tabDesignColumnSelectChangeKey,tableDefine,selection)
+  bus.emit(tabDesignColumnSelectChangeKey,tableDefine.value,selection)
 }
 </script>
 
