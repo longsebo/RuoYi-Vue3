@@ -106,17 +106,17 @@ function isExistsInNewSelection(testItem, tableDefine, selection) {
 }
 
 onMounted(() => {
-  bus.on(tabDesignColumnSelectChangeKey,(tableDefine,selection) =>{
+  bus.on(tabDesignColumnSelectChangeKey,(tableDefine,selection1) =>{
      debugger;
     //查找tableDefine selection在selectColumnTabModel中是否存在,不存在则添加
-     for(let i=0;i<selection.length;i++){
-        if(!isExistsInSelectColumnTabModel(tableDefine,selection[i])){
-          selectColumnTabModel.value.push(makeItem(tableDefine,selection[i]));
+     for(let i=0;i<selection1.length;i++){
+        if(!isExistsInSelectColumnTabModel(tableDefine,selection1[i])){
+          selectColumnTabModel.value.push(makeItem(tableDefine,selection1[i]));
         }
      }
       //查找selectCoumnTableModel在selectColumnTabModel中是否存在,不存在则删除
      for(let i=selectColumnTabModel.value.length-1;i>=0;i--){
-       if(!isExistsInNewSelection(selectColumnTabModel.value[i],tableDefine,selection)){
+       if(!isExistsInNewSelection(selectColumnTabModel.value[i],tableDefine,selection1)){
          selectColumnTabModel.value.splice(i,1);
         }
       }
