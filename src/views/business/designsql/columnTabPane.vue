@@ -107,7 +107,7 @@ function isExistsInNewSelection(testItem, tableDefine, selection) {
 
 onMounted(() => {
   bus.on(tabDesignColumnSelectChangeKey,(tableDefine,selection) =>{
-
+     debugger;
     //查找tableDefine selection在selectColumnTabModel中是否存在,不存在则添加
      for(let i=0;i<selection.length;i++){
         if(!isExistsInSelectColumnTabModel(tableDefine,selection[i])){
