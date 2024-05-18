@@ -51,7 +51,11 @@ const props= defineProps({
     type: Boolean
   }
 })
-
+const upArrowIcon = useIcon("ali_up_arrow")
+const downArrowIcon = useIcon("ali_down_arrow")
+const distinct = ref(false)
+const selectColumnTabModel =ref([])
+const currentIndex=ref(-1)
 watch(() => props, val => {
   distinct.value = props.distinct;
   selectColumnTabModel.value = JSON.parse(JSON.stringify(props.selectColumnTabModel))
@@ -66,11 +70,7 @@ watch(()=>selectColumnTabModel.value,val=>{
 })
 const emit = defineEmits<Emits>()
 
-const upArrowIcon = useIcon("ali_up_arrow")
-const downArrowIcon = useIcon("ali_down_arrow")
-const distinct = ref(false)
-const selectColumnTabModel =ref([])
-const currentIndex=ref(-1)
+
 /**
  * 构造一项
  * @param tableDefine
