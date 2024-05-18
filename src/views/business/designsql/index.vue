@@ -56,7 +56,7 @@ import { onMounted,Directive, watch,ref,computed,defineEmits,defineProps } from 
 import { ElTabs, ElTabPane } from 'element-plus';
 import SearchConditionTabPane from "@/views/business/designsql/searchConditionTabPane.vue"
 import SortTabPane from "@/views/business/designsql/sortTabPane.vue"
-import ColumnTabPane from "@/views/business/designsql/sqlPreviewTabPane.vue"
+import ColumnTabPane from "@/views/business/designsql/columnTabPane.vue"
 import SqlPreviewTabPane from "./sqlPreviewTabPane.vue";
 const topHeight = ref(100);
 const bottomHeight = ref(300);
