@@ -120,7 +120,7 @@ function makeItem(tableDefine, selectionElement) {
  */
 function isExistsInNewSelection(testItem, tableDefine, selection) {
   for(let i=0;i<selection.length;i++){
-    if(testItem.fieldName==selection[i].fieldName && testItem.orgTableName==tableDefine.enName &&
+    if(testItem.fieldName==selection[i].fieldEnName && testItem.orgTableName==tableDefine.enName &&
        testItem.datasourceName==tableDefine.datasourceName){
       return true;
     }
