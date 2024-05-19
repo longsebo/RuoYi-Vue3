@@ -106,8 +106,10 @@ function isExistsInNewSelection(testItem, tableDefine, selection) {
 }
 
 onMounted(() => {
-  bus.on(tabDesignColumnSelectChangeKey,(tableDefine,selection1) =>{
+  bus.on(tabDesignColumnSelectChangeKey,(complexParam) =>{
      debugger;
+     let selection1 = complexParam.selection;
+     let tableDefine = complexParam.tableDefine;
     //查找tableDefine selection在selectColumnTabModel中是否存在,不存在则添加
      for(let i=0;i<selection1.length;i++){
         if(!isExistsInSelectColumnTabModel(tableDefine,selection1[i])){

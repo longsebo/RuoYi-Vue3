@@ -63,9 +63,9 @@ watch(()=>tableDefine.alias,val=>{
   emit('updateTableDefine', tableDefine.value)
 });
 function handleSelectionChange(selection) {
-  let newSelection = JSON.parse(JSON.stringify(selection))
+  let complexParam={'tableDefine':tableDefine.value,'selection':selection}
   //通知bus，选择发生变化
-  bus.emit(tabDesignColumnSelectChangeKey,newSelection,tableDefine.value)
+  bus.emit(tabDesignColumnSelectChangeKey,complexParam)
 }
 </script>
 
