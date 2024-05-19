@@ -157,7 +157,7 @@ function isExistsInSelectColumnTabModel(tableDefine, selectionElement) {
   for (let i = 0; i < selectColumnTabModel.value.length; i++) {
     if(selectColumnTabModel.value[i].datasourceName === tableDefine.datasourceName &&
         selectColumnTabModel.value[i].orgTableName === tableDefine.enName &&
-        selectColumnTabModel.value[i].fieldName === selectionElement.fieldName
+        selectColumnTabModel.value[i].fieldName === selectionElement.fieldEnName
     ) {
       return true;
     }
