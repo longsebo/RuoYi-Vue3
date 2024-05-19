@@ -57,24 +57,29 @@ const downArrowIcon = useIcon("ali_down_arrow")
 const distinct = ref(false)
 const selectColumnTabModel =ref([])
 const currentIndex=ref(-1)
+
+function makeDisplayName (item) {
+  if (item.columAndExp != null && item.columAndExp != '') {
+    if (item.tableAlias != '') {
+      item.displayField = item.tableAlias + "." + item.columAndExp;
+    } else {
+      item.displayField = item.orgTableName + "." + item.columAndExp;
+    }
+  } else {
+    if (item.tableAlias != '') {
+      item.displayField = item.tableAlias + "." + item.fieldName;
+    } else {
+      item.displayField = item.orgTableName + "." + item.fieldName;
+    }
+  }
+}
+
 watch(() => props, val => {
   distinct.value = props.distinct;
   selectColumnTabModel.value = JSON.parse(JSON.stringify(props.selectColumnTabModel))
   for(let i=0;i<selectColumnTabModel.value.length;i++){
     let item = selectColumnTabModel.value[i];
-    if(item.columAndExp!=null && item.columAndExp!=''){
-        if(item.tableAlias!='') {
-          item.displayField = item.tableAlias+"."+item.columAndExp;
-        }else{
-          item.displayField = item.orgTableName+"."+item.columAndExp;
-        }
-    }else{
-      if(item.tableAlias!='') {
-        item.displayField = item.tableAlias+"."+item.fieldName;
-      }else{
-        item.displayField = item.orgTableName+"."+item.fieldName;
-      }
-    }
+    makeDisplayName(item);
   }
 });
 watch(()=>selectColumnTabModel.value,val=>{
@@ -103,6 +108,7 @@ function makeItem(tableDefine, selectionElement) {
     fieldName: selectionElement.fieldEnName,//字段名
     datasourceName:tableDefine.datasourceName,//数据源名称
      }
+    makeDisplayName(item);
     return item;
 }
 
