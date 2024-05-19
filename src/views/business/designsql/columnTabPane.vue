@@ -12,7 +12,7 @@
       </el-row>
       <el-table :data="selectColumnTabModel" @row-click="handleRowClick">
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="列表达式" align="center" prop="columAndExp" />
+        <el-table-column label="列表达式" align="center" prop="displayField" />
         <el-table-column label="别名" align="center" prop="alias" />
         <el-table-column label="聚合" align="center" prop="aggregation" />
       </el-table>
@@ -45,6 +45,7 @@ const props= defineProps({
       tableAlias: String,//表别名
       fieldName: String,//字段名
       datasourceName:String,//数据源名称
+      displayField:String,//显示表达式或字段名
     }]
   },
   distinct: {
@@ -59,6 +60,22 @@ const currentIndex=ref(-1)
 watch(() => props, val => {
   distinct.value = props.distinct;
   selectColumnTabModel.value = JSON.parse(JSON.stringify(props.selectColumnTabModel))
+  for(let i=0;i<selectColumnTabModel.value.length;i++){
+    let item = selectColumnTabModel.value[i];
+    if(item.columAndExp!=null && item.columAndExp!=''){
+        if(item.tableAlias!='') {
+          item.displayField = item.tableAlias+"."+item.columAndExp;
+        }else{
+          item.displayField = item.orgTableName+"."+item.columAndExp;
+        }
+    }else{
+      if(item.tableAlias!='') {
+        item.displayField = item.tableAlias+"."+item.fieldName;
+      }else{
+        item.displayField = item.orgTableName+"."+item.fieldName;
+      }
+    }
+  }
 });
 watch(()=>selectColumnTabModel.value,val=>{
   //如果发生变化，则更新
@@ -83,7 +100,7 @@ function makeItem(tableDefine, selectionElement) {
     chineseName: tableDefine.cnName,//中文名
     orgTableName:tableDefine.enName,//原始表名
     tableAlias: tableDefine.alias,//表别名
-    fieldName: selectionElement.fieldName,//字段名
+    fieldName: selectionElement.fieldEnName,//字段名
     datasourceName:tableDefine.datasourceName,//数据源名称
      }
     return item;
