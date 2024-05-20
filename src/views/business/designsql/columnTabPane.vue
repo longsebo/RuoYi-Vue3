@@ -12,7 +12,7 @@
       </el-row>
       <el-table :data="selectColumnTabModel" @row-click="handleRowClick">
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="列表达式" align="center" prop="displayField" />
+        <el-table-column label="列表达式" align="center" prop="columAndExp" />
         <el-table-column label="别名" align="center" prop="alias" />
         <el-table-column label="聚合" align="center" prop="aggregation" />
       </el-table>
@@ -45,7 +45,6 @@ const props= defineProps({
       tableAlias: String,//表别名
       fieldName: String,//字段名
       datasourceName:String,//数据源名称
-      displayField:String,//显示表达式或字段名
     }]
   },
   distinct: {
@@ -59,19 +58,14 @@ const selectColumnTabModel =ref([])
 const currentIndex=ref(-1)
 
 function makeDisplayName (item) {
-  if (item.columAndExp != null && item.columAndExp != '') {
+  if (item.columAndExp == null || item.columAndExp == '') {
     if (item.tableAlias != '') {
-      item.displayField = item.tableAlias + "." + item.columAndExp;
+       item.columAndExp = item.tableAlias + "." + item.fieldName;
     } else {
-      item.displayField = item.orgTableName + "." + item.columAndExp;
-    }
-  } else {
-    if (item.tableAlias != '') {
-      item.displayField = item.tableAlias + "." + item.fieldName;
-    } else {
-      item.displayField = item.orgTableName + "." + item.fieldName;
+      item.columAndExp = item.orgTableName + "." + item.fieldName;
     }
   }
+
 }
 
 watch(() => props, val => {
