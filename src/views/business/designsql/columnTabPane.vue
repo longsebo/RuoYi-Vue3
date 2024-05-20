@@ -187,8 +187,9 @@ function deleteColumn(){
   }
 }
 //单击行
-function handleRowClick(row, column, event, index){
- currentIndex.value = index;
+function handleRowClick(row, column, event{
+  console.log(row['row-index']);
+  currentIndex.value = row;
 }
 
 onUnmounted(() => {
