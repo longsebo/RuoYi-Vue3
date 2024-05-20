@@ -25,6 +25,7 @@
 import {onMounted, ref,onUnmounted,watch,defineProps,defineEmits} from "vue";
 import { useIcon } from "@/components/common/util";
 import bus from '@/event/bus'
+import { genId } from "@/components/form/designer/util/common";
 import {
   tabDesignColumnSelectChangeKey
 } from "@/config/app.keys";
@@ -93,7 +94,9 @@ const emit = defineEmits<Emits>()
  * @param selectionElement
  */
 function makeItem(tableDefine, selectionElement) {
-  let item={ alias: '',//alias
+  let item={
+    id:genId(),
+    alias: '',//alias
     aggregation: '',//聚合
     group: false,//是否分组
     chineseName: tableDefine.cnName,//中文名
@@ -164,13 +167,14 @@ function updateDistinct(){
 }
 //上移
 function moveUp(){
-  if (currentIndex.value === 0) return;
+  if (currentIndex.value <= 0) return;
   const temp = selectColumnTabModel.value[currentIndex.value - 1];
   selectColumnTabModel.value.splice(currentIndex.value - 1, 1);
   selectColumnTabModel.value.splice(currentIndex.value , 0, temp);
 }
 //下移
 function moveDown(){
+  if(currentIndex.value===-1) return;
   if (currentIndex.value === selectColumnTabModel.value.length - 1) return;
   const temp = selectColumnTabModel.value[currentIndex.value  + 1];
   selectColumnTabModel.value.splice(currentIndex.value  + 1, 1);
@@ -186,10 +190,23 @@ function deleteColumn(){
     selectColumnTabModel.value.splice(currentIndex.value, 1);
   }
 }
+
+/**
+ * 获取行索引
+ * @param row
+ */
+function getRowIndex(row) {
+  for(let i=0;i<selectColumnTabModel.value.length;i++){
+    if(row.id === selectColumnTabModel.value[i].id){
+      return i;
+    }
+  }
+  return -1;
+}
+
 //单击行
 function handleRowClick(row, column, event){
-  console.log(row['row-index']);
-  currentIndex.value = row;
+  currentIndex.value = getRowIndex(row);
 }
 
 onUnmounted(() => {
