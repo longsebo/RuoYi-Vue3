@@ -171,6 +171,10 @@ function moveUp(){
   const temp = selectColumnTabModel.value[currentIndex.value - 1];
   selectColumnTabModel.value.splice(currentIndex.value - 1, 1);
   selectColumnTabModel.value.splice(currentIndex.value , 0, temp);
+  //当前行减1
+  if(currentIndex.value-1>=0){
+    currentIndex.value = currentIndex.value-1;
+  }
 }
 //下移
 function moveDown(){
@@ -179,6 +183,10 @@ function moveDown(){
   const temp = selectColumnTabModel.value[currentIndex.value  + 1];
   selectColumnTabModel.value.splice(currentIndex.value  + 1, 1);
   selectColumnTabModel.value.splice(currentIndex.value , 0, temp);
+  //当前行加1
+  if(currentIndex.value+1<selectColumnTabModel.value.length){
+    currentIndex.value = currentIndex.value+1;
+  }
 }
 //增加列
 function addColumn(){
