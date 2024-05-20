@@ -167,7 +167,7 @@ function moveUp(){
   if (currentIndex.value === 0) return;
   const temp = selectColumnTabModel.value[currentIndex.value - 1];
   selectColumnTabModel.value.splice(currentIndex.value - 1, 1);
-  selectColumnTabModel.value.splice(currentIndex.value - 2, 0, temp);
+  selectColumnTabModel.value.splice(currentIndex.value - 1, 0, temp);
 }
 //下移
 function moveDown(){
