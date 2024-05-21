@@ -12,9 +12,28 @@
       </el-row>
       <el-table :data="selectColumnTabModel" @row-click="handleRowClick">
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="列表达式" align="center" prop="columAndExp" />
-        <el-table-column label="别名" align="center" prop="alias" />
-        <el-table-column label="聚合" align="center" prop="aggregation" />
+        <el-table-column label="列表达式" align="center" prop="columAndExp">
+          <template #default="scope">
+            <el-input v-model="scope.row.columAndExp" placeholder="请输入列表达式" />
+          </template>
+        </el-table-column>
+        <el-table-column label="别名" align="center" prop="alias">
+          <template #default="scope">
+            <el-input v-model="scope.row.alias" placeholder="请输入别名" />
+          </template>
+        </el-table-column>
+        <el-table-column label="聚合" align="center" prop="aggregation" >
+          <template #default="scope">
+            <el-select v-model="scope.row.aggregation" placeholder="请选择聚合">
+              <el-option label="无" value=""></el-option>
+              <el-option label="统计个数" value="count"></el-option>
+              <el-option label="求和" value="sum"></el-option>
+              <el-option label="平均值" value="avg"></el-option>
+              <el-option label="最大值" value="max"></el-option>
+              <el-option label="最小值" value="min"></el-option>
+            </el-select>
+          </template>
+        </el-table-column>
       </el-table>
 
     </el-main>
@@ -138,9 +157,13 @@ onMounted(() => {
      }
       //查找selectCoumnTableModel在selectColumnTabModel中是否存在,不存在则删除
      for(let i=selectColumnTabModel.value.length-1;i>=0;i--){
-       if(!isExistsInNewSelection(selectColumnTabModel.value[i],tableDefine,selection1)){
-         selectColumnTabModel.value.splice(i,1);
-        }
+       //手工添加的不删除
+       if(selectColumnTabModel.value[i].orgTableName!=null &&selectColumnTabModel.value[i].orgTableName!=''
+           && selectColumnTabModel.value[i].fieldName!=null &&selectColumnTabModel.value[i].fieldName!='') {
+         if (!isExistsInNewSelection(selectColumnTabModel.value[i], tableDefine, selection1)) {
+           selectColumnTabModel.value.splice(i, 1);
+         }
+       }
       }
   })
 })
