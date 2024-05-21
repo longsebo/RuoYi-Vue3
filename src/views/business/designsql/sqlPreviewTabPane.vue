@@ -140,7 +140,7 @@ watch(() => props,
         console.log(res)
         textarea.value=res.data
       })
-    },{deep: true,immediate: true}
+    }
 )
 function reGengeralSql(){
   generatesql(props.designModel).then(res => {
