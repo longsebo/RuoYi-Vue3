@@ -93,12 +93,16 @@ watch(() => props, val => {
         +"."
         validColumnModel.value[i].alias==null?validColumnModel.value[i].fieldName:validColumnModel.value[i].alias;
   }
-  sortColumnModel.value = JSON.parse(JSON.stringify(props.sortColumnModel));
-  for(let i=0;i<sortColumnModel.value.length;i++){
-    sortColumnModel.value[i].fullFieldName =
-        sortColumnModel.value[i].tableAlias==null?sortColumnModel.value[i].orgTableName:sortColumnModel.value[i].tableAlias
-            +"."
-    sortColumnModel.value[i].alias==null?sortColumnModel.value[i].fieldName:sortColumnModel.value[i].alias;
+  let sortColumnModelJson1 = JSON.stringify(sortColumnModel.value);
+  let sortColumnModelJson2 = JSON.stringify(props.sortColumnModel.value);
+  if(sortColumnModelJson1!=sortColumnModelJson2) {
+    sortColumnModel.value = JSON.parse(JSON.stringify(props.sortColumnModel));
+    for (let i = 0; i < sortColumnModel.value.length; i++) {
+      sortColumnModel.value[i].fullFieldName =
+          sortColumnModel.value[i].tableAlias == null ? sortColumnModel.value[i].orgTableName : sortColumnModel.value[i].tableAlias
+              + "."
+      sortColumnModel.value[i].alias == null ? sortColumnModel.value[i].fieldName : sortColumnModel.value[i].alias;
+    }
   }
 },{deep: true,immediate: true});
 watch(()=>sortColumnModel,val =>{

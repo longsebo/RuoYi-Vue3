@@ -90,10 +90,14 @@ function makeDisplayName (item) {
 
 watch(() => props, val => {
   distinct.value = props.distinct;
-  selectColumnTabModel.value = JSON.parse(JSON.stringify(props.selectColumnTabModel))
-  for(let i=0;i<selectColumnTabModel.value.length;i++){
-    let item = selectColumnTabModel.value[i];
-    makeDisplayName(item);
+  let tmp1 = JSON.stringify(props.selectColumnTabModel);
+  let tmp2 = JSON.stringify(selectColumnTabModel.value);
+  if(tmp1!=tmp2) {
+    selectColumnTabModel.value = JSON.parse(JSON.stringify(props.selectColumnTabModel))
+    for (let i = 0; i < selectColumnTabModel.value.length; i++) {
+      let item = selectColumnTabModel.value[i];
+      makeDisplayName(item);
+    }
   }
 },{deep: true,immediate: true});
 watch(()=>selectColumnTabModel.value,val=>{

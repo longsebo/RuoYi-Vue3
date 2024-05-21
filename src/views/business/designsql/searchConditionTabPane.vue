@@ -108,8 +108,11 @@ const allowDeleteCondition = ref(false)
 const treeData =ref([])
 const emit = defineEmits(['update:modelValue'])
 watch(() => props, val => {
-  treeData.value = JSON.parse(JSON.stringify(props.conditionTreeModel));
-
+  let tmp1 = JSON.stringify(props.conditionTreeModel);
+  let tmp2 = JSON.stringify(treeData.value);
+  if(tmp1!=tmp2) {
+    treeData.value = JSON.parse(JSON.stringify(props.conditionTreeModel));
+  }
 },{deep: true,immediate: true});
 watch(()=>treeData.value,val=>{
   //如果发生变化，则更新
