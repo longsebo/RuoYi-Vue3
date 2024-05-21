@@ -61,7 +61,7 @@ watch(() => props.tableDefine, val => {
 watch(()=>tableDefine.alias,val=>{
   //更新父窗口
   emit('updateTableDefine', tableDefine.value)
-});
+},{deep: true,immediate: true});
 function handleSelectionChange(selection) {
   let complexParam={'tableDefine':tableDefine.value,'selection':selection}
   //通知bus，选择发生变化

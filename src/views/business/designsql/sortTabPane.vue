@@ -100,14 +100,14 @@ watch(() => props, val => {
             +"."
     sortColumnModel.value[i].alias==null?sortColumnModel.value[i].fieldName:sortColumnModel.value[i].alias;
   }
-});
+},{deep: true,immediate: true});
 watch(()=>sortColumnModel,val =>{
   let sortColumnModelJson1 = JSON.stringify(sortColumnModel.value);
   let sortColumnModelJson2 = JSON.stringify(props.sortColumnModel.value);
   if(sortColumnModelJson1!=sortColumnModelJson2){
     emit('update:modelValue',sortColumnModel.value)
   }
-})
+},{deep: true,immediate: true})
 //增加到排序列
 function addToSort() {
   if (currentValidColumnIndex.value >= 0 && currentValidColumnIndex.value < validColumnModel.value.length) {

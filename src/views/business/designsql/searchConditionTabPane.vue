@@ -110,7 +110,7 @@ const emit = defineEmits(['update:modelValue'])
 watch(() => props, val => {
   treeData.value = JSON.parse(JSON.stringify(props.conditionTreeModel));
 
-});
+},{deep: true,immediate: true});
 watch(()=>treeData.value,val=>{
   //如果发生变化，则更新
   let tmp1 = JSON.stringify(props.conditionTreeModel);
@@ -118,7 +118,7 @@ watch(()=>treeData.value,val=>{
   if(tmp1!=tmp2){
     emit('update:conditionTreeModel', treeData.value);
   }
-})
+},{deep: true,immediate: true})
 //单击行
 function handleRowClick(row, column, event, index){
     //如果最父级，不能改成组条件,不能删除

@@ -95,7 +95,7 @@ watch(() => props, val => {
     let item = selectColumnTabModel.value[i];
     makeDisplayName(item);
   }
-});
+},{deep: true,immediate: true});
 watch(()=>selectColumnTabModel.value,val=>{
   //如果发生变化，则更新
   let tmp1 = JSON.stringify(props.selectColumnTabModel);
@@ -103,7 +103,7 @@ watch(()=>selectColumnTabModel.value,val=>{
   if(tmp1!=tmp2){
     emit('update:selectColumnTabModel', selectColumnTabModel.value);
   }
-})
+},{deep: true,immediate: true})
 const emit = defineEmits<Emits>()
 
 
