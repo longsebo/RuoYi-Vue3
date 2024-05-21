@@ -59,8 +59,12 @@ watch(() => props.tableDefine, val => {
   tableDefine.value = JSON.parse(JSON.stringify(props.tableDefine));
 },{immediate:true,deep:true});
 watch(()=>tableDefine.alias,val=>{
+  let temp1 = JSON.stringify(tableDefine.value);
+  let temp2 = JSON.stringify(props.tableDefine)
   //更新父窗口
-  emit('updateTableDefine', tableDefine.value)
+  if(temp1!=temp2) {
+    emit('updateTableDefine', tableDefine.value)
+  }
 },{deep: true,immediate: true});
 function handleSelectionChange(selection) {
   let complexParam={'tableDefine':tableDefine.value,'selection':selection}
