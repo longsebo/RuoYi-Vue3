@@ -210,6 +210,7 @@ function handleAdd(row){
 //改成条件组
 function handleChangeToGroup(row){
   row.type = 1
+  row.childConditionTreeModels=[];
 }
 
 /**
