@@ -30,7 +30,6 @@
           <el-col :span="4">
             <el-select
                 v-model="scope.row.operator"
-                size="small"
                 style="width: 100px"
             >
               <el-option
