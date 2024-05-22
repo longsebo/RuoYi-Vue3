@@ -203,6 +203,7 @@ function handleAdd(row){
     conditionRelaType:'',
     parentLevel:parentLevel ,//父级层次
     currentLevel: currentLevel,//当前级别
+    id:parentLevel+"."+currentLevel,//id
   }
   parentNode.childConditionTreeModels.push(child);
 }
