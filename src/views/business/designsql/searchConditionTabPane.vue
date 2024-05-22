@@ -82,10 +82,10 @@ const props= defineProps({
   }
 })
 
-const conditionTypes=ref[{label:'分支内所有条件必须匹配',value:'All'},
+const conditionTypes=ref([{label:'分支内所有条件必须匹配',value:'All'},
     {label:'分支内所有条件任意一个匹配',value:'Any'},
     {label:'分支中的任何条件都不能匹配',value:'None'},
-    {label:'分支中没有一个条件必须匹配',value:'NotAll'}]
+    {label:'分支中没有一个条件必须匹配',value:'NotAll'}])
 const operators=ref([
   {label:'=',value:'='},
   {label:'!=',value:'!='},
