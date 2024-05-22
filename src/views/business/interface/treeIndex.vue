@@ -240,7 +240,7 @@ const open = ref(false);
 const designModel = ref({
   selectColumnTabModel:[],
   distinct:false,
-  conditionTreeModel:{
+  conditionTreeModel:[{
     type: 1,
     conditionRelaType:'All',//条件关系类型:All,Any,None,NotAll
     parentLevel: '',//父级层次
@@ -250,7 +250,7 @@ const designModel = ref({
     operator: '',//操作符
     right: '',// 右边操作列/表达式
     id:'1'
-  },
+  }],
   groupConditionTreeModel:{},
   tablesModel:[],
   sortColumnModel:[],

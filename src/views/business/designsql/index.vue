@@ -16,7 +16,7 @@
             <ColumnTabPane v-model:selectColumnTabModel="designModel.selectColumnTabModel" :distinct="designModel.distinct" @updateDistinct="updateDistinct"/>
           </el-tab-pane>
           <el-tab-pane label="查询条件" name="searchConditionTab">
-            <SearchConditionTabPane v-model:conditionTreeModel="designModel.conditionTreeModel" />
+            <SearchConditionTabPane :conditionTreeModel="designModel.conditionTreeModel" @updateConditionTreeModel="updateConditionTreeModel" />
           </el-tab-pane>
           <el-tab-pane label="排序" name="sortTab">
             <SortTabPane :validColumnModel="validColumnModel" v-model:sortColumnModel="designModel.sortColumnModel"/>
@@ -104,7 +104,7 @@ const  openSelectTab=ref(false)
 const designModel =ref({
   selectColumnTabModel:{},//列表模型
   distinct:Boolean,//是否排重
-  conditionTreeModel:{},//条件列树模型
+  conditionTreeModel:[],//条件列树模型
   groupConditionTreeModel:{},//分组列树模型
   tablesModel:[],//表模型列表
   sortColumnModel:[],//排序列模型
@@ -134,7 +134,7 @@ const props= defineProps({
       type: Boolean
     },
     conditionTreeModel: {
-      type: Object,
+      type: Array,
       default: () => [{
         type: Number,
         conditionRelaType:String,//条件关系类型:All,Any,None,NotAll
@@ -234,6 +234,18 @@ function  handleAdd() {
 function  handleDelete(){
   designModel.value.tablesModel = [];
  }
+
+/**
+ * 更新条件树模型
+  * @param conditionTreeModel
+ */
+function updateConditionTreeModel(conditionTreeModel){
+  let temp1 = JSON.stringify(designModel.value.conditionTreeModel);
+  let temp2 = JSON.stringify(conditionTreeModel);
+  if(temp1!=temp2) {
+    designModel.value.conditionTreeModel = conditionTreeModel;
+  }
+}
 async function selectTable() {
   //检查目前是否有模型，有则提示，只能增加一个表;否则模型列表增加一个
   if (designModel.value.tablesModel.length > 0) {

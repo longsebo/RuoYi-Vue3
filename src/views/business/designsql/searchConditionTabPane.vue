@@ -2,7 +2,7 @@
   <el-table :data="treeData" row-key="id" :tree-props="{children: 'childConditionTreeModels'}" @row-click="handleRowClick">
     <el-table-column  label="层次">
       <template #default="scope">
-        <el-button>{{scope.id}}</el-button>
+        <el-button link :key="scope.id">{{scope.id}}</el-button>
       </template>
     </el-table-column>
     <el-table-column  label="条件">
@@ -22,7 +22,7 @@
         </el-select>
         <el-row v-show="scope.row.type===2">
           <el-col>
-             <el-input v-model="scrope.row.left" placeholder="请输入表达式或点击右边...按钮"/>
+             <el-input v-model="scope.row.left" placeholder="请输入表达式或点击右边...按钮"/>
           </el-col>
           <el-col>
             <el-button @click="showSelectFieldOrParamDlg('left')">...</el-button>
@@ -42,7 +42,7 @@
             </el-select>
           </el-col>
           <el-col>
-            <el-input v-model="scrope.row.right" placeholder="请输入表达式或点击右边...按钮"/>
+            <el-input v-model="scope.row.right" placeholder="请输入表达式或点击右边...按钮"/>
           </el-col>
           <el-col>
             <el-button @click="showSelectFieldOrParamDlg('right')">...</el-button>
@@ -106,7 +106,7 @@ const operators=ref([
 const allowChangeToGroup=ref(false)
 const allowDeleteCondition = ref(false)
 const treeData =ref([])
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['updateConditionTreeModel'])
 watch(() => props, val => {
   debugger;
   let tmp1 = JSON.stringify(props.conditionTreeModel);
@@ -114,15 +114,16 @@ watch(() => props, val => {
   if(tmp1!=tmp2) {
     treeData.value = JSON.parse(JSON.stringify(props.conditionTreeModel));
   }
-});
+  console.log('watch treeData',JSON.stringify(treeData.value))
+},{deep:true,immediate:true});
 watch(()=>treeData.value,val=>{
   //如果发生变化，则更新
   let tmp1 = JSON.stringify(props.conditionTreeModel);
   let tmp2 = JSON.stringify(treeData.value);
   if(tmp1!=tmp2){
-    emit('update:conditionTreeModel', treeData.value);
+    emit('updateConditionTreeModel', treeData.value);
   }
-})
+},{deep:true,immediate:true})
 //单击行
 function handleRowClick(row, column, event, index){
     //如果最父级，不能改成组条件,不能删除

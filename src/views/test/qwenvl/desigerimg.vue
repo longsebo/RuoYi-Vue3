@@ -1,61 +1,32 @@
 <template>
-  <div class="container">
-    <!-- Default button -->
-    <el-button type="default">Default</el-button>
-
-    <!-- Primary color button -->
-    <el-button type="primary">Primary</el-button>
-
-    <!-- Success color button -->
-    <el-button type="success">Success</el-button>
-
-    <!-- Info color button -->
-    <el-button type="info">Info</el-button>
-
-    <!-- Warning color button -->
-    <el-button type="warning">Warning</el-button>
-
-    <!-- Danger color button -->
-    <el-button type="danger">Danger</el-button>
-
-    <!-- Plain style buttons with different colors and types -->
-    <p>Plain Style:</p>
-    <el-button plain type="primary" size="small">Small Primary Button (plain)</el-button>
-    <br />
-    <el-button plain type="primary" size="medium">Medium Primary Button (plain)</el-button>
-    <br />
-    <el-button plain type="primary" size="large">Large Primary Button (plain)</el-button>
-
-    <!-- Round style buttons with different colors and sizes -->
-    <p>Round Style:</p>
-    <el-button round type="primary" size="small">Small Primary Button (round)</el-button>
-    <br />
-    <el-button round type="primary" size="medium">Medium Primary Button (round)</el-button>
-    <br />
-    <el-button round type="primary" size="large">Large Primary Button (round)</el-button>
-
-    <!-- Checkbox, checkbox-circle, star icon buttons -->
-    <p>Icon Buttons:</p>
-    <el-checkbox v-model="checked"></el-checkbox>
-    <br/>
-    <el-icon :type="'check'"></el-icon>
-    <br/>
-    <el-icon :type="'star-empty'" circle></el-icon>
-    <br/>
-    <el-button type="text"><i slot="icon" class="el-icon-delete"></i>Delete</el-button>
+  <el-table :data="tableData" style="width: 100%">
+    <el-table-column prop="role" label="角色" width="180"></el-table-column>
+    <el-table-column prop="permissions" label="权限字节" width="180"></el-table-column>
+    <el-table-column prop="limit" label="限制字符"></el-table-column>
+    <el-table-column prop="value" label="数值"></el-table-column>
+  </el-table>
+  <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+    <div>
+      <span style="margin-right: 10px;">2022-12-29 创建时间</span>
+      <span style="margin-right: 10px;">修改日期</span>
+    </div>
+    <div>
+      <el-button type="primary">创建</el-button>
+      <el-button>保存</el-button>
+    </div>
   </div>
 </template>
 
-<script setup lang="ts">
-import { defineComponent } from 'vue';
-const checked = false;
-export default defineComponent({
-  components: {},
-});
+<script>
+export default {
+  data() {
+    return {
+      tableData: [
+        { role: '', permissions: '', limit: '', value: '' },
+        { role: '编辑器/管理员', permissions: 'admin', limit: '', value: '8653,67' },
+        // 更多行数据...
+      ]
+    };
+  }
+};
 </script>
-
-<style scoped>
-.container {
-  display: flex;
-}
-</style>
