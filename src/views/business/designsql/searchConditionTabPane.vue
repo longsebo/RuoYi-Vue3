@@ -145,8 +145,8 @@ function handleRowClick(row, column, event, index){
 function getNextLevel(children) {
   let level=0;
   for(let i=0;i<children.length;i++){
-    if(children[i].level>level){
-      level = children[i].level;
+    if(children[i].currentLevel>level){
+      level = children[i].currentLevel;
     }
   }
   return level+1;
