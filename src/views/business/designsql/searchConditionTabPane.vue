@@ -186,14 +186,14 @@ function handleAdd(row){
   let parentLevel;
   let parentNode;
   if(row.type===1){
-    currentLevel = getNextLevel(row.children);
+    currentLevel = getNextLevel(row.childConditionTreeModels);
     parentLevel = row.id;
     parentNode = row;
   }else {
     //如果row为条件，则获取父节点，取父节点子节点最大序号+1作为新节点currentLevel
     parentNode = getParentNode(row,treeData.value);
     if(parentNode!=null) {
-      currentLevel = getNextLevel(parentNode.children);
+      currentLevel = getNextLevel(parentNode.childConditionTreeModels);
       parentLevel = parentNode.id;
     }else{
       return;
