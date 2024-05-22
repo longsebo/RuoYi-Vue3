@@ -52,8 +52,8 @@
     <el-table-column label="操作" align="center" width="360" class-name="small-padding fixed-width">
       <template #default="scope">
         <el-button link type="primary" icon="Plus" @click="handleAdd(scope.row)" >新增条件</el-button>
-        <el-button link type="primary" disabled="!allowChangeToGroup" :icon="changToGroupIcon" @click="handleChangeToGroup(scope.row)" >改成组合条件</el-button>
-        <el-button link type="primary" disabled="!allowDeleteCondition" icon="Delete" @click="handleDelete(scope.row)" >删除条件</el-button>
+        <el-button link type="primary" :disabled="!allowChangeToGroup" :icon="changToGroupIcon" @click="handleChangeToGroup(scope.row)" >改成组合条件</el-button>
+        <el-button link type="primary" :disabled="!allowDeleteCondition" icon="Delete" @click="handleDelete(scope.row)" >删除条件</el-button>
       </template>
     </el-table-column>
   </el-table>
