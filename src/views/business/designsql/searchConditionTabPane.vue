@@ -159,12 +159,12 @@ function getNextLevel(children) {
  */
 function getParentNode(row, tree) {
   //从树根从上往下找
-  if(tree.id === row.parentLevel){
+  if(tree.id.toString() === row.parentLevel.toString()){
     return tree
   }
   let foundNode = null;
   for(let i=0;i<tree.childConditionTreeModels.length;i++){
-     if(tree.childConditionTreeModels[i].id ===row.parentLevel){
+     if(tree.childConditionTreeModels[i].id.toString() ===row.parentLevel.toString()){
          return tree.childConditionTreeModels[i];
      }
      //否则查找下级
@@ -190,7 +190,7 @@ function handleAdd(row){
     parentNode = row;
   }else {
     //如果row为条件，则获取父节点，取父节点子节点最大序号+1作为新节点currentLevel
-    parentNode = getParentNode(row,treeData.value);
+    parentNode = getParentNode(row,treeData.value[0]);
     if(parentNode!=null) {
       currentLevel1 = getNextLevel(parentNode.childConditionTreeModels);
       parentLevel = parentNode.id;
