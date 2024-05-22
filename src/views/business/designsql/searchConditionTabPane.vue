@@ -1,11 +1,11 @@
 <template>
   <el-table :data="treeData" row-key="id" :tree-props="{children: 'childConditionTreeModels'}" @row-click="handleRowClick">
-    <el-table-column  label="层次" width="30">
+    <el-table-column  label="层次" width="100">
       <template #default="scope">
         {{scope.row.id}}
       </template>
     </el-table-column>
-    <el-table-column  label="条件" width="200">
+    <el-table-column  label="条件" width="400">
       <template #default="scope">
         <el-select
             v-model="scope.row.conditionRelaType"
@@ -50,7 +50,7 @@
         </el-row>
       </template>
     </el-table-column>
-    <el-table-column label="操作" align="center" width="180" class-name="small-padding fixed-width">
+    <el-table-column label="操作" align="center" width="360" class-name="small-padding fixed-width">
       <template #default="scope">
         <el-button link type="primary" icon="Plus" @click="handleAdd(scope.row)" >新增条件</el-button>
         <el-button link type="primary" disabled="!allowChangeToGroup" :icon="changToGroupIcon" @click="handleChangeToGroup(scope.row)" >改成组合条件</el-button>
