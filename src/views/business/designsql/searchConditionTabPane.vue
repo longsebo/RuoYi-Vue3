@@ -2,7 +2,7 @@
   <el-table :data="treeData" row-key="id" :tree-props="{children: 'childConditionTreeModels'}" @row-click="handleRowClick">
     <el-table-column  label="层次">
       <template #default="scope">
-        <el-button link :key="scope.id">{{scope.id}}</el-button>
+        {{scope.id}}
       </template>
     </el-table-column>
     <el-table-column  label="条件">
