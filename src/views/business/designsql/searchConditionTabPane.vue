@@ -181,18 +181,18 @@ function handleAdd(row){
  //构造新行
  //如果row为类型1，为最顶级，则获取子节点最大序号+1作为新节点currentLevel
   //如果row为分组 ，则获取子节点最大序号+1作为新节点currentLevel
-  let currentLevel =0
+  let currentLevel1 =0
   let parentLevel;
   let parentNode;
   if(row.type===1){
-    currentLevel = getNextLevel(row.childConditionTreeModels);
+    currentLevel1 = getNextLevel(row.childConditionTreeModels);
     parentLevel = row.id;
     parentNode = row;
   }else {
     //如果row为条件，则获取父节点，取父节点子节点最大序号+1作为新节点currentLevel
     parentNode = getParentNode(row,treeData.value);
     if(parentNode!=null) {
-      currentLevel = getNextLevel(parentNode.childConditionTreeModels);
+      currentLevel1 = getNextLevel(parentNode.childConditionTreeModels);
       parentLevel = parentNode.id;
     }else{
       return;
@@ -202,8 +202,8 @@ function handleAdd(row){
     type: 2,
     conditionRelaType:'',
     parentLevel:parentLevel ,//父级层次
-    currentLevel: currentLevel,//当前级别
-    id:parentLevel+"."+currentLevel,//id
+    currentLevel: currentLevel1,//当前级别
+    id:parentLevel+"."+currentLevel1.toString(),//id
   }
   parentNode.childConditionTreeModels.push(child);
 }
