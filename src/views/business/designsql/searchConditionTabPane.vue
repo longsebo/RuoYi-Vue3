@@ -25,7 +25,7 @@
              <el-input v-model="scope.row.left" placeholder="请输入表达式或点击右边...按钮"/>
           </el-col>
           <el-col :span="2">
-            <el-button @click="showSelectFieldOrParamDlg('left')">...</el-button>
+            <el-button size="small" @click="showSelectFieldOrParamDlg('left')">...</el-button>
           </el-col>
           <el-col :span="4">
             <el-select
@@ -45,7 +45,7 @@
             <el-input v-model="scope.row.right" placeholder="请输入表达式或点击右边...按钮"/>
           </el-col>
           <el-col :span="2">
-            <el-button @click="showSelectFieldOrParamDlg('right')">...</el-button>
+            <el-button size="small" @click="showSelectFieldOrParamDlg('right')">...</el-button>
           </el-col>
         </el-row>
       </template>
