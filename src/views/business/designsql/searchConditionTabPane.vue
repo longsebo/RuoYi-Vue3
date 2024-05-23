@@ -1,4 +1,5 @@
 <template>
+  <div>
   <el-table :data="treeData" row-key="id" :tree-props="{children: 'childConditionTreeModels'}" @row-click="handleRowClick">
     <el-table-column  label="层次" width="100">
       <template #default="scope">
@@ -25,7 +26,7 @@
              <el-input v-model="scope.row.left" placeholder="请输入表达式或点击右边...按钮"/>
           </el-col>
           <el-col :span="2">
-            <el-button size="small" @click="showSelectFieldOrParamDlg('left')">...</el-button>
+            <el-button size="small" @click="showSelectFieldOrParamDlg(scope.row,'left')">...</el-button>
           </el-col>
           <el-col :span="4">
             <el-select
@@ -44,7 +45,7 @@
             <el-input v-model="scope.row.right" placeholder="请输入表达式或点击右边...按钮"/>
           </el-col>
           <el-col :span="2">
-            <el-button size="small" @click="showSelectFieldOrParamDlg('right')">...</el-button>
+            <el-button size="small" @click="showSelectFieldOrParamDlg(scope.row,'right')">...</el-button>
           </el-col>
         </el-row>
       </template>
@@ -57,13 +58,43 @@
       </template>
     </el-table-column>
   </el-table>
+    <el-dialog title="选择字段或参数" v-model="open" width="500px" append-to-body>
+      <el-tree
+          :data="fieldOrParameterTreeData"
+          :props="defaultProps"
+          :highlight-current="true"
+          node-key="id"
+          ref="tree"
+          :check-strictly="true"
+          :expand-on-click-node="false"
+          show-checkbox="false"
+          v-model="currentNode"
+      ></el-tree>
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button type="primary" @click="confirm">确 定</el-button>
+          <el-button @click="open=false">取 消</el-button>
+        </div>
+      </template>
+    </el-dialog>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted,Directive, watch,ref,defineEmits } from 'vue';
 import { useIcon } from "@/components/common/util";
-const changToGroupIcon = useIcon("ali_changetogroup")
 
+const fieldOrParameterTreeData = ref([
+  { id: 1, label: '节点1', children: [{ id: 2, label: '节点1-1' }] },
+  { id: 3, label: '节点2', children: [{ id: 4, label: '节点2-1' }] }
+]);
+const defaultProps = {
+  children: 'children',
+  label: 'label'
+};
+const currentNode = ref(null);
+const changToGroupIcon = useIcon("ali_changetogroup")
+const open = ref(false)
 const props= defineProps({
   conditionTreeModel: {
     type: Object,
@@ -241,6 +272,15 @@ function handleDelete(row){
       parentNode.childConditionTreeModels.splice(index, 1)
     }
   }
+}
+
+/**
+ * 显示选择字段或条件对话框
+ * @param row
+ * @param flag
+ */
+function showSelectFieldOrParamDlg(row,flag){
+
 }
 </script>
 
