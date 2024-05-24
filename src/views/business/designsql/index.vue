@@ -16,7 +16,7 @@
             <ColumnTabPane v-model:selectColumnTabModel="designModel.selectColumnTabModel" :distinct="designModel.distinct" @updateDistinct="updateDistinct"/>
           </el-tab-pane>
           <el-tab-pane label="查询条件" name="searchConditionTab">
-            <SearchConditionTabPane :conditionTreeModel="designModel.conditionTreeModel" @updateConditionTreeModel="updateConditionTreeModel" />
+            <SearchConditionTabPane :conditionTreeModel="designModel.conditionTreeModel" :tablesModel="designModel.tablesModel" @updateConditionTreeModel="updateConditionTreeModel" />
           </el-tab-pane>
           <el-tab-pane label="排序" name="sortTab">
             <SortTabPane :validColumnModel="validColumnModel" v-model:sortColumnModel="designModel.sortColumnModel"/>

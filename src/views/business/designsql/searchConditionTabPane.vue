@@ -67,12 +67,12 @@
           ref="tree"
           :check-strictly="true"
           :expand-on-click-node="false"
-          show-checkbox="false"
-          v-model="currentNode"
+          :show-checkbox="false"
+          v-model:checked="currentNode"
       ></el-tree>
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="confirm">确 定</el-button>
+          <el-button type="primary" @click="confirmOk">确 定</el-button>
           <el-button @click="open=false">取 消</el-button>
         </div>
       </template>
@@ -83,16 +83,15 @@
 <script setup lang="ts">
 import { onMounted,Directive, watch,ref,defineEmits } from 'vue';
 import { useIcon } from "@/components/common/util";
+import { genId } from "@/components/form/designer/util/common";
 
 const fieldOrParameterTreeData = ref([
-  { id: 1, label: '节点1', children: [{ id: 2, label: '节点1-1' }] },
-  { id: 3, label: '节点2', children: [{ id: 4, label: '节点2-1' }] }
 ]);
 const defaultProps = {
   children: 'children',
   label: 'label'
 };
-const currentNode = ref(null);
+const currentNode = ref([]);
 const changToGroupIcon = useIcon("ali_changetogroup")
 const open = ref(false)
 const props= defineProps({
@@ -109,7 +108,28 @@ const props= defineProps({
       right: String,// 右边操作列/表达式
       id:String,//行唯一标识=parentLevel+"."+currentLevel
     }]
-  }
+  },
+  tablesModel: {
+    type: Array,
+    default: () => [{
+      orgTableName: String,//原始表名
+      tableAlias: String,//表别名
+      tableCnName: String,//表中文名
+      datasourceName: String,//数据源
+      x: Number,
+      y: Number,
+      h: Number,
+      w: Number,
+      active: Boolean,
+      columns: {
+        type: Array,
+        default: () => [{
+          fieldName: String,//字段英文名
+          fieldCnName: String,//字段中文名
+        }]
+      }
+    }]
+  },
 })
 
 const conditionTypes=ref([{label:'分支内所有条件必须匹配',value:'All'},
@@ -137,13 +157,48 @@ const allowChangeToGroup=ref(false)
 const allowDeleteCondition = ref(false)
 const treeData =ref([])
 const emit = defineEmits(['updateConditionTreeModel'])
+const currentRow =ref({})
+const leftRightFlag = ref('')
+/**
+ * 转换树形结构
+ * @param tablesModel
+ */
+function convertTreeMode(tablesModel) {
+  let treeData = [];
+  for(let i=0;i<tablesModel.length;i++){
+    let table = tablesModel[i];
+    let tableNode = {
+      id:genId(),
+      label:(table.tableAlias==null||table.tableAlias=='')?table.enName:table.tableAlias,
+      children:[],
+      disabled: true,
+    }
+    //循环加入字段
+    for(let j=0;j<table.columns.length;j++){
+      let column = table.columns[j];
+      let columnNode = {
+        id:genId(),
+        label:column.fieldEnName,
+        parentLabel:tableNode.label,
+        children:[]
+      }
+      tableNode.children.push(columnNode);
+    }
+    treeData.push(tableNode);
+   }
+
+  return treeData;
+}
+
 watch(() => props, val => {
-  debugger;
+
   let tmp1 = JSON.stringify(props.conditionTreeModel);
   let tmp2 = JSON.stringify(treeData.value);
   if(tmp1!=tmp2) {
     treeData.value = JSON.parse(JSON.stringify(props.conditionTreeModel));
   }
+  //转换树形结构
+  fieldOrParameterTreeData.value = convertTreeMode(props.tablesModel);
   console.log('watch treeData',JSON.stringify(treeData.value))
 },{deep:true,immediate:true});
 watch(()=>treeData.value,val=>{
@@ -279,9 +334,24 @@ function handleDelete(row){
  * @param row
  * @param flag
  */
-function showSelectFieldOrParamDlg(row,flag){
-
+function showSelectFieldOrParamDlg(row,flag) {
+  open.value = true;
+  currentRow.value = row;
+  leftRightFlag.value = flag
 }
+function confirmOk(){
+  debugger;
+  const selectedNodes = tree.value.getCheckedNodes();
+  console.log('Selected Nodes:', selectedNodes);
+  let backFillString = currentNode.parentLabel+"."+currentNode.label;
+  if(leftRightFlag.value==='left'){
+    currentRow.value.left = backFillString;
+  }else{
+    currentRow.value.right = backFillString;
+  }
+  open.value = false;
+}
+
 </script>
 
 <style scoped>
