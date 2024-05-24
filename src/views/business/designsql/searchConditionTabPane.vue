@@ -64,7 +64,7 @@
           :props="defaultProps"
           :highlight-current="true"
           node-key="id"
-          ref="tree"
+          ref="treeRef"
           :check-strictly="true"
           :expand-on-click-node="false"
           :show-checkbox="false"
@@ -159,6 +159,7 @@ const treeData =ref([])
 const emit = defineEmits(['updateConditionTreeModel'])
 const currentRow =ref({})
 const leftRightFlag = ref('')
+const treeRef =ref()
 /**
  * 转换树形结构
  * @param tablesModel
@@ -341,7 +342,7 @@ function showSelectFieldOrParamDlg(row,flag) {
 }
 function confirmOk(){
   debugger;
-  const selectedNodes = tree.value.getCheckedNodes();
+  const selectedNodes = treeRef.value.getCheckedNodes();
   console.log('Selected Nodes:', selectedNodes);
   let backFillString = currentNode.parentLabel+"."+currentNode.label;
   if(leftRightFlag.value==='left'){
