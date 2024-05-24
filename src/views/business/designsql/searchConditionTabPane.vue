@@ -69,6 +69,7 @@
           :expand-on-click-node="false"
           :show-checkbox="false"
           @node-click="handleNodeClick"
+          v-model="currentNode"
       ></el-tree>
       <template #footer>
         <div class="dialog-footer">
@@ -344,7 +345,7 @@ const handleNodeClick = (data, node, tree) => {
   // console.log(data); // 当前节点的数据对象
   // console.log(node); // 当前节点的Node对象，包含了当前节点的所有信息
   // console.log(tree); // 树组件的实例
-  currentNode.value = data;
+  // currentNode.value = data;
 };
 function confirmOk(){
   debugger;
