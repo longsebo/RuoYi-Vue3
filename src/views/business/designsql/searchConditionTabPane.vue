@@ -69,7 +69,6 @@
           :expand-on-click-node="false"
           :show-checkbox="false"
           @node-click="handleNodeClick"
-          v-model="currentNode"
       ></el-tree>
       <template #footer>
         <div class="dialog-footer">
@@ -161,6 +160,7 @@ const emit = defineEmits(['updateConditionTreeModel'])
 const currentRow =ref({})
 const leftRightFlag = ref('')
 const treeRef =ref()
+const { proxy } = getCurrentInstance();
 /**
  * 转换树形结构
  * @param tablesModel
@@ -173,6 +173,7 @@ function convertTreeMode(tablesModel) {
       id:genId(),
       label:(table.tableAlias==null||table.tableAlias=='')?table.enName:table.tableAlias,
       children:[],
+      level:1,
       disabled: true,
     }
     //循环加入字段
@@ -182,7 +183,8 @@ function convertTreeMode(tablesModel) {
         id:genId(),
         label:column.fieldEnName,
         parentLabel:tableNode.label,
-        children:[]
+        children:[],
+        level:2
       }
       tableNode.children.push(columnNode);
     }
@@ -345,17 +347,20 @@ const handleNodeClick = (data, node, tree) => {
   // console.log(data); // 当前节点的数据对象
   // console.log(node); // 当前节点的Node对象，包含了当前节点的所有信息
   // console.log(tree); // 树组件的实例
-  // currentNode.value = data;
+  currentNode.value = data;
 };
 function confirmOk(){
-  debugger;
-  let backFillString = currentNode.value.parentLabel+"."+currentNode.value.label;
-  if(leftRightFlag.value==='left'){
-    currentRow.value.left = backFillString;
+  if(currentNode.level==2) {
+    let backFillString = currentNode.value.parentLabel + "." + currentNode.value.label;
+    if (leftRightFlag.value === 'left') {
+      currentRow.value.left = backFillString;
+    } else {
+      currentRow.value.right = backFillString;
+    }
+    open.value = false;
   }else{
-    currentRow.value.right = backFillString;
+    proxy.$modal.msgSuccess("请选择字段或条件!");
   }
-  open.value = false;
 }
 
 </script>
