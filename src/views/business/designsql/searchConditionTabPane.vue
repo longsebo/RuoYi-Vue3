@@ -341,15 +341,14 @@ function showSelectFieldOrParamDlg(row,flag) {
   leftRightFlag.value = flag
 }
 const handleNodeClick = (data, node, tree) => {
-  console.log(data); // 当前节点的数据对象
-  console.log(node); // 当前节点的Node对象，包含了当前节点的所有信息
-  console.log(tree); // 树组件的实例
+  // console.log(data); // 当前节点的数据对象
+  // console.log(node); // 当前节点的Node对象，包含了当前节点的所有信息
+  // console.log(tree); // 树组件的实例
+  currentNode.value = data;
 };
 function confirmOk(){
   debugger;
-  const selectedNodes = treeRef.value.getCheckedNodes();
-  console.log('Selected Nodes:', selectedNodes);
-  let backFillString = currentNode.parentLabel+"."+currentNode.label;
+  let backFillString = currentNode.value.parentLabel+"."+currentNode.value.label;
   if(leftRightFlag.value==='left'){
     currentRow.value.left = backFillString;
   }else{
