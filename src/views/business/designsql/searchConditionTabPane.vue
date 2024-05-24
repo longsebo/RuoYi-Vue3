@@ -350,7 +350,7 @@ const handleNodeClick = (data, node, tree) => {
   currentNode.value = data;
 };
 function confirmOk(){
-  if(currentNode.level==2) {
+  if(currentNode.value.level==2) {
     let backFillString = currentNode.value.parentLabel + "." + currentNode.value.label;
     if (leftRightFlag.value === 'left') {
       currentRow.value.left = backFillString;
