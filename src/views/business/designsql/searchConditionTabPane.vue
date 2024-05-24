@@ -68,7 +68,7 @@
           :check-strictly="true"
           :expand-on-click-node="false"
           :show-checkbox="false"
-          v-model:checked="currentNode"
+          @node-click="handleNodeClick"
       ></el-tree>
       <template #footer>
         <div class="dialog-footer">
@@ -340,6 +340,11 @@ function showSelectFieldOrParamDlg(row,flag) {
   currentRow.value = row;
   leftRightFlag.value = flag
 }
+const handleNodeClick = (data, node, tree) => {
+  console.log(data); // 当前节点的数据对象
+  console.log(node); // 当前节点的Node对象，包含了当前节点的所有信息
+  console.log(tree); // 树组件的实例
+};
 function confirmOk(){
   debugger;
   const selectedNodes = treeRef.value.getCheckedNodes();
