@@ -8,12 +8,20 @@
               <el-table-column prop="fullFieldName" label="有效列" ></el-table-column>
             </el-table>
           </el-col>
+          <!-- <el-col :span="5" class="container1">
+            <el-button @click="addToSort" :disabled="isDisableRightBt" > &lt; </el-button>
+            <el-button @click="removeFromSort" :disabled="isDisableLeftBt"> &lt; </el-button>
+          </el-col>  -->
+        </el-row>
+      </el-aside>
+      <div width="80px">
+        <el-row>
           <el-col :span="5" class="container1">
             <el-button @click="addToSort" :disabled="isDisableRightBt" > &lt; </el-button>
             <el-button @click="removeFromSort" :disabled="isDisableLeftBt"> &lt; </el-button>
           </el-col>
         </el-row>
-      </el-aside>
+      </div>
       <el-main style="flex: 1">
         <el-row>
           <el-col :span="10">
