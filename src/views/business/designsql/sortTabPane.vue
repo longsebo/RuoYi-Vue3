@@ -18,7 +18,7 @@
         <el-row>
           <el-col  class="container1">
             <el-button @click="addToSort" :disabled="isDisableRightBt" > &lt; </el-button>
-            <el-button @click="removeFromSort" :disabled="isDisableLeftBt"> &lt; </el-button>
+            <el-button @click="removeFromSort" :disabled="isDisableLeftBt"> &lg; </el-button>
           </el-col>
         </el-row>
       </div>
