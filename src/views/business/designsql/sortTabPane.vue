@@ -8,7 +8,7 @@
               <el-table-column prop="fullFieldName" label="有效列" ></el-table-column>
             </el-table>
           </el-col>
-          <el-col :span="2" :flex="'wrap'">
+          <el-col :span="2" class="container">
             <el-button @click="addToSort" :disabled="isDisableRightBt" > &lt; </el-button>
             <el-button @click="removeFromSort" :disabled="isDisableLeftBt"> &lt; </el-button>
           </el-col>
@@ -26,7 +26,7 @@
               </el-table-column>
             </el-table>
           </el-col>
-          <el-col :span="2" :flex="'wrap'">
+          <el-col :span="2" class="container">
             <el-button @click="moveUp" :disabled="isDisableUpBt"> ∧ </el-button>
             <el-button @click="moveDown" :disabled="isDisableDownBt"> ∨ </el-button>
           </el-col>
@@ -167,5 +167,11 @@ function handleRowClickSortColumn(row, column, event, index){
 }
 .el-button {
   margin: 5px 0; /* 垂直间隔 */
+}
+.container {
+  display: flex; /* 使用Flexbox布局 */
+  flex-direction: column; /* 垂直排列 */
+  justify-content: center; /* 垂直居中 */
+  height: 100vh; /* 容器高度设置为视窗高度 */
 }
 </style>
