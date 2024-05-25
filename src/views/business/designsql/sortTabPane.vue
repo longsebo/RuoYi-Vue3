@@ -156,13 +156,13 @@ function handleRowClickSortColumn(row, column, event, index){
 }
 </script>
 
-<style >
-.el-container {
+<style scoped>
+::v-deep(.el-container) {
   display: flex; /* 启用Flex布局 */
   flex-direction: row; /* 指定主轴方向为行 */
 }
 
-.el-main {
+::v-deep(.el-main) {
   overflow: auto; /* 当内容过多时，可以滚动查看 */
 }
 .container1 {
@@ -170,5 +170,8 @@ function handleRowClickSortColumn(row, column, event, index){
   flex-direction: column; /* 垂直排列 */
   justify-content: center; /* 垂直居中 */
   align-items:center;
+}
+::v-deep(.el-button+.el-button) {
+  margin-left: 0px;
 }
 </style>
