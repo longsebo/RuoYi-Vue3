@@ -3,12 +3,12 @@
     <el-container style="height: 100vh;">
       <el-aside width="200px">
         <el-row>
-          <el-col :span="10">
+          <el-col :span="9">
             <el-table :data="validColumnModel" style="width: 100%"  @row-click="handleRowClickValidColumn" >
               <el-table-column prop="fullFieldName" label="有效列" ></el-table-column>
             </el-table>
           </el-col>
-          <el-col :span="2" class="container">
+          <el-col :span="5" class="container">
             <el-button @click="addToSort" :disabled="isDisableRightBt" > &lt; </el-button>
             <el-button @click="removeFromSort" :disabled="isDisableLeftBt"> &lt; </el-button>
           </el-col>
@@ -172,6 +172,6 @@ function handleRowClickSortColumn(row, column, event, index){
   display: flex; /* 使用Flexbox布局 */
   flex-direction: column; /* 垂直排列 */
   justify-content: center; /* 垂直居中 */
-  height: 50vh; /* 容器高度设置为视窗高度 */
+  height: 25vh; /* 容器高度设置为视窗高度 */
 }
 </style>
