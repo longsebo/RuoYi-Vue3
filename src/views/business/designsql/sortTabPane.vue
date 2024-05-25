@@ -172,6 +172,6 @@ function handleRowClickSortColumn(row, column, event, index){
   display: flex; /* 使用Flexbox布局 */
   flex-direction: column; /* 垂直排列 */
   justify-content: center; /* 垂直居中 */
-  height: 100vh; /* 容器高度设置为视窗高度 */
+  height: 50vh; /* 容器高度设置为视窗高度 */
 }
 </style>
