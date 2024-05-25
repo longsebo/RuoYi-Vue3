@@ -165,9 +165,6 @@ function handleRowClickSortColumn(row, column, event, index){
 .el-main {
   overflow: auto; /* 当内容过多时，可以滚动查看 */
 }
-.el-button {
-  margin: 5px 0; /* 垂直间隔 */
-}
 .container {
   display: flex; /* 使用Flexbox布局 */
   flex-direction: column; /* 垂直排列 */
