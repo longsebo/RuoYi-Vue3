@@ -182,6 +182,6 @@ function handleRowClickSortColumn(row, column, event, index){
 }
 ::v-deep(.el-button+.el-button) {
   margin-left: 0px;
-  margin-top: 5px;
+  margin-top: 10px;
 }
 </style>
