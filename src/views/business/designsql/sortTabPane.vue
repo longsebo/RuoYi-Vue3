@@ -14,7 +14,7 @@
           </el-col>  -->
         </el-row>
       </el-aside>
-      <div width="60px">
+      <div width="60px" style="margin-left: 5px;">
         <el-row>
           <el-col  class="container1">
             <el-button @click="addToSort" :disabled="isDisableRightBt" > &lt; </el-button>
