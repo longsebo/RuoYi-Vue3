@@ -169,5 +169,6 @@ function handleRowClickSortColumn(row, column, event, index){
   display: flex; /* 使用Flexbox布局 */
   flex-direction: column; /* 垂直排列 */
   justify-content: center; /* 垂直居中 */
+  align-items:center;
 }
 </style>
