@@ -16,7 +16,7 @@
       </el-aside>
       <div width="60px">
         <el-row>
-          <el-col :span="5" class="container1">
+          <el-col  class="container1">
             <el-button @click="addToSort" :disabled="isDisableRightBt" > &lt; </el-button>
             <el-button @click="removeFromSort" :disabled="isDisableLeftBt"> &lt; </el-button>
           </el-col>
