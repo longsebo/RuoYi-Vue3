@@ -178,9 +178,10 @@ function handleRowClickSortColumn(row, column, event, index){
   flex-direction: column; /* 垂直排列 */
   justify-content: center; /* 垂直居中 */
   align-items:center;
-  height: 20vh;
+  height: 40vh;
 }
 ::v-deep(.el-button+.el-button) {
   margin-left: 0px;
+  margin-top: 5px;
 }
 </style>
