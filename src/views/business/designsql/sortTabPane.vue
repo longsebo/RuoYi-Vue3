@@ -13,8 +13,8 @@
       <div width="60px" style="margin-left: 5px;">
         <el-row>
           <el-col  class="container1">
-            <el-button @click="addToSort" :disabled="isDisableRightBt" > &lt; </el-button>
-            <el-button @click="removeFromSort" :disabled="isDisableLeftBt"> &gt; </el-button>
+            <el-button @click="addToSort" :disabled="isDisableRightBt" > &gt; </el-button>
+            <el-button @click="removeFromSort" :disabled="isDisableLeftBt">&lt;  </el-button>
           </el-col>
         </el-row>
       </div>
