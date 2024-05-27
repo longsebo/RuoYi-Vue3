@@ -126,6 +126,7 @@ watch(()=>sortColumnModel,val =>{
 },{deep:true,immediate:true})
 //增加到排序列
 function addToSort() {
+  debugger;
   if (currentValidColumnIndex.value >= 0 && currentValidColumnIndex.value < validColumnModel.value.length) {
      let tempSort = validColumnModel.value[currentValidColumnIndex.value];
      validColumnModel.value.splice(currentValidColumnIndex.value,1)
