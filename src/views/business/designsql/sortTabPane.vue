@@ -4,8 +4,8 @@
       <el-aside width="300px">
         <el-row>
           <el-col >
-            <el-table :data="validColumnModel" width="200px"  @row-click="handleRowClickValidColumn" >
-              <el-table-column prop="fullFieldName" width="200px" label="有效列" ></el-table-column>
+            <el-table :data="validColumnModel"  hight="300px"  @row-click="handleRowClickValidColumn" >
+              <el-table-column prop="fullFieldName" align="center"  label="有效列" ></el-table-column>
             </el-table>
           </el-col>
         </el-row>
