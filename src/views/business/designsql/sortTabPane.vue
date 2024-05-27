@@ -42,6 +42,7 @@
 
 <script setup lang="ts">
 import { ref,defineEmits,defineProps,watch,computed } from 'vue';
+import { genId } from "@/components/form/designer/util/common";
 interface Emits {
   (e: 'updateSortColumnModel', sortColumnModel:object): void
 }
@@ -100,6 +101,7 @@ watch(() => props, val => {
           (validColumnModel.value[i].tableAlias == '' ? validColumnModel.value[i].orgTableName : validColumnModel.value[i].tableAlias)
               + "."+
           (validColumnModel.value[i].alias == '' ? validColumnModel.value[i].fieldName : validColumnModel.value[i].alias);
+      validColumnModel.value[i].id = genId();
     }
   }
   let sortColumnModelJson1 = JSON.stringify(sortColumnModel.value);
@@ -111,6 +113,7 @@ watch(() => props, val => {
           (sortColumnModel.value[i].tableAlias == '' ? sortColumnModel.value[i].orgTableName : sortColumnModel.value[i].tableAlias)
               + "."+
           (sortColumnModel.value[i].alias == '' ? sortColumnModel.value[i].fieldName : sortColumnModel.value[i].alias);
+      sortColumnModel.value[i].id = genId();
     }
   }
 },{deep:true,immediate:true});
@@ -157,11 +160,23 @@ function moveDown(){
 }
 //单击行
 function handleRowClickValidColumn(row, column, event, index){
-  currentValidColumnIndex.value = index;
+  currentValidColumnIndex.value = getRowIndex(row,validColumnModel.value);
 }
 //单击行
 function handleRowClickSortColumn(row, column, event, index){
-  currentSortColumnIndex.value = index;
+  currentSortColumnIndex.value =  getRowIndex(row,sortColumnModel.value);;
+}
+/**
+ * 获取行索引
+ * @param row
+ */
+function getRowIndex(row,list) {
+  for(let i=0;i<list.length;i++){
+    if(row.id === list[i].id){
+      return i;
+    }
+  }
+  return -1;
 }
 </script>
 
