@@ -1,7 +1,7 @@
 <template>
   <div class="common-layout">
     <el-container style="height: 100vh;">
-      <el-aside width="200px">
+      <el-aside width="300px">
         <el-row>
           <el-col >
             <el-table :data="validColumnModel" width="200px"  @row-click="handleRowClickValidColumn" >
