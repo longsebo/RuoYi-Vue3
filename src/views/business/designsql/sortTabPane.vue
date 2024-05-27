@@ -4,8 +4,8 @@
       <el-aside width="200px">
         <el-row>
           <el-col :span="9">
-            <el-table :data="validColumnModel" style="width: 100%"  @row-click="handleRowClickValidColumn" >
-              <el-table-column prop="fullFieldName" label="有效列" ></el-table-column>
+            <el-table :data="validColumnModel" width="200px"  @row-click="handleRowClickValidColumn" >
+              <el-table-column prop="fullFieldName" width="200px" label="有效列" ></el-table-column>
             </el-table>
           </el-col>
           <!-- <el-col :span="5" class="container1">
@@ -47,7 +47,7 @@
 <script setup lang="ts">
 import { ref,defineEmits,defineProps,watch,computed } from 'vue';
 interface Emits {
-  (e: 'update:modelValue', sortColumnModel:object): void
+  (e: 'updateSortColumnModel', sortColumnModel:object): void
 }
 const emit = defineEmits<Emits>()
 const sortColumnModel = ref([])
@@ -94,12 +94,17 @@ const props= defineProps({
   },
 })
 watch(() => props, val => {
-  validColumnModel.value = JSON.parse(JSON.stringify(validColumnModel));
-  for(let i=0;i<validColumnModel.value.length;i++){
-    validColumnModel.value[i].fullFieldName =
-        validColumnModel.value[i].tableAlias==null?validColumnModel.value[i].orgTableName:validColumnModel.value[i].tableAlias
-        +"."
-        validColumnModel.value[i].alias==null?validColumnModel.value[i].fieldName:validColumnModel.value[i].alias;
+  debugger;
+  let validColumnModelJson1 = JSON.stringify(props.validColumnModel);
+  let validColumnModelJson2 = JSON.stringify(validColumnModel);
+  if(validColumnModelJson1!=validColumnModelJson2) {
+    validColumnModel.value = JSON.parse(JSON.stringify(props.validColumnModel));
+    for (let i = 0; i < validColumnModel.value.length; i++) {
+      validColumnModel.value[i].fullFieldName =
+          (validColumnModel.value[i].tableAlias == '' ? validColumnModel.value[i].orgTableName : validColumnModel.value[i].tableAlias)
+              + "."+
+          (validColumnModel.value[i].alias == '' ? validColumnModel.value[i].fieldName : validColumnModel.value[i].alias);
+    }
   }
   let sortColumnModelJson1 = JSON.stringify(sortColumnModel.value);
   let sortColumnModelJson2 = JSON.stringify(props.sortColumnModel.value);
@@ -107,19 +112,19 @@ watch(() => props, val => {
     sortColumnModel.value = JSON.parse(JSON.stringify(props.sortColumnModel));
     for (let i = 0; i < sortColumnModel.value.length; i++) {
       sortColumnModel.value[i].fullFieldName =
-          sortColumnModel.value[i].tableAlias == null ? sortColumnModel.value[i].orgTableName : sortColumnModel.value[i].tableAlias
-              + "."
-      sortColumnModel.value[i].alias == null ? sortColumnModel.value[i].fieldName : sortColumnModel.value[i].alias;
+          (sortColumnModel.value[i].tableAlias == '' ? sortColumnModel.value[i].orgTableName : sortColumnModel.value[i].tableAlias)
+              + "."+
+          (sortColumnModel.value[i].alias == '' ? sortColumnModel.value[i].fieldName : sortColumnModel.value[i].alias);
     }
   }
-});
+},{deep:true,immediate:true});
 watch(()=>sortColumnModel,val =>{
   let sortColumnModelJson1 = JSON.stringify(sortColumnModel.value);
   let sortColumnModelJson2 = JSON.stringify(props.sortColumnModel.value);
   if(sortColumnModelJson1!=sortColumnModelJson2){
-    emit('update:modelValue',sortColumnModel.value)
+    emit('updateSortColumnModel',sortColumnModel.value)
   }
-})
+},{deep:true,immediate:true})
 //增加到排序列
 function addToSort() {
   if (currentValidColumnIndex.value >= 0 && currentValidColumnIndex.value < validColumnModel.value.length) {

@@ -19,7 +19,7 @@
             <SearchConditionTabPane :conditionTreeModel="designModel.conditionTreeModel" :tablesModel="designModel.tablesModel" @updateConditionTreeModel="updateConditionTreeModel" />
           </el-tab-pane>
           <el-tab-pane label="排序" name="sortTab">
-            <SortTabPane :validColumnModel="validColumnModel" v-model:sortColumnModel="designModel.sortColumnModel"/>
+            <SortTabPane :validColumnModel="validColumnModel" :sortColumnModel="designModel.sortColumnModel" @updateSortColumnModel="updateSortColumnModel" />
           </el-tab-pane>
           <el-tab-pane label="SQL预览" name="sqlPreview">
             <SqlPreviewTabPane/>
@@ -339,30 +339,44 @@ function isExistsInSortColumns(tablesModelElement: any, column: any) {
  */
 function makeSortColumn(tablesModelElement: any, column: any) {
    let sortColumn={
-     orgTableName: tablesModelElement.orgTableName,//原始表名
-     tableAlias: tablesModelElement.tableAlias,//表别名
+     orgTableName: tablesModelElement.enName,//原始表名
+     tableAlias: tablesModelElement.alias,//表别名
      columAndExp: '',//列/表达式
      alias: '',//列别名
-     fieldName: column.fieldName,//字段名
+     fieldName: column.fieldEnName,//字段名
      descending: false//是否倒排
    }
    return sortColumn;
 }
 
 //计算排序字段有效列
-    const validColumnModel = computed(() => {
-      //所有表列，排除sortColumnModel就是有效列
-      let validColumnModels=[];
-      for(let i=0;i<designModel.value.tablesModel.length;i++){
-        let columns = designModel.value.tablesModel[i].columns;
-         for(let j=0;j<columns.length;j++){
-             if(!isExistsInSortColumns(designModel.value.tablesModel[i],columns[j])){
-               validColumnModels.push(makeSortColumn(designModel.value.tablesModel[i],columns[j]))
-             }
+const validColumnModel = computed(() => {
+  //debugger;
+  //所有表列，排除sortColumnModel就是有效列
+  let validColumnModels=[];
+  for(let i=0;i<designModel.value.tablesModel.length;i++){
+    let columns = designModel.value.tablesModel[i].columns;
+     for(let j=0;j<columns.length;j++){
+         if(!isExistsInSortColumns(designModel.value.tablesModel[i],columns[j])){
+           validColumnModels.push(makeSortColumn(designModel.value.tablesModel[i],columns[j]))
          }
-      }
-      return validColumnModels;
-    })
+     }
+  }
+  console.log('validColumnModels:'+JSON.stringify(validColumnModels))
+  return validColumnModels;
+})
+
+/**
+ * 更新排序字段模型
+ * @param sortColumnModel
+ */
+function updateSortColumnModel(sortColumnModel) {
+  let temp1 = JSON.stringify(designModel.value.sortColumnModel);
+  let temp2 = JSON.stringify(sortColumnModel);
+  if(temp1!=temp2) {
+    designModel.value.sortColumnModel = sortColumnModel;
+  }
+}
 </script>
 
 <style>
