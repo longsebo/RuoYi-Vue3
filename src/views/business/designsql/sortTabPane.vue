@@ -3,15 +3,11 @@
     <el-container style="height: 100vh;">
       <el-aside width="200px">
         <el-row>
-          <el-col :span="9">
+          <el-col >
             <el-table :data="validColumnModel" width="200px"  @row-click="handleRowClickValidColumn" >
               <el-table-column prop="fullFieldName" width="200px" label="有效列" ></el-table-column>
             </el-table>
           </el-col>
-          <!-- <el-col :span="5" class="container1">
-            <el-button @click="addToSort" :disabled="isDisableRightBt" > &lt; </el-button>
-            <el-button @click="removeFromSort" :disabled="isDisableLeftBt"> &lt; </el-button>
-          </el-col>  -->
         </el-row>
       </el-aside>
       <div width="60px" style="margin-left: 5px;">
