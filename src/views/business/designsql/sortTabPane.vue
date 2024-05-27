@@ -95,14 +95,19 @@ watch(() => props, val => {
   let validColumnModelJson1 = JSON.stringify(props.validColumnModel);
   let validColumnModelJson2 = JSON.stringify(validColumnModel);
   if(validColumnModelJson1!=validColumnModelJson2) {
-    validColumnModel.value = JSON.parse(JSON.stringify(props.validColumnModel));
-    for (let i = 0; i < validColumnModel.value.length; i++) {
-      validColumnModel.value[i].fullFieldName =
-          (validColumnModel.value[i].tableAlias == '' ? validColumnModel.value[i].orgTableName : validColumnModel.value[i].tableAlias)
-              + "."+
-          (validColumnModel.value[i].alias == '' ? validColumnModel.value[i].fieldName : validColumnModel.value[i].alias);
-      validColumnModel.value[i].id = genId();
+    let tmpValidColumnModel=[];
+    tmpValidColumnModel = JSON.parse(JSON.stringify(props.validColumnModel));
+    validColumnModel.value=[];
+    for (let i = 0; i < tmpValidColumnModel.length; i++) {
+      if(!notInSortColumn(tmpValidColumnModel[i],props.sortColumnModel)){
+        tmpValidColumnModel[i].fullFieldName =
+            (tmpValidColumnModel[i].tableAlias == '' ? tmpValidColumnModel[i].orgTableName : tmpValidColumnModel[i].tableAlias)
+            + "."+
+            (tmpValidColumnModel[i].alias == '' ? tmpValidColumnModel[i].fieldName : tmpValidColumnModel[i].alias);
+        tmpValidColumnModel[i].id = genId();
+      }
     }
+    validColumnModel.value=tmpValidColumnModel;
   }
   let sortColumnModelJson1 = JSON.stringify(sortColumnModel.value);
   let sortColumnModelJson2 = JSON.stringify(props.sortColumnModel.value);
@@ -126,7 +131,6 @@ watch(()=>sortColumnModel,val =>{
 },{deep:true,immediate:true})
 //增加到排序列
 function addToSort() {
-  debugger;
   if (currentValidColumnIndex.value >= 0 && currentValidColumnIndex.value < validColumnModel.value.length) {
      let tempSort = validColumnModel.value[currentValidColumnIndex.value];
      validColumnModel.value.splice(currentValidColumnIndex.value,1)
