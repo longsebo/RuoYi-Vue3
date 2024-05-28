@@ -59,7 +59,7 @@ const isDisableLeftBt = computed(() => {
   return currentSortColumnIndex.value<0; // 根据实际条件返回true或false
 });
 const isDisableUpBt = computed(() => {
-  return currentSortColumnIndex.value==1; // 根据实际条件返回true或false
+  return currentSortColumnIndex.value<=0; // 根据实际条件返回true或false
 });
 const isDisableDownBt = computed(() => {
   return currentSortColumnIndex.value==sortColumnModel.value.length-1; // 根据实际条件返回true或false
