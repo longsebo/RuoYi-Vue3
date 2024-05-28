@@ -98,9 +98,15 @@ const props= defineProps({
  */
 function notInSortColumn(validColumnModelElement, sortColumnModel) {
   for(let i=0;i<sortColumnModel.length;i++){
-      if(sortColumnModel[i].id == validColumnModelElement.id){
-        return false;
-      }
+
+      if (sortColumnModel[i].orgTableName == validColumnModelElement.orgTableName &&
+          sortColumnModel[i].tableAlias == validColumnModelElement.tableAlias &&
+          sortColumnModel[i].alias == validColumnModelElement.alias &&
+          sortColumnModel[i].fieldName == validColumnModelElement.fieldName
+        ) {
+          return false;
+        }
+
   }
   return true;
 }
