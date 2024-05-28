@@ -176,20 +176,25 @@ function removeFromSort(){
 }
 //排序列上移
 function moveUp(){
-    if(currentSortColumnIndex.value!=0){
-      let tempSort1 = sortColumnModel.value[currentSortColumnIndex.value-1];
-      let tempSort2 = sortColumnModel.value[currentSortColumnIndex.value];
-      sortColumnModel.value.splice(currentSortColumnIndex.value-1,2)
-      sortColumnModel.value.splice(currentSortColumnIndex.value-1,0,tempSort2,tempSort1);
-    }
+  if (currentSortColumnIndex.value <= 0) return;
+  const temp = sortColumnModel.value[currentSortColumnIndex.value - 1];
+  sortColumnModel.value.splice(currentSortColumnIndex.value - 1, 1);
+  sortColumnModel.value.splice(currentSortColumnIndex.value , 0, temp);
+  //当前行减1
+  if(currentSortColumnIndex.value-1>=0){
+    currentSortColumnIndex.value = currentSortColumnIndex.value-1;
+  }
 }
 //排序列下移
 function moveDown(){
-  if(currentSortColumnIndex.value<sortColumnModel.value.length){
-    let tempSort1 = sortColumnModel.value[currentSortColumnIndex.value];
-    let tempSort2 = sortColumnModel.value[currentSortColumnIndex.value+1];
-    sortColumnModel.value.splice(currentSortColumnIndex.value,2)
-    sortColumnModel.value.splice(currentSortColumnIndex.value,0,tempSort2,tempSort1);
+  if(currentSortColumnIndex.value===-1) return;
+  if (currentSortColumnIndex.value === sortColumnModel.value.length - 1) return;
+  const temp = sortColumnModel.value[currentSortColumnIndex.value  + 1];
+  sortColumnModel.value.splice(currentSortColumnIndex.value  + 1, 1);
+  sortColumnModel.value.splice(currentSortColumnIndex.value , 0, temp);
+  //当前行加1
+  if(currentSortColumnIndex.value+1<sortColumnModel.value.length){
+    currentSortColumnIndex.value = currentSortColumnIndex.value+1;
   }
 }
 //单击行
