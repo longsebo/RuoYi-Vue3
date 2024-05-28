@@ -90,6 +90,21 @@ const props= defineProps({
     }]
   },
 })
+
+/**
+ * 有效列在排序列是否存在
+ * @param validColumnModelElement
+ * @param sortColumnModel
+ */
+function notInSortColumn(validColumnModelElement, sortColumnModel) {
+  for(let i=0;i<sortColumnModel.length;i++){
+      if(sortColumnModel[i].id == validColumnModelElement.id){
+        return false;
+      }
+  }
+  return true;
+}
+
 watch(() => props, val => {
   debugger;
   let validColumnModelJson1 = JSON.stringify(props.validColumnModel);
@@ -99,15 +114,18 @@ watch(() => props, val => {
     tmpValidColumnModel = JSON.parse(JSON.stringify(props.validColumnModel));
     validColumnModel.value=[];
     for (let i = 0; i < tmpValidColumnModel.length; i++) {
-      if(!notInSortColumn(tmpValidColumnModel[i],props.sortColumnModel)){
+      if(notInSortColumn(tmpValidColumnModel[i],props.sortColumnModel)){
         tmpValidColumnModel[i].fullFieldName =
             (tmpValidColumnModel[i].tableAlias == '' ? tmpValidColumnModel[i].orgTableName : tmpValidColumnModel[i].tableAlias)
             + "."+
             (tmpValidColumnModel[i].alias == '' ? tmpValidColumnModel[i].fieldName : tmpValidColumnModel[i].alias);
-        tmpValidColumnModel[i].id = genId();
+        if(tmpValidColumnModel[i].id==null || tmpValidColumnModel[i].id=='') {
+          tmpValidColumnModel[i].id = genId();
+        }
+        validColumnModel.value.push(tmpValidColumnModel[i])
       }
     }
-    validColumnModel.value=tmpValidColumnModel;
+
   }
   let sortColumnModelJson1 = JSON.stringify(sortColumnModel.value);
   let sortColumnModelJson2 = JSON.stringify(props.sortColumnModel.value);
@@ -118,7 +136,9 @@ watch(() => props, val => {
           (sortColumnModel.value[i].tableAlias == '' ? sortColumnModel.value[i].orgTableName : sortColumnModel.value[i].tableAlias)
               + "."+
           (sortColumnModel.value[i].alias == '' ? sortColumnModel.value[i].fieldName : sortColumnModel.value[i].alias);
-      sortColumnModel.value[i].id = genId();
+      if(sortColumnModel.value[i].id==null || sortColumnModel.value[i].id=='') {
+        sortColumnModel.value[i].id = genId();
+      }
     }
   }
 },{deep:true,immediate:true});
@@ -129,6 +149,9 @@ watch(()=>sortColumnModel,val =>{
     emit('updateSortColumnModel',sortColumnModel.value)
   }
 },{deep:true,immediate:true})
+// function notInSortColumn(){
+//
+// }
 //增加到排序列
 function addToSort() {
   if (currentValidColumnIndex.value >= 0 && currentValidColumnIndex.value < validColumnModel.value.length) {
