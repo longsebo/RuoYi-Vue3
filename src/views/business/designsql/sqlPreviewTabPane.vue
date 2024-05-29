@@ -134,13 +134,14 @@ const props= defineProps({
 })
 watch(() => props,
     (newVal) =>{
+  debugger;
       //调用生成sql接口
       console.log(newVal)
       generatesql(props.designModel).then(res => {
         console.log(res)
         textarea.value=res.data
       })
-    }
+    },{deep:true,immediate:true}
 )
 function reGengeralSql(){
   generatesql(props.designModel).then(res => {

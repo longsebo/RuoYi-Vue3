@@ -61,7 +61,7 @@ export function tree(query) {
 // 产生sql
 export function generatesql(data) {
   return request({
-    url: '/business/generatesql',
+    url: '/business/interface/generatesql',
     method: 'post',
     data: data
   })

@@ -22,7 +22,7 @@
             <SortTabPane :validColumnModel="validColumnModel" :sortColumnModel="designModel.sortColumnModel" @updateSortColumnModel="updateSortColumnModel" />
           </el-tab-pane>
           <el-tab-pane label="SQL预览" name="sqlPreview">
-            <SqlPreviewTabPane/>
+            <SqlPreviewTabPane :designModel="designModel"/>
           </el-tab-pane>
         </el-tabs>
     </el-footer>
@@ -290,6 +290,7 @@ async function selectTable() {
   });
  }
  function updateTableDefine( tableDefineItems) {
+    debugger;
    designModel.value.tablesModel = JSON.parse(JSON.stringify(tableDefineItems));
    //更新父窗口模型
    emit('updateDesignModel', designModel.value);
