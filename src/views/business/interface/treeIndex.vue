@@ -204,7 +204,7 @@
      </el-dialog>
      <!-- SQL设计-->
      <el-dialog title="SQL设计" v-model="showDesignSqlDlg" :fullscreen="true" @close="showDesignSqlDlg=false" append-to-body>
-       <DesignSql :designModel="designModel" @updateDesignModel="updateDesignModel"/>
+       <DesignSql :designModel="designModel" :id="searchPersonalizedId" @updateDesignModel="updateDesignModel"/>
      </el-dialog>
    </div>
 </template>
@@ -238,6 +238,7 @@ const multiple = ref(true);
 const total = ref(0);
 const title = ref("");
 const open = ref(false);
+const searchPersonalizedId=ref(0)
 const designModel = ref({
   selectColumnTabModel:[],
   distinct:false,
@@ -516,6 +517,7 @@ function submitForm() {
  */
 function handleSqlDesign(row){
   debugger;
+  searchPersonalizedId.value = row.searchPersonalizedId;
   if(row.designSql) {
     designModel.value = JSON.parse(row.designSql);
   }else{
@@ -567,12 +569,7 @@ function formatInterfaceType(row,column){
   return interface_type.value.find(k=>k.value == row.interfaceType)?.label??'';
 }
 
-/**
- * 显示设计sql对话框
- */
-function showDesignSql(){
-  showDesignSqlDlg.value = true;
-}
+
 
 /**
  * 更新模型

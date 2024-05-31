@@ -59,12 +59,13 @@ import SearchConditionTabPane from "@/views/business/designsql/searchConditionTa
 import SortTabPane from "@/views/business/designsql/sortTabPane.vue"
 import ColumnTabPane from "@/views/business/designsql/columnTabPane.vue"
 import SqlPreviewTabPane from "./sqlPreviewTabPane.vue";
-import { useIcon } from "@/components/common/util";
+import {generatesql} from "@/api/business/interface"
+import {updateSearchPersonalized} from "@/api/business/searchpersonalized"
 const topHeight = ref(100);
 const bottomHeight = ref(300);
 let startY = 0;
 let startTopHeight = 0;
-const saveIcon = useIcon('Save')
+const { proxy } = getCurrentInstance();
 
 interface Emits {
   (e: 'updateDesignModel', updateDesignModel: object): void
@@ -116,6 +117,9 @@ const designModel =ref({
 const activeName=ref('columnTab')
 
 const props= defineProps({
+  id:{
+    type: Number
+  },
   designModel: {
     type:Object,
     default: () => [{
@@ -381,7 +385,22 @@ function updateSortColumnModel(sortColumnModel) {
     designModel.value.sortColumnModel = sortColumnModel;
   }
 }
-function handleSave() {
+//保存sql设计json及预览sql
+async function  handleSave() {
+ let updateRow ={
+   id:props.id,
+   designSql:JSON.stringify(designModel.value),
+   produceSql:'',
+ }
+  updateRow.produceSql = await generatesql(designModel.value).data
+  updateSearchPersonalized(updateRow).then(res => {
+    console.log(res)
+    if(res.code==200){
+      proxy.$modal.msgSuccess("修改成功");
+    }else{
+      proxy.$modal.msgSuccess("修改成功");
+    }
+  })
 
 }
 </script>
