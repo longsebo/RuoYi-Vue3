@@ -130,6 +130,7 @@
                  <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['business:interface:edit']">修改</el-button>
                  <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['business:interface:remove']">删除</el-button>
                  <el-button link type="primary" :icon="parameterSetIcon" @click="handleParameterMaintenance(scope.row)" v-hasPermi="['business:interface:parametermaintenance']">参数</el-button>
+                 <el-button link type="primary" :icon="parameterSetIcon" @click="handleSqlDesign(scope.row)" v-show="scope.row.interfaceType=='search'">SQL设计</el-button>
                  <el-button link type="primary" :icon="returnValSetIcon" @click="handleReturnMaintenance(scope.row)" v-hasPermi="['business:interface:returnmaintenance']">返回值</el-button>
                </template>
              </el-table-column>
@@ -177,14 +178,14 @@
              <el-option v-for="item in dataSourceList" :key="item.datasourceName" :value="item.datasourceName" :label="item.datasourceName"/>
            </el-select>
          </el-form-item>
-         <el-form-item label="SQL设计" prop="designSql" v-show="form.interfaceType=='search'">
+         <!-- <el-form-item label="SQL设计" prop="designSql" v-show="form.interfaceType=='search'">
            <el-button type="primary" text @click="showDesignSql">SQL设计</el-button>
          </el-form-item>
          <el-form-item label="SQL预览" prop="produceSql" v-show="form.interfaceType=='search'">
            <el-scrollbar always>
              {{form.produceSql}}
            </el-scrollbar>
-         </el-form-item>
+         </el-form-item> -->
        </el-form>
        <template #footer>
          <div class="dialog-footer">
@@ -509,6 +510,37 @@ function submitForm() {
 
 };
 
+/**
+ * sql
+ * @param row
+ */
+function handleSqlDesign(row){
+  debugger;
+  if(row.designSql) {
+    designModel.value = JSON.parse(row.designSql);
+  }else{
+    designModel.value ={
+      selectColumnTabModel:[],
+          distinct:false,
+        conditionTreeModel:[{
+      type: 1,
+      conditionRelaType:'All',//条件关系类型:All,Any,None,NotAll
+      parentLevel: '',//父级层次
+      currentLevel:1,//当前级别
+      childConditionTreeModels: [],//子树模型
+      left: '',//	左边操作列/表达式
+      operator: '',//操作符
+      right: '',// 右边操作列/表达式
+      id:'1'
+    }],
+        groupConditionTreeModel:{},
+      tablesModel:[],
+          sortColumnModel:[],
+        tableJoinModels:[]
+    }
+  }
+  showDesignSqlDlg.value = true;
+}
 
 /**
  * 获取所有数据源列表
