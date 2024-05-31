@@ -4,7 +4,7 @@
       <el-row :gutter="10" class="mb8">
         <el-col :span="1.5"><el-button link type="primary" icon="Plus" @click="handleAdd()" v-hasPermi="['business:interface:adddesignsql']">新增</el-button></el-col>
         <el-col :span="1.5"><el-button link type="primary" icon="Delete" @click="handleDelete()" v-hasPermi="['business:interface:removedesignsql']">删除</el-button></el-col>
-        <el-col :span="1.5"><el-button link type="primary" :icon="saveIcon" @click="handleSave()" v-hasPermi="['business:interface:savedesignsql']">保存</el-button></el-col>
+        <el-col :span="1.5"><el-button link type="primary" icon="Edit" @click="handleSave()" v-hasPermi="['business:interface:savedesignsql']">保存</el-button></el-col>
       </el-row>
     </el-header>
     <el-main :style="{ height: topHeight + 'px' }" class="bordered-main">
