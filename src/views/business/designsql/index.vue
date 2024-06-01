@@ -364,7 +364,7 @@ function updateTableDefine( tableDefineItems) {
      designModel.value.tablesModel[i] = JSON.parse(JSON.stringify(tableDefineItems[i]));
      if(oldTableAlias!=newTableAlias) {
        //更新列的表别名
-       updateSelectColumnTabModel(oldTableAlias,newTableAlias);
+       updateSelectColumnTabModel(oldTableAliasForCondition,newTableAlias);
        //更新排序列的表别名
        updateSortColumnModelTableAlias(oldTableAlias,newTableAlias)
        //更新条件列
