@@ -336,8 +336,8 @@ function updateConditionTreeModelTableAlias(conditionTreeModel, oldTableAlias: s
       if(conditionTreeModel.type==1){
         updateConditionTreeModelTableAlias(conditionTreeModel.childConditionTreeModels,oldTableAlias,newTableAlias);
       }else{
-        conditionTreeModel.left = replaceAll(conditionTreeModel.left,oldTableAlias+".",newTableAlias+".")
-        conditionTreeModel.right = replaceAll(conditionTreeModel.right,oldTableAlias+".",newTableAlias+".")
+        conditionTreeModel[i].left = replaceAll(conditionTreeModel[i].left,oldTableAlias+".",newTableAlias+".")
+        conditionTreeModel[i].right = replaceAll(conditionTreeModel[i].right,oldTableAlias+".",newTableAlias+".")
       }
     }
 }
