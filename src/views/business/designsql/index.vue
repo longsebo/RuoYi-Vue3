@@ -331,13 +331,14 @@ function updateSortColumnModelTableAlias(oldTableAlias: string, newTableAlias: s
  */
 function updateConditionTreeModelTableAlias(conditionTreeModel, oldTableAlias: string, newTableAlias: string) {
   debugger;
+
   for(let i=0;i<conditionTreeModel.length;i++){
        //如果是树分支，则递归下级列表
       if(conditionTreeModel[i].type==1){
         updateConditionTreeModelTableAlias(conditionTreeModel[i].childConditionTreeModels,oldTableAlias,newTableAlias);
       }else{
-        conditionTreeModel[i].left = replaceAll(conditionTreeModel[i].left,oldTableAlias+".",newTableAlias+".")
-        conditionTreeModel[i].right = replaceAll(conditionTreeModel[i].right,oldTableAlias+".",newTableAlias+".")
+          conditionTreeModel[i].left = replaceAll(conditionTreeModel[i].left, oldTableAlias + ".", newTableAlias + ".")
+          conditionTreeModel[i].right = replaceAll(conditionTreeModel[i].right, oldTableAlias + ".", newTableAlias + ".")
       }
     }
 }
@@ -353,6 +354,13 @@ function updateTableDefine( tableDefineItems) {
    for(let i=0;i<designModel.value.tablesModel.length;i++){
      let  oldTableAlias = designModel.value.tablesModel[i].alias;
      let newTableAlias = tableDefineItems[i].alias
+     //对于条件的表别名，单独处理
+     let oldTableAliasForCondition = ""
+     if(oldTableAlias==''){
+       oldTableAliasForCondition = designModel.value.tablesModel[i].orgTableName
+     }else{
+       oldTableAliasForCondition = oldTableAlias
+     }
      designModel.value.tablesModel[i] = JSON.parse(JSON.stringify(tableDefineItems[i]));
      if(oldTableAlias!=newTableAlias) {
        //更新列的表别名
@@ -360,7 +368,7 @@ function updateTableDefine( tableDefineItems) {
        //更新排序列的表别名
        updateSortColumnModelTableAlias(oldTableAlias,newTableAlias)
        //更新条件列
-       updateConditionTreeModelTableAlias(designModel.value.conditionTreeModel,oldTableAlias,newTableAlias)
+       updateConditionTreeModelTableAlias(designModel.value.conditionTreeModel,oldTableAliasForCondition,newTableAlias)
      }
    }
 
