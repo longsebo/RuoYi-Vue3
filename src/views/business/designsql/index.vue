@@ -350,8 +350,8 @@ function updateTableDefine( tableDefineItems) {
 
    // designModel.value.tablesModel = JSON.parse(JSON.stringify(tableDefineItems));
    for(let i=0;i<designModel.value.tablesModel.length;i++){
-     let  oldTableAlias = designModel.value.tablesModel[i].tableAlias;
-     let newTableAlias = tableDefineItems[i].tableAlias
+     let  oldTableAlias = designModel.value.tablesModel[i].alias;
+     let newTableAlias = tableDefineItems[i].alias
      designModel.value.tablesModel[i] = JSON.parse(JSON.stringify(tableDefineItems[i]));
      if(oldTableAlias!=newTableAlias) {
        //更新列的表别名
