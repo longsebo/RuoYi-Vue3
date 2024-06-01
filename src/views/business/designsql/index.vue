@@ -330,7 +330,8 @@ function updateSortColumnModelTableAlias(oldTableAlias: string, newTableAlias: s
  * @param newTableAlias
  */
 function updateConditionTreeModelTableAlias(conditionTreeModel, oldTableAlias: string, newTableAlias: string) {
-    for(let i=0;i<conditionTreeModel.length;i++){
+  debugger;
+  for(let i=0;i<conditionTreeModel.length;i++){
        //如果是树分支，则递归下级列表
       if(conditionTreeModel.type==1){
         updateConditionTreeModelTableAlias(conditionTreeModel.childConditionTreeModels,oldTableAlias,newTableAlias);
