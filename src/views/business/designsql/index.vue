@@ -304,9 +304,7 @@ async function selectTable() {
  */
 function updateSelectColumnTabModel(oldTableAlias: string, newTableAlias: string) {
   for(let i=0;i<designModel.value.selectColumnTabModel.length;i++){
-     if(designModel.value.selectColumnTabModel[i].tableAlias==oldTableAlias){
-       designModel.value.selectColumnTabModel[i].tableAlias = newTableAlias;
-     }
+    designModel.value.selectColumnTabModel[i].columAndExp = replaceAll(designModel.value.selectColumnTabModel[i].columAndExp, oldTableAlias + ".", newTableAlias + ".")
   }
 }
 
