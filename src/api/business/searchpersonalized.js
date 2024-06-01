@@ -20,7 +20,7 @@ export function getSearchPersonalized(id) {
 // 新增查询个性化
 export function addSearchPersonalized(data) {
   return request({
-    url: '/business/listening',
+    url: '/business/personalized',
     method: 'post',
     data: data
   })
@@ -29,7 +29,7 @@ export function addSearchPersonalized(data) {
 // 修改查询个性化
 export function updateSearchPersonalized(data) {
   return request({
-    url: '/business/listening',
+    url: '/business/personalized',
     method: 'put',
     data: data
   })
