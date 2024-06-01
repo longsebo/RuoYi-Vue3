@@ -392,7 +392,6 @@ async function  handleSave() {
    designSql:JSON.stringify(designModel.value),
    produceSql:'',
  }
- debugger;
   let temp = await generatesql(designModel.value)
   console.log('temp:'+JSON.stringify(temp))
   updateRow.produceSql = temp.data;

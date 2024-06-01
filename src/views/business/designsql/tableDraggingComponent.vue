@@ -71,6 +71,7 @@ function resizeEnd1(){
   //console.log('tableDefineItems', JSON.stringify(tableDefineItems.value))
 }
 function updateTableDefine(tableDefineItem){
+  debugger;
   // 替换元素
   tableDefineItems.value = tableDefineItems.value.map((element, i) => {
     if(element.datasourceName=== tableDefineItem.datasourceName && element.enName === tableDefineItem.enName ){

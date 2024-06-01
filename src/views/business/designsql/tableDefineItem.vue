@@ -64,6 +64,7 @@ watch(() => props.tableDefine, val => {
   }
 },{immediate:true,deep:true});
 watch(()=>tableDefine.alias,val=>{
+  debugger;
   let temp1 = JSON.stringify(tableDefine.value);
   let temp2 = JSON.stringify(props.tableDefine)
   //更新父窗口
