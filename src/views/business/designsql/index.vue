@@ -357,7 +357,7 @@ function updateTableDefine( tableDefineItems) {
      //对于条件的表别名，单独处理
      let oldTableAliasForCondition = ""
      if(oldTableAlias==''){
-       oldTableAliasForCondition = designModel.value.tablesModel[i].orgTableName
+       oldTableAliasForCondition = designModel.value.tablesModel[i].enName
      }else{
        oldTableAliasForCondition = oldTableAlias
      }
