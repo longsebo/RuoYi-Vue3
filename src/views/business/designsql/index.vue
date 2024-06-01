@@ -333,7 +333,7 @@ function updateConditionTreeModelTableAlias(conditionTreeModel, oldTableAlias: s
   debugger;
   for(let i=0;i<conditionTreeModel.length;i++){
        //如果是树分支，则递归下级列表
-      if(conditionTreeModel.type==1){
+      if(conditionTreeModel[i].type==1){
         updateConditionTreeModelTableAlias(conditionTreeModel.childConditionTreeModels,oldTableAlias,newTableAlias);
       }else{
         conditionTreeModel[i].left = replaceAll(conditionTreeModel[i].left,oldTableAlias+".",newTableAlias+".")
