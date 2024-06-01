@@ -63,7 +63,7 @@ watch(() => props.tableDefine, val => {
     tableDefine.value = JSON.parse(JSON.stringify(props.tableDefine));
   }
 },{immediate:true,deep:true});
-watch(()=>tableDefine.alias,val=>{
+watch(()=>tableDefine.value.alias,val=>{
   debugger;
   let temp1 = JSON.stringify(tableDefine.value);
   let temp2 = JSON.stringify(props.tableDefine)
