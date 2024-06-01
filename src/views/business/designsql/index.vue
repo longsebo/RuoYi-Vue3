@@ -334,7 +334,7 @@ function updateConditionTreeModelTableAlias(conditionTreeModel, oldTableAlias: s
   for(let i=0;i<conditionTreeModel.length;i++){
        //如果是树分支，则递归下级列表
       if(conditionTreeModel[i].type==1){
-        updateConditionTreeModelTableAlias(conditionTreeModel.childConditionTreeModels,oldTableAlias,newTableAlias);
+        updateConditionTreeModelTableAlias(conditionTreeModel[i].childConditionTreeModels,oldTableAlias,newTableAlias);
       }else{
         conditionTreeModel[i].left = replaceAll(conditionTreeModel[i].left,oldTableAlias+".",newTableAlias+".")
         conditionTreeModel[i].right = replaceAll(conditionTreeModel[i].right,oldTableAlias+".",newTableAlias+".")
