@@ -296,9 +296,73 @@ async function selectTable() {
     treeModelDef.value = response.data;
   });
  }
- function updateTableDefine( tableDefineItems) {
+
+/**
+ * 更新选择列表别名
+ * @param oldTableAlias
+ * @param newTableAlias
+ */
+function updateSelectColumnTabModel(oldTableAlias: string, newTableAlias: string) {
+  for(let i=0;i<designModel.value.selectColumnTabModel.length;i++){
+     if(designModel.value.selectColumnTabModel[i].tableAlias==oldTableAlias){
+       designModel.value.selectColumnTabModel[i].tableAlias = newTableAlias;
+     }
+  }
+}
+
+/**
+ * 更新排序列表别名
+ * @param oldTableAlias
+ * @param newTableAlias
+ */
+function updateSortColumnModelTableAlias(oldTableAlias: string, newTableAlias: string) {
+  for(let i=0;i<designModel.value.sortColumnModel.length;i++){
+    if(designModel.value.sortColumnModel[i].tableAlias==oldTableAlias){
+      designModel.value.sortColumnModel[i].tableAlias=newTableAlias
+    }
+  }
+}
+
+/**
+ * 更新条件树的表别名
+ * @param conditionTreeModel
+ * @param oldTableAlias
+ * @param newTableAlias
+ */
+function updateConditionTreeModelTableAlias(conditionTreeModel, oldTableAlias: string, newTableAlias: string) {
+    for(let i=0;i<conditionTreeModel.length;i++){
+       //如果是树分支，则递归下级列表
+      if(conditionTreeModel.type==1){
+        updateConditionTreeModelTableAlias(conditionTreeModel.childConditionTreeModels,oldTableAlias,newTableAlias);
+      }else{
+        conditionTreeModel.left = replaceAll(conditionTreeModel.left,oldTableAlias+".",newTableAlias+".")
+        conditionTreeModel.right = replaceAll(conditionTreeModel.right,oldTableAlias+".",newTableAlias+".")
+      }
+    }
+}
+
+function replaceAll(str, find, replace) {
+  return str.replace(new RegExp(find, 'g'), replace);
+}
+
+function updateTableDefine( tableDefineItems) {
     debugger;
-   designModel.value.tablesModel = JSON.parse(JSON.stringify(tableDefineItems));
+
+   // designModel.value.tablesModel = JSON.parse(JSON.stringify(tableDefineItems));
+   for(let i=0;i<designModel.value.tablesModel.length;i++){
+     let  oldTableAlias = designModel.value.tablesModel[i].tableAlias;
+     let newTableAlias = tableDefineItems[i].tableAlias
+     designModel.value.tablesModel[i] = JSON.parse(JSON.stringify(tableDefineItems[i]));
+     if(oldTableAlias!=newTableAlias) {
+       //更新列的表别名
+       updateSelectColumnTabModel(oldTableAlias,newTableAlias);
+       //更新排序列的表别名
+       updateSortColumnModelTableAlias(oldTableAlias,newTableAlias)
+       //更新条件列
+       updateConditionTreeModelTableAlias(designModel.value.conditionTreeModel,oldTableAlias,newTableAlias)
+     }
+   }
+
    //更新父窗口模型
    emit('updateDesignModel', designModel.value);
  }
