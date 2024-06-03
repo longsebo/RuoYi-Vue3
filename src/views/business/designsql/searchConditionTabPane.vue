@@ -222,6 +222,7 @@ function recursionMakeTableNode(interfaceParameterModel) {
  * @param tablesModel
  */
 function convertTreeMode(tablesModel,interfaceParameterModel) {
+  debugger;
   let treeData = [];
   for(let i=0;i<tablesModel.length;i++){
     let table = tablesModel[i];
@@ -254,13 +255,10 @@ function convertTreeMode(tablesModel,interfaceParameterModel) {
     level:1,
     disabled: true,
   }
+
   let childTableNode = recursionMakeTableNode(interfaceParameterModel);
   tableNode.children.push(childTableNode);
   treeData.push(tableNode);
-  //循环加入参数
-  for(let i=0;i<tablesModel.length;i++) {
-    let table = tablesModel[i];
-  }
   return treeData;
 }
 
