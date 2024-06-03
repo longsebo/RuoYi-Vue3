@@ -17,7 +17,7 @@
             <ColumnTabPane v-model:selectColumnTabModel="designModel.selectColumnTabModel" :distinct="designModel.distinct" @updateDistinct="updateDistinct"/>
           </el-tab-pane>
           <el-tab-pane label="查询条件" name="searchConditionTab">
-            <SearchConditionTabPane :conditionTreeModel="designModel.conditionTreeModel" :tablesModel="designModel.tablesModel" @updateConditionTreeModel="updateConditionTreeModel" />
+            <SearchConditionTabPane :conditionTreeModel="designModel.conditionTreeModel" :tablesModel="designModel.tablesModel" :interfaceParameterModel="designModel.interfaceParameterModel" @updateConditionTreeModel="updateConditionTreeModel"  />
           </el-tab-pane>
           <el-tab-pane label="排序" name="sortTab">
             <SortTabPane :validColumnModel="validColumnModel" :sortColumnModel="designModel.sortColumnModel" @updateSortColumnModel="updateSortColumnModel" />
@@ -230,6 +230,32 @@ const props= defineProps({
         }
       }]
     },
+     interfaceParameterModel: {
+        type: Object,
+        default: () => [{
+          id: Number,//
+          parameterName: String,//参数名
+          parameterDesc: String,//参数描述
+          isFrontpageVisible: String,//是否前端可见
+          parameterType: String,//参数类型
+          parameterFormat: String,//参数格式
+          parentId: Number,父参数id
+          interfaceCode: String,//接口编码
+          children: {
+            type: Array,
+            default: () => [{
+              id: Number,//
+              parameterName: String,//参数名
+              parameterDesc: String,//参数描述
+              isFrontpageVisible: String,//是否前端可见
+              parameterType: String,//参数类型
+              parameterFormat: String,//参数格式
+              parentId: Number,父参数id
+              interfaceCode: String,//接口编码
+            }]
+          }
+        }]
+      },
     }]
     }
 })

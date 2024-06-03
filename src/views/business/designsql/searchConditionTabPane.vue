@@ -130,6 +130,32 @@ const props= defineProps({
       }
     }]
   },
+  interfaceParameterModel: {
+    type: Object,
+    default: () => [{
+      id: Number,//
+      parameterName: String,//参数名
+      parameterDesc: String,//参数描述
+      isFrontpageVisible: String,//是否前端可见
+      parameterType: String,//参数类型
+      parameterFormat: String,//参数格式
+      parentId: Number,父参数id
+      interfaceCode: String,//接口编码
+      children: {
+        type: Array,
+        default: () => [{
+          id: Number,//
+          parameterName: String,//参数名
+          parameterDesc: String,//参数描述
+          isFrontpageVisible: String,//是否前端可见
+          parameterType: String,//参数类型
+          parameterFormat: String,//参数格式
+          parentId: Number,父参数id
+          interfaceCode: String,//接口编码
+        }]
+      }
+    }]
+  },
 })
 
 const conditionTypes=ref([{label:'分支内所有条件必须匹配',value:'All'},
@@ -161,11 +187,41 @@ const currentRow =ref({})
 const leftRightFlag = ref('')
 const treeRef =ref()
 const { proxy } = getCurrentInstance();
+
+/**
+ * 递归构造参数节点
+ * @param interfaceParameterModel
+ */
+function recursionMakeTableNode(interfaceParameterModel) {
+
+  let tableNode = {
+    id:genId(),
+    label:interfaceParameterModel.parameterName,
+    children:[],
+    level:1,
+  }
+  for(let i=0;i<interfaceParameterModel.children.length;i++){
+    let child = interfaceParameterModel.children[i];
+    if(child.children.length>0){
+      tableNode.children.push(recursionMakeTableNode(child));
+    }else{
+      let  tableNodeChild = {
+        id:genId(),
+        label:child.parameterName,
+        children:[],
+        level:1,
+      }
+      tableNode.children.push(tableNodeChild);
+    }
+  }
+  return tableNode;
+}
+
 /**
  * 转换树形结构
  * @param tablesModel
  */
-function convertTreeMode(tablesModel) {
+function convertTreeMode(tablesModel,interfaceParameterModel) {
   let treeData = [];
   for(let i=0;i<tablesModel.length;i++){
     let table = tablesModel[i];
@@ -190,7 +246,21 @@ function convertTreeMode(tablesModel) {
     }
     treeData.push(tableNode);
    }
-
+  //添加参数
+  let tableNode = {
+    id:genId(),
+    label:'接口参数',
+    children:[],
+    level:1,
+    disabled: true,
+  }
+  let childTableNode = recursionMakeTableNode(interfaceParameterModel);
+  tableNode.children.push(childTableNode);
+  treeData.push(tableNode);
+  //循环加入参数
+  for(let i=0;i<tablesModel.length;i++) {
+    let table = tablesModel[i];
+  }
   return treeData;
 }
 
@@ -202,7 +272,7 @@ watch(() => props, val => {
     treeData.value = JSON.parse(JSON.stringify(props.conditionTreeModel));
   }
   //转换树形结构
-  fieldOrParameterTreeData.value = convertTreeMode(props.tablesModel);
+  fieldOrParameterTreeData.value = convertTreeMode(props.tablesModel,props.interfaceParameterModel);
   console.log('watch treeData',JSON.stringify(treeData.value))
 },{deep:true,immediate:true});
 watch(()=>treeData.value,val=>{
