@@ -139,7 +139,7 @@ const props= defineProps({
       isFrontpageVisible: String,//是否前端可见
       parameterType: String,//参数类型
       parameterFormat: String,//参数格式
-      parentId: Number,父参数id
+      parentId: Number,//父参数id
       interfaceCode: String,//接口编码
       children: {
         type: Array,
@@ -150,7 +150,7 @@ const props= defineProps({
           isFrontpageVisible: String,//是否前端可见
           parameterType: String,//参数类型
           parameterFormat: String,//参数格式
-          parentId: Number,父参数id
+          parentId: Number,//父参数id
           interfaceCode: String,//接口编码
         }]
       }
