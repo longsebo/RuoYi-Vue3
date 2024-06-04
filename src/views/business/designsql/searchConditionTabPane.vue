@@ -255,10 +255,11 @@ function convertTreeMode(tablesModel,interfaceParameterModel) {
     level:1,
     disabled: true,
   }
-
-  let childTableNode = recursionMakeTableNode(interfaceParameterModel);
-  tableNode.children.push(childTableNode);
-  treeData.push(tableNode);
+  for(let i=0;i<interfaceParameterModel.length;i++) {
+    let childTableNode = recursionMakeTableNode(interfaceParameterModel[i]);
+    tableNode.children.push(childTableNode);
+    treeData.push(tableNode);
+  }
   return treeData;
 }
 

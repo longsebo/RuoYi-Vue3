@@ -414,6 +414,7 @@ watch(() => props, val => {
   designModel.value.tablesModel = JSON.parse(JSON.stringify(props.designModel.tablesModel));
   designModel.value.sortColumnModel = JSON.parse(JSON.stringify(props.designModel.sortColumnModel));
   designModel.value.tableJoinModels = JSON.parse(JSON.stringify(props.designModel.tableJoinModels));
+  designModel.value.interfaceParameterModel = JSON.parse(JSON.stringify(props.designModel.interfaceParameterModel));
 },{deep: true,immediate: true});
 //页签单击
 function handleElTabClick(tab, event){

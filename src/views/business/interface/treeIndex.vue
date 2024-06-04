@@ -178,14 +178,7 @@
              <el-option v-for="item in dataSourceList" :key="item.datasourceName" :value="item.datasourceName" :label="item.datasourceName"/>
            </el-select>
          </el-form-item>
-         <!-- <el-form-item label="SQL设计" prop="designSql" v-show="form.interfaceType=='search'">
-           <el-button type="primary" text @click="showDesignSql">SQL设计</el-button>
-         </el-form-item>
-         <el-form-item label="SQL预览" prop="produceSql" v-show="form.interfaceType=='search'">
-           <el-scrollbar always>
-             {{form.produceSql}}
-           </el-scrollbar>
-         </el-form-item> -->
+
        </el-form>
        <template #footer>
          <div class="dialog-footer">
@@ -223,7 +216,7 @@ import ParameterMaintenance from "@/views/business/parameter/index.vue"
 import ReturnValueMaintenance from  "@/views/business/value/index.vue"
 import DesignSql from "@/views/business/designsql/index.vue"
 import {listAllUrl} from "@/api/business/url"
-
+import { parameterTreeSelect } from "@/api/business/parameter";
 const router = useRouter();
 const { proxy } = getCurrentInstance();
 const { interface_method,interface_type } = proxy.useDict("interface_method","interface_type");
@@ -267,7 +260,11 @@ const interfaceCode=ref('')
 const parameterOpen = ref(false)
 const returnValOpen =ref(false)
 const commonUrlList = ref([])
-
+const queryInterfaceParams=ref({
+  pageNum: 1,
+  pageSize: 10,
+  interfaceCode:null
+})
 // 列显隐信息
 const columns = ref([
   { key: 0, label: `模型表编号`, visible: true },
@@ -515,31 +512,37 @@ function submitForm() {
  * sql
  * @param row
  */
-function handleSqlDesign(row){
+async function handleSqlDesign(row) {
   debugger;
   searchPersonalizedId.value = row.searchPersonalizedId;
-  if(row.designSql) {
+  if (row.designSql) {
     designModel.value = JSON.parse(row.designSql);
-  }else{
-    designModel.value ={
-      selectColumnTabModel:[],
-          distinct:false,
-        conditionTreeModel:[{
-      type: 1,
-      conditionRelaType:'All',//条件关系类型:All,Any,None,NotAll
-      parentLevel: '',//父级层次
-      currentLevel:1,//当前级别
-      childConditionTreeModels: [],//子树模型
-      left: '',//	左边操作列/表达式
-      operator: '',//操作符
-      right: '',// 右边操作列/表达式
-      id:'1'
-    }],
-        groupConditionTreeModel:{},
-      tablesModel:[],
-          sortColumnModel:[],
-        tableJoinModels:[]
+  } else {
+    designModel.value = {
+      selectColumnTabModel: [],
+      distinct: false,
+      conditionTreeModel: [{
+        type: 1,
+        conditionRelaType: 'All',//条件关系类型:All,Any,None,NotAll
+        parentLevel: '',//父级层次
+        currentLevel: 1,//当前级别
+        childConditionTreeModels: [],//子树模型
+        left: '',//	左边操作列/表达式
+        operator: '',//操作符
+        right: '',// 右边操作列/表达式
+        id: '1'
+      }],
+      groupConditionTreeModel: {},
+      tablesModel: [],
+      sortColumnModel: [],
+      tableJoinModels: []
     }
+  }
+  //查询接口参数列表
+  queryInterfaceParams.value.interfaceCode = row.interfaceCode;
+  let response = await parameterTreeSelect(queryInterfaceParams.value)
+  if(response.code==200){
+    designModel.value.interfaceParameterModel =response.rows;
   }
   showDesignSqlDlg.value = true;
 }
