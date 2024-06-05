@@ -17,7 +17,7 @@
             <ColumnTabPane v-model:selectColumnTabModel="designModel.selectColumnTabModel" :distinct="designModel.distinct" @updateDistinct="updateDistinct"/>
           </el-tab-pane>
           <el-tab-pane label="查询条件" name="searchConditionTab">
-            <SearchConditionTabPane :conditionTreeModel="designModel.conditionTreeModel" :tablesModel="designModel.tablesModel" :interfaceParameterModel="designModel.interfaceParameterModel" @updateConditionTreeModel="updateConditionTreeModel"  />
+            <SearchConditionTabPane :conditionTreeModel="designModel.conditionTreeModel" :tablesModel="designModel.tablesModel" :interfaceParameterModel="interfaceParameterModel" @updateConditionTreeModel="updateConditionTreeModel"  />
           </el-tab-pane>
           <el-tab-pane label="排序" name="sortTab">
             <SortTabPane :validColumnModel="validColumnModel" :sortColumnModel="designModel.sortColumnModel" @updateSortColumnModel="updateSortColumnModel" />
@@ -115,7 +115,7 @@ const designModel =ref({
   tableJoinModels:[],//表关系模型
 })
 const activeName=ref('columnTab')
-
+const interfaceParameterModel=ref({})
 const props= defineProps({
   id:{
     type: Number
@@ -414,7 +414,7 @@ watch(() => props, val => {
   designModel.value.tablesModel = JSON.parse(JSON.stringify(props.designModel.tablesModel));
   designModel.value.sortColumnModel = JSON.parse(JSON.stringify(props.designModel.sortColumnModel));
   designModel.value.tableJoinModels = JSON.parse(JSON.stringify(props.designModel.tableJoinModels));
-  designModel.value.interfaceParameterModel = JSON.parse(JSON.stringify(props.designModel.interfaceParameterModel));
+  interfaceParameterModel.value = JSON.parse(JSON.stringify(props.designModel.interfaceParameterModel));
 },{deep: true,immediate: true});
 //页签单击
 function handleElTabClick(tab, event){

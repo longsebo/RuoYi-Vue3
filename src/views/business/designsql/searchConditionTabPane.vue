@@ -198,7 +198,7 @@ function recursionMakeTableNode(interfaceParameterModel) {
     id:genId(),
     label:interfaceParameterModel.parameterName,
     children:[],
-    level:1,
+    level:2,
   }
   for(let i=0;i<interfaceParameterModel.children.length;i++){
     let child = interfaceParameterModel.children[i];
@@ -209,7 +209,7 @@ function recursionMakeTableNode(interfaceParameterModel) {
         id:genId(),
         label:child.parameterName,
         children:[],
-        level:1,
+        level:2,
       }
       tableNode.children.push(tableNodeChild);
     }
@@ -420,7 +420,12 @@ const handleNodeClick = (data, node, tree) => {
 };
 function confirmOk(){
   if(currentNode.value.level==2) {
-    let backFillString = currentNode.value.parentLabel + "." + currentNode.value.label;
+    let backFillString = '';
+    if(currentNode.value.parentLabel) {
+      backFillString = currentNode.value.parentLabel + "." + currentNode.value.label;
+    }else{
+      backFillString="${"+currentNode.value.label+"}";
+    }
     if (leftRightFlag.value === 'left') {
       currentRow.value.left = backFillString;
     } else {
