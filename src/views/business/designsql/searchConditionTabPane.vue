@@ -192,24 +192,28 @@ const { proxy } = getCurrentInstance();
  * 递归构造参数节点
  * @param interfaceParameterModel
  */
-function recursionMakeTableNode(interfaceParameterModel) {
+function recursionMakeTableNode(interfaceParameterModel,parentLabel) {
 
   let tableNode = {
     id:genId(),
     label:interfaceParameterModel.parameterName,
     children:[],
+    nodeType:2,
+    parentLabel:parentLabel,
     level:2,
   }
   for(let i=0;i<interfaceParameterModel.children.length;i++){
     let child = interfaceParameterModel.children[i];
     if(child.children.length>0){
-      tableNode.children.push(recursionMakeTableNode(child));
+      tableNode.children.push(recursionMakeTableNode(child,tableNode.parentLabel+"."+tableNode.label));
     }else{
       let  tableNodeChild = {
         id:genId(),
         label:child.parameterName,
         children:[],
         level:2,
+        nodeType:2,
+        parentLabel:tableNode.parentLabel+"."+tableNode.label,
       }
       tableNode.children.push(tableNodeChild);
     }
@@ -232,6 +236,7 @@ function convertTreeMode(tablesModel,interfaceParameterModel) {
       children:[],
       level:1,
       disabled: true,
+      nodeType:1,
     }
     //循环加入字段
     for(let j=0;j<table.columns.length;j++){
@@ -241,6 +246,7 @@ function convertTreeMode(tablesModel,interfaceParameterModel) {
         label:column.fieldEnName,
         parentLabel:tableNode.label,
         children:[],
+        nodeType:1,
         level:2
       }
       tableNode.children.push(columnNode);
@@ -254,9 +260,10 @@ function convertTreeMode(tablesModel,interfaceParameterModel) {
     children:[],
     level:1,
     disabled: true,
+    nodeType:2,
   }
   for(let i=0;i<interfaceParameterModel.length;i++) {
-    let childTableNode = recursionMakeTableNode(interfaceParameterModel[i]);
+    let childTableNode = recursionMakeTableNode(interfaceParameterModel[i],'');
     tableNode.children.push(childTableNode);
   }
   treeData.push(tableNode);
@@ -423,10 +430,10 @@ const handleNodeClick = (data, node, tree) => {
 function confirmOk(){
   if(currentNode.value.level==2) {
     let backFillString = '';
-    if(currentNode.value.parentLabel) {
+    if(currentNode.value.nodeType==1) {
       backFillString = currentNode.value.parentLabel + "." + currentNode.value.label;
     }else{
-      backFillString="${"+currentNode.value.label+"}";
+      backFillString="${"+currentNode.value.parentLabel + "."+currentNode.value.label+"}";
     }
     if (leftRightFlag.value === 'left') {
       currentRow.value.left = backFillString;
