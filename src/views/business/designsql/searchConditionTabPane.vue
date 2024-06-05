@@ -393,11 +393,13 @@ function handleDelete(row){
     return;
   }
   //查询父节点
-  let parentNode = getParentNode(row,treeData.value);
-  if(parentNode!=null){
-    let index = findNodeIndex(row,parentNode.childConditionTreeModels)
-    if(index!=-1) {
-      parentNode.childConditionTreeModels.splice(index, 1)
+  for(let i=0;i<treeData.value.length;i++) {
+    let parentNode = getParentNode(row, treeData.value[i]);
+    if (parentNode != null) {
+      let index = findNodeIndex(row, parentNode.childConditionTreeModels)
+      if (index != -1) {
+        parentNode.childConditionTreeModels.splice(index, 1)
+      }
     }
   }
 }
