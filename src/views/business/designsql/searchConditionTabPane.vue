@@ -258,8 +258,8 @@ function convertTreeMode(tablesModel,interfaceParameterModel) {
   for(let i=0;i<interfaceParameterModel.length;i++) {
     let childTableNode = recursionMakeTableNode(interfaceParameterModel[i]);
     tableNode.children.push(childTableNode);
-    treeData.push(tableNode);
   }
+  treeData.push(tableNode);
   return treeData;
 }
 
