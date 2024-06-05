@@ -433,7 +433,11 @@ function confirmOk(){
     if(currentNode.value.nodeType==1) {
       backFillString = currentNode.value.parentLabel + "." + currentNode.value.label;
     }else{
-      backFillString="${"+currentNode.value.parentLabel + "."+currentNode.value.label+"}";
+      if(currentNode.value.parentLabel!='') {
+        backFillString = "${" + currentNode.value.parentLabel + "." + currentNode.value.label + "}";
+      }else{
+        backFillString = "${" + currentNode.value.label + "}";
+      }
     }
     if (leftRightFlag.value === 'left') {
       currentRow.value.left = backFillString;
