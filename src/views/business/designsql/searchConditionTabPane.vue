@@ -205,15 +205,20 @@ function recursionMakeTableNode(interfaceParameterModel,parentLabel) {
   for(let i=0;i<interfaceParameterModel.children.length;i++){
     let child = interfaceParameterModel.children[i];
     if(child.children.length>0){
-      tableNode.children.push(recursionMakeTableNode(child,tableNode.parentLabel+"."+tableNode.label));
+      if(tableNode.parentLabel!='') {
+        tableNode.children.push(recursionMakeTableNode(child, tableNode.parentLabel + "." + tableNode.label));
+      }else{
+        tableNode.children.push(recursionMakeTableNode(child,  tableNode.label));
+      }
     }else{
+      let parentLabel = tableNode.parentLabel==''?tableNode.label:tableNode.parentLabel+"."+tableNode.label;
       let  tableNodeChild = {
         id:genId(),
         label:child.parameterName,
         children:[],
         level:2,
         nodeType:2,
-        parentLabel:tableNode.parentLabel+"."+tableNode.label,
+        parentLabel:parentLabel,
       }
       tableNode.children.push(tableNodeChild);
     }
