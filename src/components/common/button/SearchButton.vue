@@ -111,7 +111,7 @@ function  handleQuery() {
   queryParams.value.pageNum = 1;
   getList();
 }
-
+console.log('searchbutton $attrs:'+JSON.stringify(props));
 
 </script>
 
