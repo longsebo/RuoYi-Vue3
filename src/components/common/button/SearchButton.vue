@@ -88,10 +88,10 @@ async function handleClick() {
 
       if (res.code === 200) {
         //通知结果变化
-        bus.emit(props.id+"_"+queryListResultKey,response.rows);
+        bus.emit(props.id+"_"+queryListResultKey,res.rows);
         //applicationList.value = response.rows;
         //total.value = response.total;
-        bus.emit(props.id+"_"+totalKey,response.total)
+        bus.emit(props.id+"_"+totalKey,res.total)
         bus.emit(props.id+"_"+loadingKey,false);
         ElMessage.success(res.msg)
       }else{
