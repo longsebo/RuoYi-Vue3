@@ -75,8 +75,6 @@ async function handleClick() {
   //将replaceParameters转换为json对象
   let jsonParameters = JSON.parse(replaceParameters);
   //调用API
-  //根据事件类型，判断是调用API还是打开网页
-  if (props.operationtype === 'api') {
     //改变装载状态
     bus.emit(props.id+"_"+loadingKey,true);
     //根据接口编码查询接口信息
@@ -100,10 +98,7 @@ async function handleClick() {
         ElMessage.error(res.msg || '操作失败！')
       }
     }
-  } else {
-    //TODO
-    //打开网页
-  }
+
 }
 
 function  handleQuery() {
