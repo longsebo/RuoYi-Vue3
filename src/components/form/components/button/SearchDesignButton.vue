@@ -67,7 +67,7 @@ watch(() => props, (newVal) =>{
     props.disabled = true
   }*/
 },{immediate: true,deep: true})
-//console.log('$attrs:'+JSON.stringify(props));
+console.log('searchdesignbutton $attrs:'+JSON.stringify(props));
 
 
 /**
