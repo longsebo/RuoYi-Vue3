@@ -96,6 +96,7 @@
       <el-table-column label="URL" align="center" prop="url" />
       <el-table-column label="用户名" align="center" prop="userName" />
       <el-table-column label="备注" align="center" prop="remark" />
+      <el-table-column label="数据库类型" align="center" prop="dbType" :formatter="formatDbType"  />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template #default="scope">
           <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['business:datasource:edit']">修改</el-button>
@@ -119,6 +120,12 @@
         <el-form-item label="数据源名称" prop="datasourceName" label-width="auto">
           <el-input v-model="form.datasourceName" placeholder="请输入数据源名称" />
         </el-form-item>
+        <el-form-item label="数据库类型" prop="dbType">
+          <el-select v-model="form.dbType"   placeholder="请选择页面类型" >
+            <el-option v-for="item in db_type" :key="item.value" :value="item.value" :label="item.label"/>
+          </el-select>
+        </el-form-item>
+
         <el-form-item label="驱动类" prop="driverClass">
           <el-input v-model="form.driverClass" placeholder="请输入驱动类" />
         </el-form-item>
@@ -151,8 +158,9 @@ import { listDatasource, getDatasource, delDatasource, addDatasource, updateData
 import {useIcon} from "../../../components/common/util";
 import {checkConnect} from "../../../api/business/datasource";
 import {getCurrentInstance, reactive, ref, toRefs} from "vue";
-const { proxy } = getCurrentInstance();
 
+const { proxy } = getCurrentInstance();
+const { db_type } = proxy.useDict("db_type");
 const datasourceList = ref([]);
 const open = ref(false);
 const loading = ref(true);
@@ -174,6 +182,7 @@ const data = reactive({
     url: null,
     userName: null,
     password: null,
+    dbType: null
   },
   rules: {
     datasourceName: [
@@ -219,7 +228,8 @@ function reset() {
     createBy: null,
     createTime: null,
     updateBy: null,
-    updateTime: null
+    updateTime: null,
+    dbType: null
   };
   proxy.resetForm("datasourceRef");
 }
@@ -317,6 +327,14 @@ function handleExport() {
     ...queryParams.value
   }, `datasource_${new Date().getTime()}.xlsx`)
 }
-
+/**
+ * 翻译数据库类型
+ * @param row
+ * @param column
+ * @returns {*|string}
+ */
+function  formatDbType(row, column){
+  return db_type.value.find(k => k.value === row.dbType)?.label ?? '';
+}
 getList();
 </script>
