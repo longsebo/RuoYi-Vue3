@@ -28,6 +28,7 @@ import { parameterTreeSelect } from "@/api/business/parameter";
 import InterfaceParameter from "./InterfaceParameter.vue";
 interface Props {
   interfaceCode: string,
+  interfaceType: string,
   parameterList: object
 }
 interface Emits {
@@ -85,7 +86,11 @@ async function handleSelectChange(value) {
 
 /** 获取接口树列表 */
 function getTreeInterface(){
+  debugger;
   let tmp={};
+  if(props.interfaceType){
+    tmp={"interfaceType":props.interfaceType}
+  }
   tree(tmp).then(response => {
     treeInterface.value = response.data;
   });

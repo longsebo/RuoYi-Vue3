@@ -84,7 +84,7 @@
       </el-radio-group>
     </el-form-item>
     <el-form-item  label="操作设置" >
-      <InterfaceSelect  :interfaceCode="vFormSelectElem.attrs.operationdata.interfaceCode"
+      <InterfaceSelect  :interfaceCode="vFormSelectElem.attrs.operationdata.interfaceCode" :interfaceType="searchInterfaceType"
                        :parameterList="vFormSelectElem.attrs.operationdata.parameterList" @change="updateInterfacceConfig"/>
     </el-form-item>
     <el-form-item prop="mode" label="模式">
@@ -105,6 +105,7 @@ import {computed, inject, ref} from "vue";
 import { vFormActiveElementKey } from "@/components/form/state.key";
 import InterfaceSelect from    "@/components/common/selector/interface/InterfaceSelect.vue";
 const vFormSelectElem = inject(vFormActiveElementKey)
+const searchInterfaceType = ref('search')
 console.log('inject vFormSelectElem', JSON.stringify(vFormSelectElem.value.attrs.operationdata.parameterList));
 const mode = computed({
   get: () => vFormSelectElem.value.attrs.mode ? [vFormSelectElem.value.attrs.mode] : [],
