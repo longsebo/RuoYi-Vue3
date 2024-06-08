@@ -120,7 +120,7 @@
         <el-form-item label="数据源名称" prop="datasourceName" label-width="auto">
           <el-input v-model="form.datasourceName" placeholder="请输入数据源名称" />
         </el-form-item>
-        <el-form-item label="数据库类型" prop="dbType">
+        <el-form-item label="数据库类型" prop="dbType" label-width="auto">
           <el-select v-model="form.dbType"   placeholder="请选择页面类型" >
             <el-option v-for="item in db_type" :key="item.value" :value="item.value" :label="item.label"/>
           </el-select>
