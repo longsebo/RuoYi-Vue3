@@ -65,6 +65,7 @@ function getList() {
 }
 
 async function handleClick() {
+  debugger;
   //替换变量值
   let opertionParameter = JSON.stringify(props.operationdata.parameterList);
   let contextMap = new Map();
