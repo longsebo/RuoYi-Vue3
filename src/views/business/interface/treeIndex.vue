@@ -125,6 +125,7 @@
              <el-table-column label="接口METHOD" align="center" prop="interfaceMethod" :formatter="formatInterfaceMethod" />
              <el-table-column label="接口类型" align="center" prop="interfaceType" :formatter="formatInterfaceType" />
              <el-table-column label="接口数据源名称" align="center" prop="interfaceDatasourceName" />
+             <el-table-column label="是否翻页" align="center" prop="isPage" />
              <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
                <template #default="scope">
                  <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['business:interface:edit']">修改</el-button>
@@ -178,7 +179,9 @@
              <el-option v-for="item in dataSourceList" :key="item.datasourceName" :value="item.datasourceName" :label="item.datasourceName"/>
            </el-select>
          </el-form-item>
-
+         <el-form-item label="是否翻页" prop="isPage">
+           <el-checkbox v-model="form.isPage" placeholder="请输入是否翻页" size="large" true-value="Y" false-value="N" />
+         </el-form-item>
        </el-form>
        <template #footer>
          <div class="dialog-footer">
@@ -427,7 +430,8 @@ function reset() {
     createBy: null,
     createTime: null,
     updateBy: null,
-    updateTime: null
+    updateTime: null,
+    isPage: null
   };
   proxy.resetForm("interfaceRef");
 }
