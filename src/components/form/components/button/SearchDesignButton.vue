@@ -18,8 +18,7 @@ import {ElButton, ElMessage} from 'element-plus'
 import {computed, inject, nextTick, useAttrs, watch} from "vue";
 import { formModeKey } from "@/components/form/state.key";
 import { vFormSchemeKey } from '@/components/form/state.key';
-import {replaceDynamicVar} from '@/api/tool/replacevar'
-import {listInterfaceAll} from '@/api/business/interface'
+
 import SearchButton from '@/components/common/button/SearchButton.vue'
 import request from '@/utils/request'
 const formScheme = inject(vFormSchemeKey)!

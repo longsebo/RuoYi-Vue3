@@ -6,6 +6,7 @@
 import bus from '@/event/bus'
 import {onMounted, ref, onUnmounted, defineProps} from "vue";
 import { Search } from '@element-plus/icons-vue';
+import {replaceDynamicVar} from '@/api/tool/replacevar'
 import {listInterfaceAll,convert2ApiJson,doRequest} from '@/api/business/interface'
 import {
   queryParamKey,queryListResultKey,executeQueryKey,totalKey,loadingKey
