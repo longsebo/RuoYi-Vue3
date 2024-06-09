@@ -334,6 +334,8 @@ function handleExport() {
  * @returns {*|string}
  */
 function  formatDbType(row, column){
+  debugger;
+  console.log('db_type:'+JSON.stringify(db_type.value))
   return db_type.value.find(k => k.value === row.dbType)?.label ?? '';
 }
 getList();
