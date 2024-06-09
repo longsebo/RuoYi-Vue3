@@ -11,7 +11,7 @@ import {listInterfaceAll,convert2ApiJson,doRequest} from '@/api/business/interfa
 import {
   queryParamKey,queryListResultKey,executeQueryKey,totalKey,loadingKey
 } from "@/config/app.keys";
-
+import {ElButton, ElMessage} from 'element-plus'
 interface Props {
   size?:string
   type?:string
@@ -34,14 +34,17 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   label: '搜索'
 })
-const queryParams = ref({})
+const queryParams = ref({
+  pageNum: 1,
+  pageSize: 10,
+})
 onMounted(() => {
   bus.on(props.id+"_"+queryParamKey,(data) =>{
     console.log('queryParamKey:'+JSON.stringify(data.value));
     queryParams.value = data.value;
   })
   bus.on(props.id+"_"+executeQueryKey,() => {
-    getList();
+    handleClick();
   })
 })
 onUnmounted(() =>{
@@ -49,20 +52,7 @@ onUnmounted(() =>{
   bus.off(props.id+"_"+executeQueryKey);
 })
 
-/** 查询应用定义列表 */
-function getList() {
-  //loading.value = true;
 
-  console.log('inject queryParams:'+JSON.stringify(queryParams.value));
-  listApplication(queryParams.value).then(response => {
-    //通知结果变化
-    bus.emit(props.id+"_"+queryListResultKey,response.rows);
-    //applicationList.value = response.rows;
-    //total.value = response.total;
-    bus.emit(props.id+"_"+totalKey,response.total)
-    bus.emit(props.id+"_"+loadingKey,false);
-  });
-}
 
 async function handleClick() {
   debugger;
@@ -84,6 +74,11 @@ async function handleClick() {
       //调用接口
       let apiParameter =convert2ApiJson(jsonParameters)
       apiParameter["interfaceCode"]=props.operationdata.interfaceCode
+      //判断是否为翻页
+      if(interfaceInfo.data[0].isPage=='Y'){
+        apiParameter["pageNum"]=queryParams.value.pageNum;
+        apiParameter["pageSize"]=queryParams.value.pageSize;
+      }
       let res = await doRequest(interfaceInfo.data[0], apiParameter);
 
       if (res.code === 200) {
@@ -101,11 +96,7 @@ async function handleClick() {
 
 }
 
-function  handleQuery() {
-  // 处理搜索逻辑
-  queryParams.value.pageNum = 1;
-  getList();
-}
+
 console.log('searchbutton $attrs:'+JSON.stringify(props));
 
 </script>
