@@ -64,7 +64,7 @@ function buildTree(schema:Object, parentName:string):any[] {
       if(childReturnData.length>0){
         let tempNode = {
           id: schema.children[i].id,
-          label: schema.children[i].formItemAttrs.label?schema.children[i].formItemAttrs.label:schema.children[i].category,
+          label: schema.children[i].formItemAttrs?schema.children[i].formItemAttrs.label:schema.children[i].category,
           component: schema.children[i].component,
           hasChildren: true,
           children:[]
