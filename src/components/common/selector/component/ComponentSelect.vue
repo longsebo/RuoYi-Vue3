@@ -7,6 +7,7 @@
       border
       default-expand-all
       @row-click  ="handleRowClick"
+      :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
     >
 
     <el-table-column prop="label" label="字段名称(组件名称)"  />
@@ -58,6 +59,19 @@ function buildTree(schema:Object, parentName:string):any[] {
         component: schema.children[i].component,
         hasChildren: false
       })
+    }else{
+      let childReturnData = buildTree(schema.children[i],schema.children[i].name);
+      if(childReturnData.length>0){
+        let tempNode = {
+          id: schema.children[i].id,
+          label: schema.children[i].formItemAttrs.label,
+          component: schema.children[i].component,
+          hasChildren: true,
+          children:[]
+        };
+        tempNode.children.push(childReturnData);
+        returnData.push(tempNode)
+      }
     }
   }
   return returnData;
