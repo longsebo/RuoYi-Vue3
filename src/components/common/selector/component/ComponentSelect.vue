@@ -21,7 +21,7 @@
 import {watch, ref, inject} from "vue";
 import { vFormSchemeKey } from '@/components/form/state.key';
 import {InputComponents} from "../../../form/designer/data";
-
+import { genId } from "@/components/form/designer/util/common";
 const formScheme = inject(vFormSchemeKey)!
 
 interface Emits {
@@ -54,23 +54,22 @@ function buildTree(schema:Object, parentName:string):any[] {
     if(schema.children[i].category !=='layout' && schema.children[i].category!=='display'
         && schema.children[i].category!=='button' && schema.children[i].category!=='table'){
       returnData.push({
-        id: schema.children[i].id,
+        id: genId(),
         label: schema.children[i].formItemAttrs.label,
         component: schema.children[i].component,
-        hasChildren:parentName==''?false:true,
-        children:[]
+        hasChildren:false
       })
     }else{
       let childReturnData = buildTree(schema.children[i],schema.children[i].name);
       if(childReturnData.length>0){
         let tempNode = {
-          id: schema.children[i].id,
+          id: genId(),
           label: schema.children[i].formItemAttrs?schema.children[i].formItemAttrs.label:schema.children[i].category,
           component: schema.children[i].component,
           hasChildren: true,
           children:[]
         };
-        tempNode.children.push(childReturnData);
+        tempNode.children=childReturnData;
         returnData.push(tempNode)
       }
     }
