@@ -57,7 +57,7 @@ function buildTree(schema:Object, parentName:string):any[] {
         id: schema.children[i].id,
         label: schema.children[i].formItemAttrs.label,
         component: schema.children[i].component,
-        hasChildren: false
+        hasChildren:parentName==''?false:true,
       })
     }else{
       let childReturnData = buildTree(schema.children[i],schema.children[i].name);
