@@ -37,6 +37,7 @@ const componentTreeData=ref([]);
 const selectedId=ref('');
 watch(() => formScheme, (val) => {
   componentTreeData.value=buildTree(formScheme.value,'');
+  debugger;
 },{immediate: true,deep:true})
 
 /**
