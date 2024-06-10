@@ -8,7 +8,7 @@
       default-expand-all
       @row-click  ="handleRowClick"
     >
-
+    <el-table-column type="selection" width="55" align="center" />
     <el-table-column prop="label" label="字段名称(组件名称)"  />
     <el-table-column prop="component" label="组件类型"  :formatter="formatComponentType" />
   </el-table>
