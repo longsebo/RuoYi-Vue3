@@ -108,8 +108,8 @@ function handleCancel() {
  */
 function formatComponentType(row, column){
   let i=0;
-  console.log('row.component:'+row.component)
-  console.log('InputComponents:'+JSON.stringify(InputComponents))
+  // console.log('row.component:'+row.component)
+  // console.log('InputComponents:'+JSON.stringify(InputComponents))
   for(i=0;i<InputComponents.length;i++){
     if(row.component===InputComponents[i].component){
       return InputComponents[i].title;
