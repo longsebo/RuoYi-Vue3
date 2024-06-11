@@ -21,7 +21,7 @@
               :value="item.value"
           />
         </el-select>
-        <el-row v-show="scope.row.type===2" :gutter="20">
+        <el-row v-show="scope.row.type===2" :gutter="28">
           <el-col :span="8">
              <el-input v-model="scope.row.left" placeholder="请输入表达式或点击右边...按钮"/>
           </el-col>
