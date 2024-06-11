@@ -6,7 +6,7 @@
         {{scope.row.id}}
       </template>
     </el-table-column>
-    <el-table-column  label="条件" width="1000">
+    <el-table-column  label="条件" width="1200">
       <template #default="scope">
         <el-select
             v-model="scope.row.conditionRelaType"
