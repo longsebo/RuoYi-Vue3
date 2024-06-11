@@ -57,7 +57,6 @@ function buildTree(schema:Object, parentName:string):any[] {
         id: genId(),
         label: schema.children[i].formItemAttrs.label,
         component: schema.children[i].component,
-        hasChildren:false
       })
     }else{
       let childReturnData = buildTree(schema.children[i],schema.children[i].name);
@@ -66,7 +65,6 @@ function buildTree(schema:Object, parentName:string):any[] {
           id: genId(),
           label: schema.children[i].formItemAttrs?schema.children[i].formItemAttrs.label:schema.children[i].category,
           component: schema.children[i].component,
-          hasChildren: true,
           children:[]
         };
         tempNode.children=childReturnData;
