@@ -21,7 +21,7 @@
               :value="item.value"
           />
         </el-select>
-        <el-row v-show="scope.row.type===2" :gutter="28">
+        <el-row v-show="scope.row.type===2" :gutter="24">
           <el-col :span="8">
              <el-input v-model="scope.row.left" placeholder="请输入表达式或点击右边...按钮"/>
           </el-col>
@@ -41,10 +41,10 @@
               />
             </el-select>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="6">
             <el-input v-model="scope.row.right" placeholder="请输入表达式或点击右边...按钮"/>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="4">
             <el-button size="small" @click="showSelectFieldOrParamDlg(scope.row,'right')">...</el-button>
             <el-checkbox true-value="1" false-value="0" v-model="scope.row.isOptional" label="是否可选"></el-checkbox>
           </el-col>
