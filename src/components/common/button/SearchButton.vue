@@ -72,13 +72,15 @@ async function handleClick() {
     let interfaceInfo = await listInterfaceAll(interfaceParam);
     if (interfaceInfo.code === 200) {
       //调用接口
-      let apiParameter =convert2ApiJson(jsonParameters)
+      let searchParameter =convert2ApiJson(jsonParameters)
+      let apiParameter ={};
       apiParameter["interfaceCode"]=props.operationdata.interfaceCode
       //判断是否为翻页
       if(interfaceInfo.data[0].isPage=='Y'){
         apiParameter["pageNum"]=queryParams.value.pageNum;
         apiParameter["pageSize"]=queryParams.value.pageSize;
       }
+      apiParameter["searchCondition"] = searchParameter;
       let res = await doRequest(interfaceInfo.data[0], apiParameter);
 
       if (res.code === 200) {
