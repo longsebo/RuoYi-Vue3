@@ -31,7 +31,7 @@
           <el-col :span="4">
             <el-select
                 v-model="scope.row.operator"
-                style="width: 100px"
+                style="width: 60px"
             >
               <el-option
                   v-for="item in operators"
