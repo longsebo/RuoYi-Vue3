@@ -47,6 +47,9 @@
           <el-col :span="2">
             <el-button size="small" @click="showSelectFieldOrParamDlg(scope.row,'right')">...</el-button>
           </el-col>
+          <el-col :span="8">
+            <el-checkbox true-value="1" false-value="0" v-model="scope.row.isOptional" label="是否可选"></el-checkbox>
+          </el-col>
         </el-row>
       </template>
     </el-table-column>
@@ -107,6 +110,7 @@ const props= defineProps({
       operator: String,//操作符
       right: String,// 右边操作列/表达式
       id:String,//行唯一标识=parentLevel+"."+currentLevel
+      isOptional:String,//是否可选
     }]
   },
   tablesModel: {
