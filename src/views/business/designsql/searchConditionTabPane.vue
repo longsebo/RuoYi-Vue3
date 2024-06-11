@@ -31,7 +31,7 @@
           <el-col :span="3">
             <el-select
                 v-model="scope.row.operator"
-                style="width: 70px"
+                style="width: 75px"
             >
               <el-option
                   v-for="item in operators"
@@ -44,8 +44,10 @@
           <el-col :span="6">
             <el-input v-model="scope.row.right" placeholder="请输入表达式或点击右边...按钮"/>
           </el-col>
-          <el-col :span="5">
+          <el-col :span="2">
             <el-button size="small" @click="showSelectFieldOrParamDlg(scope.row,'right')">...</el-button>
+          </el-col>
+          <el-col :span="3">
             <el-checkbox true-value="1" false-value="0" v-model="scope.row.isOptional" label="是否可选"></el-checkbox>
           </el-col>
         </el-row>
