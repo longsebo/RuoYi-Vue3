@@ -8,7 +8,6 @@
       default-expand-all
       @row-click  ="handleRowClick"
     >
-    <el-table-column type="selection" width="55" align="center" />
     <el-table-column prop="label" label="字段名称(组件名称)"  />
     <el-table-column prop="component" label="组件类型"  :formatter="formatComponentType" />
   </el-table>
@@ -21,7 +20,6 @@
 import {watch, ref, inject} from "vue";
 import { vFormSchemeKey } from '@/components/form/state.key';
 import {InputComponents} from "../../../form/designer/data";
-import { genId } from "@/components/form/designer/util/common";
 const formScheme = inject(vFormSchemeKey)!
 
 interface Emits {
@@ -54,7 +52,7 @@ function buildTree(schema:Object, parentName:string):any[] {
     if(schema.children[i].category !=='layout' && schema.children[i].category!=='display'
         && schema.children[i].category!=='button' && schema.children[i].category!=='table'){
       returnData.push({
-        id: genId(),
+        id: schema.children[i].id,
         label: schema.children[i].formItemAttrs.label,
         component: schema.children[i].component,
       })
@@ -62,7 +60,7 @@ function buildTree(schema:Object, parentName:string):any[] {
       let childReturnData = buildTree(schema.children[i],schema.children[i].name);
       if(childReturnData.length>0){
         let tempNode = {
-          id: genId(),
+          id: schema.children[i].id,
           label: schema.children[i].formItemAttrs?schema.children[i].formItemAttrs.label:schema.children[i].category,
           component: schema.children[i].component,
           children:[]
