@@ -48,7 +48,7 @@
             <el-button size="small" @click="showSelectFieldOrParamDlg(scope.row,'right')">...</el-button>
           </el-col>
           <el-col :span="3">
-            <el-checkbox true-value="1" false-value="0" v-model="scope.row.isOptional" label="是否可选"></el-checkbox>
+            <el-checkbox true-value="1" false-value="0" :disabled="scope.row.disableIsOption" v-model="scope.row.isOptional" label="是否可选"></el-checkbox>
           </el-col>
         </el-row>
       </template>
@@ -111,6 +111,7 @@ const props= defineProps({
       right: String,// 右边操作列/表达式
       id:String,//行唯一标识=parentLevel+"."+currentLevel
       isOptional:String,//是否可选
+      disableIsOption:Boolean,//是否禁用可选
     }]
   },
   tablesModel: {
@@ -379,6 +380,7 @@ function handleAdd(row){
     parentLevel:parentLevel ,//父级层次
     currentLevel: currentLevel1,//当前级别
     id:parentLevel+"."+currentLevel1.toString(),//id
+    disableIsOption:true
   }
   parentNode.childConditionTreeModels.push(child);
 }
@@ -448,10 +450,37 @@ function confirmOk(){
         backFillString = "${" + currentNode.value.label + "}";
       }
     }
+
     if (leftRightFlag.value === 'left') {
-      currentRow.value.left = backFillString;
+      //左右两边不能相同
+      if(currentRow.value.right!='' && currentRow.value.right==backFillString){
+        proxy.$modal.msgSuccess("操作符两边不能相同!");
+        return
+      }
+      //左右两边不能同时为参数
+      if(currentRow.value.right!='' && backFillString.indexOf("${")!=-1 && currentRow.value.right.indexOf("${")!=-1){
+        proxy.$modal.msgSuccess("操作符两边不能同时为参数!");
+        return
+      }
+       currentRow.value.left = backFillString;
     } else {
+      //左右两边不能相同
+      if(currentRow.value.left!='' && currentRow.value.left==backFillString){
+        proxy.$modal.msgSuccess("操作符两边不能相同!");
+        return
+      }
+      //左右两边不能同时为参数
+      if(currentRow.value.left!='' && backFillString.indexOf("${")!=-1 && currentRow.value.left.indexOf("${")!=-1){
+        proxy.$modal.msgSuccess("操作符两边不能同时为参数!");
+        return
+      }
       currentRow.value.right = backFillString;
+    }
+    if(backFillString.indexOf("}")>backFillString.indexOf("${")){
+      currentRow.value.disableIsOption =false;
+    }else{
+      currentRow.value.disableIsOption =true;
+      currentRow.value.isOptional = '0'
     }
     open.value = false;
   }else{
