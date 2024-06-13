@@ -67,6 +67,27 @@ export const ButtonComponents: CandidateComponentConfig[] = [
       }
     },
   },
+  {
+    id: genId(),
+    icon: 'Refresh',
+    component: 'Reset-design-button',
+    category: 'button',
+    title: "重置按钮",
+    attrs: {
+      size:'default',
+      type:'primary',
+      plain:false,
+      text:true,
+      bg:false,
+      link:false,
+      round:false,
+      circle:false,
+      loading:false,
+      disabled:false,
+      autofocus:false,
+      label:'重置按钮',
+    },
+  },
 ]
 export const InputComponents: CandidateComponentConfig[] = [
   {
