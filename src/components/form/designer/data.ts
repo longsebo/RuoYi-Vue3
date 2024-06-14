@@ -46,7 +46,7 @@ export const ButtonComponents: CandidateComponentConfig[] = [
     icon: 'Search',
     component: 'search-design-button',
     category: 'button',
-    title: "查询按钮",
+    title: "查询",
     attrs: {
       size:'default',
       type:'primary',
@@ -59,7 +59,7 @@ export const ButtonComponents: CandidateComponentConfig[] = [
       loading:false,
       disabled:false,
       autofocus:false,
-      label:'查询按钮',
+      label:'查询',
       //操作数据
       operationdata:{
         interfaceCode:'',
@@ -70,9 +70,9 @@ export const ButtonComponents: CandidateComponentConfig[] = [
   {
     id: genId(),
     icon: 'Refresh',
-    component: 'Reset-design-button',
+    component: 'reset-design-button',
     category: 'button',
-    title: "重置按钮",
+    title: "重置",
     attrs: {
       size:'default',
       type:'primary',
@@ -85,7 +85,106 @@ export const ButtonComponents: CandidateComponentConfig[] = [
       loading:false,
       disabled:false,
       autofocus:false,
-      label:'重置按钮',
+      label:'重置',
+    },
+  },
+  {
+    id: genId(),
+    icon: 'Plus',
+    component: 'add-design-button',
+    category: 'button',
+    title: "新增",
+    attrs: {
+      size:'default',
+      type:'primary',
+      plain:false,
+      text:true,
+      bg:false,
+      link:false,
+      round:false,
+      circle:false,
+      loading:false,
+      disabled:false,
+      autofocus:false,
+      label:'新增',
+    },
+  },
+  {
+    id: genId(),
+    icon: 'Edit',
+    component: 'edit-design-button',
+    category: 'button',
+    title: "编辑",
+    attrs: {
+      size:'default',
+      type:'primary',
+      plain:false,
+      text:true,
+      bg:false,
+      link:false,
+      round:false,
+      circle:false,
+      loading:false,
+      disabled:false,
+      autofocus:false,
+      label:'编辑',
+    },
+  },
+  {
+    id: genId(),
+    icon: 'Delete',
+    component: 'delete-design-button',
+    category: 'button',
+    title: "删除",
+    attrs: {
+      size:'default',
+      type:'primary',
+      plain:false,
+      text:true,
+      bg:false,
+      link:false,
+      round:false,
+      circle:false,
+      loading:false,
+      disabled:false,
+      autofocus:false,
+      label:'删除',
+      //操作数据
+      operationdata:{
+        interfaceCode:'',
+        parameterList:[]
+      }
+    },
+  },
+  {
+    id: genId(),
+    icon: 'Checked',
+    component: 'submit-design-button',
+    category: 'button',
+    title: "提交",
+    attrs: {
+      size:'default',
+      type:'primary',
+      plain:false,
+      text:true,
+      bg:false,
+      link:false,
+      round:false,
+      circle:false,
+      loading:false,
+      disabled:false,
+      autofocus:false,
+      label:'提交',
+      //新增操作数据
+      addoperationdata:{
+        interfaceCode:'',
+        parameterList:[]
+      },
+      //更新操作数据
+      updateoperationdata:{
+        interfaceCode:'',
+        parameterList:[]
+      }
     },
   },
 ]
