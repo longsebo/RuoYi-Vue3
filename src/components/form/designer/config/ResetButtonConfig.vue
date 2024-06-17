@@ -1,4 +1,4 @@
-<template>
+\<template>
   <el-form
     v-if="vFormSelectElem?.attrs"
     :model="vFormSelectElem?.attrs"
@@ -98,7 +98,6 @@
 import {computed, inject, ref} from "vue";
 import { vFormActiveElementKey } from "@/components/form/state.key";
 const vFormSelectElem = inject(vFormActiveElementKey)
-console.log('inject vFormSelectElem', JSON.stringify(vFormSelectElem.value.attrs.operationdata.parameterList));
 const mode = computed({
   get: () => vFormSelectElem.value.attrs.mode ? [vFormSelectElem.value.attrs.mode] : [],
   set: v => {
