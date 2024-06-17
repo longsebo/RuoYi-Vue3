@@ -83,6 +83,8 @@
         <el-radio-button :value="false">否</el-radio-button>
       </el-radio-group>
     </el-form-item>
+    <el-form-item prop="disabled" label="关联对话框">
+    </el-form-item>
     <el-form-item prop="mode" label="模式">
       <el-checkbox-group v-model="mode" :min="0" :max="1">
         <el-checkbox-button value="design">设计</el-checkbox-button>

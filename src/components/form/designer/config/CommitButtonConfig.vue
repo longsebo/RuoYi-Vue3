@@ -88,8 +88,8 @@
                        :parameterList="vFormSelectElem.attrs.addoperationdata.parameterList" @change="updateAddInterfaceConfig"/>
     </el-form-item>
     <el-form-item  label="更新接口设置" >
-      <InterfaceSelect  :interfaceCode="vFormSelectElem.attrs.upateoperationdata.interfaceCode" :interfaceType="searchInterfaceType"
-                        :parameterList="vFormSelectElem.attrs.upateoperationdata.parameterList" @change="updateUpdateInterfaceConfig"/>
+      <InterfaceSelect  :interfaceCode="vFormSelectElem.attrs.updateoperationdata.interfaceCode" :interfaceType="searchInterfaceType"
+                        :parameterList="vFormSelectElem.attrs.updateoperationdata.parameterList" @change="updateUpdateInterfaceConfig"/>
     </el-form-item>
     <el-form-item prop="mode" label="模式">
       <el-checkbox-group v-model="mode" :min="0" :max="1">

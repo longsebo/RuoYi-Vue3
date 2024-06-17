@@ -75,6 +75,11 @@ import DropdownSelectConfig from "@/components/form/designer/config/DropdownSele
 import AgGridConfig from  "@/components/form/designer/config/AgGridConfig.vue";
 import SearchButtonConfig from "@/components/form/designer/config/SearchButtonConfig.vue";
 
+import AddButtonConfig from "@/components/form/designer/config/AddButtonConfig.vue";
+import EditButtonConfig from "@/components/form/designer/config/EditButtonConfig.vue";
+import CommitButtonConfig from "@/components/form/designer/config/CommitButtonConfig.vue";
+import DeleteButtonConfig from "@/components/form/designer/config/DeleteButtonConfig.vue";
+
 const vFormSelectElem = inject(vFormActiveElementKey)
 
 const activePane = ref<string>('component')
@@ -96,7 +101,11 @@ const configMap = {
   'ruoyi-el-select':markRaw(DropdownSelectConfig),
   'ruoyi-ag-grid':markRaw(AgGridConfig),
   'search-form':markRaw(FormConfig),
-  'search-design-button':markRaw(SearchButtonConfig)
+  'search-design-button':markRaw(SearchButtonConfig),
+  'add-design-button':markRaw(AddButtonConfig),
+  'commit-design-button':markRaw(CommitButtonConfig),
+  'edit-design-button':markRaw(EditButtonConfig),
+  'delete-design-button':markRaw(DeleteButtonConfig),
 }
 
 </script>

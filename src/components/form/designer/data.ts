@@ -107,6 +107,7 @@ export const ButtonComponents: CandidateComponentConfig[] = [
       disabled:false,
       autofocus:false,
       label:'新增',
+      bindDialog:'',//绑定对话框
     },
   },
   {
@@ -128,6 +129,7 @@ export const ButtonComponents: CandidateComponentConfig[] = [
       disabled:false,
       autofocus:false,
       label:'编辑',
+      bindDialog:'',//绑定对话框
     },
   },
   {

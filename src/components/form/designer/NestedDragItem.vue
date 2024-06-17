@@ -276,6 +276,12 @@ import { Plus, Delete, CopyDocument } from "@element-plus/icons-vue";
 import { findTreeItemParentById } from "@/utils/common";
 import RuoyiElSelect from "../components/select/RuoyiElSelect.vue";
 import SearchDesignButton from "../components/button/SearchDesignButton.vue"
+
+import AddDesignButton from "../components/button/AddDesignButton.vue"
+import CommitDesignButton from "../components/button/CommitDesignButton"
+import DeleteDesignButton from "../components/button/DeleteDesignButton.vue"
+import EditDesignButton from "../components/button/EditDesignButton.vue"
+
 export default defineComponent({
   name: "NestedDragItem",
   components: {
@@ -283,7 +289,7 @@ export default defineComponent({
     UserSelectorInput, DeptSelectorInput, NumberInput, TextInput, SingleSelect, MultiSelect, UserSelect, DeptSelect,
     Plus, Delete, CopyDocument, DatePicker, DateRangePicker, LabelField,NormalButton,RuoyiElSelect,RuoyiAgGrid,
     SearchForm:defineAsyncComponent (()=> import('@/components/form/components/form/searchform/SearchForm.vue')),
-    SearchDesignButton
+    SearchDesignButton,AddDesignButton,CommitDesignButton,DeleteDesignButton,EditDesignButton
   },
   props: {
     children: Array as PropType<ComponentConfig[]>

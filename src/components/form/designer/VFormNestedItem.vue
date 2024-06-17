@@ -102,13 +102,18 @@ import RuoyiElSelect from "../components/select/RuoyiElSelect.vue";
 import RuoyiAgGrid from "../components/table/RuoyiAgGrid.vue"
 import SearchForm from "@/components/form/components/form/searchform/SearchForm.vue"
 import SearchDesignButton from "../components/button/SearchDesignButton.vue"
+import AddDesignButton from "../components/button/AddDesignButton.vue"
+import CommitDesignButton from "../components/button/CommitDesignButton"
+import DeleteDesignButton from "../components/button/DeleteDesignButton.vue"
+import EditDesignButton from "../components/button/EditDesignButton.vue"
 export default defineComponent({
   name: 'VFormNestedItem',
   components: {
     ElFormItem, ElSelect, ElOption, ElInput, ElRow, ElCol,ElButton, NumberInput, UserSelectorInput, DeptSelectorInput, TextInput,
     SingleSelect, MultiSelect, UserSelect, DeptSelect, DatePicker, DateRangePicker, LabelField,
     NormalButton,RuoyiElSelect,RuoyiAgGrid,SearchForm:defineAsyncComponent (()=> import('@/components/form/components/form/searchform/SearchForm.vue')),
-    SearchDesignButton
+    SearchDesignButton,AddDesignButton,
+    CommitDesignButton,DeleteDesignButton,EditDesignButton
   },
   props: {
     item: {
