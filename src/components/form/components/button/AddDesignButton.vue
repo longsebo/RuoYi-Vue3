@@ -52,6 +52,7 @@ const emits = defineEmits<Emits>()
 const attrs = useAttrs()
 const formMode = inject(formModeKey)
 const cMode = computed<FormFieldMode>(() => {
+  debugger;
   if (props.mode) {
     return props.mode
   }
