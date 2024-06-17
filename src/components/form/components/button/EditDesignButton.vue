@@ -39,7 +39,7 @@ interface Props {
   operationtype?:string
   operationdata:object,
   id?:string,
-  bindDialog:'',//绑定对话框
+  bindDialog:string,//绑定对话框
 }
 
 interface Emits {

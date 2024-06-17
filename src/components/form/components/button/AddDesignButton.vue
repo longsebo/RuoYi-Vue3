@@ -14,13 +14,11 @@
 </template>
 
 <script lang="ts" setup>
-import {ElButton, ElMessage} from 'element-plus'
 import {computed, inject, nextTick, useAttrs, watch} from "vue";
 import { formModeKey } from "@/components/form/state.key";
 import { vFormSchemeKey } from '@/components/form/state.key';
 
 import AddButton from '@/components/common/button/AddButton.vue'
-import request from '@/utils/request'
 const formScheme = inject(vFormSchemeKey)!
 
 interface Props {
@@ -39,7 +37,7 @@ interface Props {
   operationtype?:string
   operationdata:object,
   id?:string,
-  bindDialog:'',//绑定对话框
+  bindDialog:string,//绑定对话框
 }
 
 interface Emits {
@@ -68,7 +66,7 @@ watch(() => props, (newVal) =>{
     props.disabled = true
   }*/
 },{immediate: true,deep: true})
-console.log('searchdesignbutton $attrs:'+JSON.stringify(props));
+console.log('adddesignbutton $attrs:'+JSON.stringify(props));
 
 </script>
 
