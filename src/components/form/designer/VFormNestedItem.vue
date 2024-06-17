@@ -106,6 +106,7 @@ import AddDesignButton from "../components/button/AddDesignButton.vue"
 import CommitDesignButton from "../components/button/CommitDesignButton"
 import DeleteDesignButton from "../components/button/DeleteDesignButton.vue"
 import EditDesignButton from "../components/button/EditDesignButton.vue"
+import ResetDesignButton from "../components/button/ResetDesignButton.vue"
 export default defineComponent({
   name: 'VFormNestedItem',
   components: {
@@ -113,7 +114,7 @@ export default defineComponent({
     SingleSelect, MultiSelect, UserSelect, DeptSelect, DatePicker, DateRangePicker, LabelField,
     NormalButton,RuoyiElSelect,RuoyiAgGrid,SearchForm:defineAsyncComponent (()=> import('@/components/form/components/form/searchform/SearchForm.vue')),
     SearchDesignButton,AddDesignButton,
-    CommitDesignButton,DeleteDesignButton,EditDesignButton
+    CommitDesignButton,DeleteDesignButton,EditDesignButton,ResetDesignButton
   },
   props: {
     item: {
