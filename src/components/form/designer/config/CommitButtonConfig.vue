@@ -128,8 +128,8 @@ const mode = computed({
  * @param parameterList
  */
 function updateUpdateInterfaceConfig(interfaceCode,parameterList){
-  vFormSelectElem.value.attrs.operationdata.interfaceCode = interfaceCode;
-  vFormSelectElem.value.attrs.operationdata.parameterList = parameterList;
+  vFormSelectElem.value.attrs.updateoperationdata.interfaceCode = interfaceCode;
+  vFormSelectElem.value.attrs.updateoperationdata.parameterList = parameterList;
   console.log("vFormSelectElem:"+JSON.stringify(vFormSelectElem.value));
 
 }
@@ -139,8 +139,8 @@ function updateUpdateInterfaceConfig(interfaceCode,parameterList){
  * @param parameterList
  */
 function updateAddInterfaceConfig(interfaceCode,parameterList){
-  vFormSelectElem.value.attrs.operationdata.interfaceCode = interfaceCode;
-  vFormSelectElem.value.attrs.operationdata.parameterList = parameterList;
+  vFormSelectElem.value.attrs.addoperationdata.interfaceCode = interfaceCode;
+  vFormSelectElem.value.attrs.addoperationdata.parameterList = parameterList;
   console.log("vFormSelectElem:"+JSON.stringify(vFormSelectElem.value));
 
 }
