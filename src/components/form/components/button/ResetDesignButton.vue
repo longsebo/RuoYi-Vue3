@@ -34,8 +34,6 @@ interface Props {
   disabled?:boolean
   autofocus?:boolean
   formData:object
-  operationtype?:string
-  operationdata:object,
   id?:string
 }
 

@@ -32,6 +32,7 @@ const {proxy} = getCurrentInstance();
 function submitForm() {
   bus.emit(validateFormKey,submitData)
 }
+console.log('confirm button enter!');
 function submitData(valid:boolean,form) {
   if (valid) {
     if (form.value.id != null) {
