@@ -1,5 +1,5 @@
 <template>
-  <el-button icon="Refresh" @click="resetQuery">{{props.label}}</el-button>
+  <el-button v-bind="props" icon="Refresh" @click="resetQuery">{{props.label}}</el-button>
 </template>
 
 <script setup lang="ts">
@@ -10,10 +10,23 @@ import {
 } from "@/config/app.keys";
 
 interface Props {
-  title?: string
+  size?:string
+  type?:string
+  plain?:boolean
+  text?:boolean
+  bg?:boolean
+  link?:boolean
+  round?:boolean
+  circle?:boolean
+  loading?:boolean
+  disabled?:boolean
+  autofocus?:boolean
+  formData:object
+  id?:string,
+  label:string
 }
 const props = withDefaults(defineProps<Props>(), {
-  title: '重置',
+  label: '重置',
 })
 const resetQuery = () => {
   bus.emit(resetQueryFormKey)

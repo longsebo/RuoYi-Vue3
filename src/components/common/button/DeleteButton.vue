@@ -1,12 +1,10 @@
 <template>
   <el-button
-      type="danger"
-      plain
-      :icon="Delete"
+      v-bind="props"
+      icon="Delete"
       :disabled="!multiple"
       @click="handleDelete"
-      v-hasPermi="['business:application:remove']"
-  >{{props.title}}</el-button>
+  >{{props.label}}</el-button>
 </template>
 
 <script lang="ts" setup>
@@ -20,11 +18,25 @@ import {getCurrentInstance} from 'vue';
 const {proxy} = getCurrentInstance();
 interface Props {
   btId?:string//按钮本身id
-  title?: string
+  label?: string
+  size?:string
+  type?:string
+  plain?:boolean
+  text?:boolean
+  bg?:boolean
+  link?:boolean
+  round?:boolean
+  circle?:boolean
+  loading?:boolean
+  disabled?:boolean
+  autofocus?:boolean
+  formData:object
+  id?:string,
   bindComponent?:string//绑定数据源组件 通常为查询按钮，删除后通知它查询
 }
 const props = withDefaults(defineProps<Props>(), {
-  title: '删除',
+  label: '删除',
+  type:'danger',
 })
 const ids = ref([]);
 const form = ref({});

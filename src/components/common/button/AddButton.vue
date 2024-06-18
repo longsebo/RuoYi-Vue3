@@ -1,11 +1,9 @@
 <template>
   <el-button
-      type="primary"
-      plain
-      :icon="Plus"
+      v-bind="props"
+      icon="Plus"
       @click="handleAdd"
-      v-hasPermi="['business:application:add']"
-  >新增</el-button>
+  >{{props.label}}</el-button>
 </template>
 
 <script lang="ts" setup>
@@ -16,10 +14,24 @@ import {
 } from "@/config/app.keys";
 
 interface Props {
-  title?: string
+  size?:string
+  type?:string
+  plain?:boolean
+  text?:boolean
+  bg?:boolean
+  link?:boolean
+  round?:boolean
+  circle?:boolean
+  loading?:boolean
+  disabled?:boolean
+  autofocus?:boolean
+  formData:object
+  id?:string,
+  label?: string
 }
 const props = withDefaults(defineProps<Props>(), {
-  title: '新增',
+  label: '新增',
+  type:"primary",
 })
 /** 新增按钮操作 */
 function handleAdd() {

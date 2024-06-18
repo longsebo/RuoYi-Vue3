@@ -1,12 +1,10 @@
 <template>
   <el-button
-      type="success"
-      plain
-      :icon="Edit"
+      v-bind="props"
+      icon="Edit"
       :disabled="!single"
       @click="handleUpdate"
-      v-hasPermi="['business:application:edit']"
-  >{{ props.title}}</el-button>
+  >{{ props.label}}</el-button>
 </template>
 
 <script lang="ts" setup>
@@ -18,14 +16,27 @@ import {
 import {onMounted, ref, watch} from "vue";
 
 interface Props {
-  title?: string,
+  size?:string
+  type?:string
+  plain?:boolean
+  text?:boolean
+  bg?:boolean
+  link?:boolean
+  round?:boolean
+  circle?:boolean
+  loading?:boolean
+  disabled?:boolean
+  autofocus?:boolean
+  formData:object
+  id?:string,
+  label?: string,
   btId?:string//按钮本身id
-  id?:number
   bindDialog?:string//绑定弹窗的id，通常修改时弹出框显示
 }
 const props = withDefaults(defineProps<Props>(), {
-  title: '新增',
-  id:0
+  label: '编辑',
+  id: 0,
+  type:"success"
 })
 const id = ref(0);
 const form = ref({});
