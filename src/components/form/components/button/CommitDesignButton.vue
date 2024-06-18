@@ -38,7 +38,8 @@ interface Props {
   formData:object
   addoperationdata:object,
   updateoperationdata:object,
-  id?:string
+  id?:string,
+  label?: string
 }
 
 interface Emits {
