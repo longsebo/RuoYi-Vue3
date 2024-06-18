@@ -66,8 +66,9 @@ watch(() => props, (newVal) =>{
   /*if(cMode.value ==='design'){
     props.disabled = true
   }*/
+  console.log('commitdesignbutton $attrs:'+JSON.stringify(props));
 },{immediate: true,deep: true})
-console.log('commitdesignbutton $attrs:'+JSON.stringify(props));
+
 
 </script>
 
