@@ -1,5 +1,5 @@
 <template>
-  <el-button v-bind="props" icon="Checked" @click="submitForm">{{props.label}}</el-button>
+  <el-button v-bind="props" icon="Checked" @click="submitForm">{{props.label}}1</el-button>
 </template>
 
 <script lang="ts" setup>
