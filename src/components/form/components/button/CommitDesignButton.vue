@@ -38,8 +38,7 @@ interface Props {
   formData:object
   addoperationdata:object,
   updateoperationdata:object,
-  id?:string,
-  label?: string
+  id?:string
 }
 
 interface Emits {
@@ -68,7 +67,7 @@ watch(() => props, (newVal) =>{
     props.disabled = true
   }*/
 },{immediate: true,deep: true})
-console.log('searchdesignbutton $attrs:'+JSON.stringify(props));
+console.log('commitdesignbutton $attrs:'+JSON.stringify(props));
 
 </script>
 
