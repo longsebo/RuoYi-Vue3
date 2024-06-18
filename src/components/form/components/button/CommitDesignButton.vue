@@ -1,15 +1,15 @@
 <template>
   <template v-if="cMode === 'design'">
-    <commit-button   v-bind="props" >{{$attrs.label}}</commit-button>
+    <confirm-button   v-bind="props" >{{$attrs.label}}</confirm-button>
   </template>
   <template v-else-if="cMode === 'edit'">
-    <commit-button  v-bind="props" >{{$attrs.label}}</commit-button>
+    <confirm-button  v-bind="props" >{{$attrs.label}}</confirm-button>
   </template>
   <template v-else-if="cMode === 'read'">
-    <commit-button  v-bind="props" >{{$attrs.label}}</commit-button>
+    <confirm-button  v-bind="props" >{{$attrs.label}}</confirm-button>
   </template>
  <template v-else-if="cMode === 'hidden' ">
-   <commit-button  v-show="false" v-bind="props" >{{$attrs.label}}</commit-button>
+   <confirm-button  v-show="false" v-bind="props" >{{$attrs.label}}</confirm-button>
   </template>
 </template>
 
@@ -19,7 +19,7 @@ import {computed, inject, nextTick, useAttrs, watch} from "vue";
 import { formModeKey } from "@/components/form/state.key";
 import { vFormSchemeKey } from '@/components/form/state.key';
 
-import CommitButton from '@/components/common/button/ConfirmButton.vue'
+import ConfirmButton from '@/components/common/button/ConfirmButton.vue'
 import request from '@/utils/request'
 const formScheme = inject(vFormSchemeKey)!
 
