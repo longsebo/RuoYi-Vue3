@@ -110,7 +110,7 @@ import { vFormActiveElementKey } from "@/components/form/state.key";
 import InterfaceSelect from    "@/components/common/selector/interface/InterfaceSelect.vue";
 const vFormSelectElem = inject(vFormActiveElementKey)
 const searchInterfaceType = ref('search')
-console.log('inject vFormSelectElem', JSON.stringify(vFormSelectElem.value.attrs.operationdata.parameterList));
+//console.log('inject vFormSelectElem', JSON.stringify(vFormSelectElem.value.attrs.operationdata.parameterList));
 const mode = computed({
   get: () => vFormSelectElem.value.attrs.mode ? [vFormSelectElem.value.attrs.mode] : [],
   set: v => {
