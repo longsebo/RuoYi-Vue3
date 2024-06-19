@@ -104,7 +104,7 @@ const configMap = {
   'search-form':markRaw(FormConfig),
   'search-design-button':markRaw(SearchButtonConfig),
   'add-design-button':markRaw(AddButtonConfig),
-  'submit-design-button':markRaw(CommitButtonConfig),
+  'commit-design-button':markRaw(CommitButtonConfig),
   'edit-design-button':markRaw(EditButtonConfig),
   'delete-design-button':markRaw(DeleteButtonConfig),
   'reset-design-button':markRaw(ResetButtonConfig),

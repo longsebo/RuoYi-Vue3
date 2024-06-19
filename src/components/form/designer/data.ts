@@ -161,7 +161,7 @@ export const ButtonComponents: CandidateComponentConfig[] = [
   {
     id: genId(),
     icon: 'Checked',
-    component: 'submit-design-button',
+    component: 'commit-design-button',
     category: 'button',
     title: "提交",
     attrs: {

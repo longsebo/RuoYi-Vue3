@@ -36,8 +36,6 @@ interface Props {
   disabled?:boolean
   autofocus?:boolean
   formData:object
-  operationtype?:string
-  operationdata:object,
   id?:string,
   bindDialog:string,//绑定对话框
 }
