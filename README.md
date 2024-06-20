@@ -2,7 +2,7 @@
 <h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">若依零代码平台</h1>
 <h4 align="center">基于若依平台实现零代码平台，旨在于：通过不用接触代码，就能实现业务功能，人人都是程序员，<br>编程变成拖程，是一件快乐事情！</h4>
 如有问题可以加我微信号lita2lz或扫码： <br>
-![二维码]https://gitee.com/longsebo/vue-activiti-design/raw/master/static/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20240324174304.jpg
+![二维码](https://gitee.com/longsebo/vue-activiti-design/raw/master/static/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20240324174304.jpg)
 <br>
 ## 平台简介
 
