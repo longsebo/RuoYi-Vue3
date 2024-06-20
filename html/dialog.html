@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moveable Dialog</title>
+<style>
+  .dialog {
+    width: 300px;
+    position: absolute;
+    background: #fff;
+    border: 1px solid #ebeef5;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    z-index: 100;
+  }
+  .dialog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 10px;
+  }
+  .dialog-title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  .dialog-header .close-button {
+    cursor: pointer;
+    font-size: 16px;
+  }
+  .dialog-content {
+    padding: 10px 0;
+  }
+
+.el-dialog__headerbtn .el-dialog__close {
+    color: var(--el-color-info);
+    font-size: inherit;
+}  
+.el-icon {
+    --color: inherit;
+    height: 1em;
+    width: 1em;
+    line-height: 1em;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    fill: currentColor;
+    color: var(--color);
+    font-size: inherit;
+}
+.el-dialog__headerbtn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0;
+    width: 48px;
+    height: 48px;
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    font-size: var(--el-message-close-size, 16px);
+}
+</style>
+</head>
+<body>
+<div class="dialog">
+  <div class="dialog-header">
+    <div class="dialog-title">我是标题</div>
+    <button aria-label="Close this dialog" class="el-dialog__headerbtn" type="button">
+	<i class="el-icon el-dialog__close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><path fill="currentColor" d="M764.288 214.592 512 466.88 259.712 214.592a31.936 31.936 0 0 0-45.12 45.12L466.752 512 214.528 764.224a31.936 31.936 0 1 0 45.12 45.184L512 557.184l252.288 252.288a31.936 31.936 0 0 0 45.12-45.12L557.12 512.064l252.288-252.352a31.936 31.936 0 1 0-45.12-45.184z"></path></svg></i>
+	</button>
+  </div>
+  <div class="dialog-content">
+    这里是内容...
+  </div>
+</div>
+ 
+<script>
+  const dialog = document.querySelector('.dialog');
+  const closeButton = document.querySelector('.el-dialog__headerbtn');
+ 
+  closeButton.addEventListener('click', function() {
+    dialog.style.display = 'none';
+  });
+ 
+  // 以下是实现可移动的核心JavaScript代码
+  // 需要添加处理拖拽逻辑的代码
+let isDragging = false;
+ 
+dialog.addEventListener('mousedown', function(e) {
+  isDragging = true;
+  dialog.style.zIndex = 1000; // Make it on top
+  const offsetX = e.clientX - dialog.getBoundingClientRect().left;
+  const offsetY = e.clientY - dialog.getBoundingClientRect().top;
+ 
+  function mouseMoveHandler(e) {
+    if (isDragging) {
+      dialog.style.left = e.pageX - offsetX + 'px';
+      dialog.style.top = e.pageY - offsetY + 'px';
+    }
+  }
+ 
+  function mouseUpHandler() {
+    isDragging = false;
+    document.removeEventListener('mousemove', mouseMoveHandler);
+    document.removeEventListener('mouseup', mouseUpHandler);
+  }
+ 
+  document.addEventListener('mousemove', mouseMoveHandler);
+  document.addEventListener('mouseup', mouseUpHandler);
+});  
+</script>
+</body>
+</html>
