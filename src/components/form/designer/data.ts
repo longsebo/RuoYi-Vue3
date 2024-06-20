@@ -628,5 +628,46 @@ export const ContainerComponents: CandidateComponentConfig[] = [
     attrs: {
       children:'[]'
     }
+  },
+  {
+    id: genId(),
+    icon: 'ali_dialog',
+    component: 'maintain-dialog',
+    category: 'container',
+    title: "对话框",
+    formItemAttrs: {
+      label: "",
+      labelWidth: "120px",
+      required: false,
+    },
+    attrs: {
+      title:'',
+      width:'800px',
+      height:'600px',
+      top:'15vh',//dialog CSS 中的 margin-top 值，默认为 15vh
+      fullscreen:false,//是否全屏
+      showFooter:true,
+      showHeader:true,
+      showClose:true,//是否显示关闭按钮
+      showMaximize:true,
+      showMinimize:true,
+      showFullscreen:true,
+      showCloseOnClickModal:true,
+      showCloseOnPressEscape:true,
+      showCloseIcon:true,
+      showCloseIconOnHeader:true,
+      showCloseIconOnFooter:true,
+      modal:true,//是否显示遮罩层
+      lockScroll:true,//是否锁定滚动条
+      closeOnClickModal:true,//是否可以通过点击 modal 关闭 Dialog
+      closeOnPressEscape:true,//是否可以通过按下 ESC 关闭 Dialog
+      openDelay:0,//延迟打开的时间，单位毫秒。
+      closeDelay:0,//延迟关闭的时间，单位毫秒。
+      draggable:false,//是否可拖拽
+      overflow:false,//是否拖动范围可以超出可视区
+      center:true,//是否让 Dialog 的 header 和 footer 部分居中排列
+      alignCenter:true,//是否让 Dialog 的 body 部分居中排列
+      children:'[]'
+    }
   }
 ]
