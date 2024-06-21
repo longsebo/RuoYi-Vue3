@@ -24,6 +24,10 @@
     margin: 0;
     font-size: 16px;
     font-weight: bold;
+    width: 100%;
+  }
+  .dialog-title:hover {
+      cursor: move; /* 鼠标悬停时，鼠标变成移动形状 */
   }
   .dialog-header .close-button {
     cursor: pointer;
@@ -63,10 +67,17 @@
     cursor: pointer;
     font-size: var(--el-message-close-size, 16px);
 }
+.resizable {
+  width: 200px;
+  height: 200px;
+  border: 1px solid #ebeef5;
+  resize: both;
+  overflow: hidden;
+}
 </style>
 </head>
 <body>
-<div class="dialog">
+<div class="dialog resizable">
   <div class="dialog-header">
     <div class="dialog-title">我是标题</div>
     <button aria-label="Close this dialog" class="el-dialog__headerbtn" type="button">
