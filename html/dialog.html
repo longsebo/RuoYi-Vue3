@@ -36,7 +36,7 @@
 .el-dialog__headerbtn .el-dialog__close {
     color: var(--el-color-info);
     font-size: inherit;
-}  
+}
 .el-icon {
     --color: inherit;
     height: 1em;
@@ -77,41 +77,41 @@
     这里是内容...
   </div>
 </div>
- 
+
 <script>
   const dialog = document.querySelector('.dialog');
   const closeButton = document.querySelector('.el-dialog__headerbtn');
- 
+  const header = document.querySelector('.dialog-title')
   closeButton.addEventListener('click', function() {
     dialog.style.display = 'none';
   });
- 
+
   // 以下是实现可移动的核心JavaScript代码
   // 需要添加处理拖拽逻辑的代码
 let isDragging = false;
- 
-dialog.addEventListener('mousedown', function(e) {
+
+header.addEventListener('mousedown', function(e) {
   isDragging = true;
   dialog.style.zIndex = 1000; // Make it on top
   const offsetX = e.clientX - dialog.getBoundingClientRect().left;
   const offsetY = e.clientY - dialog.getBoundingClientRect().top;
- 
+
   function mouseMoveHandler(e) {
     if (isDragging) {
       dialog.style.left = e.pageX - offsetX + 'px';
       dialog.style.top = e.pageY - offsetY + 'px';
     }
   }
- 
+
   function mouseUpHandler() {
     isDragging = false;
     document.removeEventListener('mousemove', mouseMoveHandler);
     document.removeEventListener('mouseup', mouseUpHandler);
   }
- 
+
   document.addEventListener('mousemove', mouseMoveHandler);
   document.addEventListener('mouseup', mouseUpHandler);
-});  
+});
 </script>
 </body>
 </html>

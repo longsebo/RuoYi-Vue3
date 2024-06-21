@@ -646,17 +646,7 @@ export const ContainerComponents: CandidateComponentConfig[] = [
       height:'600px',
       top:'15vh',//dialog CSS 中的 margin-top 值，默认为 15vh
       fullscreen:false,//是否全屏
-      showFooter:true,
-      showHeader:true,
       showClose:true,//是否显示关闭按钮
-      showMaximize:true,
-      showMinimize:true,
-      showFullscreen:true,
-      showCloseOnClickModal:true,
-      showCloseOnPressEscape:true,
-      showCloseIcon:true,
-      showCloseIconOnHeader:true,
-      showCloseIconOnFooter:true,
       modal:true,//是否显示遮罩层
       lockScroll:true,//是否锁定滚动条
       closeOnClickModal:true,//是否可以通过点击 modal 关闭 Dialog
