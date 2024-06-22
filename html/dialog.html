@@ -77,7 +77,7 @@
 </style>
 </head>
 <body>
-<div class="dialog resizable">
+<div class="dialog resizable" id="simulationdlg">
   <div class="dialog-header">
     <div class="dialog-title">我是标题</div>
     <button aria-label="Close this dialog" class="el-dialog__headerbtn" type="button">
@@ -93,6 +93,8 @@
   const dialog = document.querySelector('.dialog');
   const closeButton = document.querySelector('.el-dialog__headerbtn');
   const header = document.querySelector('.dialog-title')
+  // 选择你要监听的div
+  const monitordiv = document.getElementById('simulationdlg');
   closeButton.addEventListener('click', function() {
     dialog.style.display = 'none';
   });
@@ -123,6 +125,17 @@ header.addEventListener('mousedown', function(e) {
   document.addEventListener('mousemove', mouseMoveHandler);
   document.addEventListener('mouseup', mouseUpHandler);
 });
+  // 创建一个ResizeObserver实例
+  const resizeObserver = new ResizeObserver(entries => {
+      for (const entry of entries) {
+          const width = entry.contentRect.width;
+          const height = entry.contentRect.height;
+          console.log(`Size changed. New width: ${width}, New height: ${height}`);
+      }
+  });
+
+  // 开始监听div的大小变化
+  resizeObserver.observe(monitordiv);
 </script>
 </body>
 </html>
